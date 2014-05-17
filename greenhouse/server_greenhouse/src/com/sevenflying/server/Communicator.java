@@ -1,7 +1,6 @@
 package com.sevenflying.server;
 
 import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -15,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.TooManyListenersException;
 
 
@@ -33,13 +31,16 @@ public class Communicator implements SerialPortEventListener {
 	// Input/output writers
 	private BufferedReader input = null;
 	private BufferedWriter output = null;
+	// For the callbacks when data is received
+	private PortEvent portEvent;
 
 	// Bits per second
-	private static final int DATA_RATE = 115200;
+	static final int DATA_RATE = 115200;
 	// Timeout for connecting to a port
 	private static final int PORT_CONNECT_TIMEOUT = 2000;
 
-	public Communicator() {
+	public Communicator(PortEvent portEvent) {
+		this.portEvent = portEvent;
 		this.portMap = new HashMap<String, CommPortIdentifier>();
 		searchPorts();
 	}
@@ -54,9 +55,9 @@ public class Communicator implements SerialPortEventListener {
 			CommPortIdentifier tempPort = (CommPortIdentifier) ports.nextElement();
 			if( tempPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 				portMap.put(tempPort.getName(), tempPort);
-				System.out.println("port name: " + tempPort.getName() + " object: " + tempPort);
+				System.out.println(" Port name: " + tempPort.getName() + " object: " + tempPort);
 			} else {
-				System.out.println("Port: " + tempPort.getName() + " not serial");
+				System.out.println(" Port: " + tempPort.getName() + " not serial");
 			}
 		}
 	}
@@ -104,7 +105,8 @@ public class Communicator implements SerialPortEventListener {
 		
 		if(anEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				System.out.println(input.readLine());
+				portEvent.dataReceived(input.readLine());
+				//System.out.println(input.readLine());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -119,29 +121,6 @@ public class Communicator implements SerialPortEventListener {
 			output.write(data);
 			output.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String [] args) {
-		final Communicator com = new Communicator();
-		final Scanner sca = new Scanner(System.in);
-		try {
-			com.connect("COM5", Communicator.DATA_RATE);
-			Thread t = new Thread(new Runnable() {
-					public void run() {
-						// Simple echo to see that this works
-						String toWrite = sca.nextLine();
-						while(!toWrite.equals("END")) {
-							com.sendData(toWrite);
-							toWrite = sca.nextLine();
-						}
-						sca.close();
-					}
-			});
-			t.start();
-			
-		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

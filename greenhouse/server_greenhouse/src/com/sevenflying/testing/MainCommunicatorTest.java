@@ -10,7 +10,7 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
-public class MainTest implements SerialPortEventListener {
+public class MainCommunicatorTest implements SerialPortEventListener {
 	SerialPort serialPort;
 	/** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
@@ -106,7 +106,7 @@ public class MainTest implements SerialPortEventListener {
 	}
 
 	public static void main(String[] args) throws Exception {
-		MainTest main = new MainTest();
+		MainCommunicatorTest main = new MainCommunicatorTest();
 		main.initialize();
 		Thread t=new Thread() {
 			public void run() {
