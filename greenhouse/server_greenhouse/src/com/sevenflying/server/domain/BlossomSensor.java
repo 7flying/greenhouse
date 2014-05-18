@@ -5,9 +5,12 @@ public abstract class BlossomSensor {
 
 	// Name of the sensor
 	private String name;
+	// Maps to port
+	private String id;
 	
-	public BlossomSensor(String name) {
+	public BlossomSensor(String name, String id) {
 		this.name = name;
+		this.id = id;
 	}
 
 	public String getName() {
@@ -16,5 +19,9 @@ public abstract class BlossomSensor {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getId() {
+		return id;
 	}
 }

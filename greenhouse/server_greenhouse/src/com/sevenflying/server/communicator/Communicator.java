@@ -1,4 +1,4 @@
-package com.sevenflying.server;
+package com.sevenflying.server.communicator;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
@@ -35,7 +35,7 @@ public class Communicator implements SerialPortEventListener {
 	private PortEvent portEvent;
 
 	// Bits per second
-	static final int DATA_RATE = 115200;
+	public static final int DATA_RATE = 115200;
 	// Timeout for connecting to a port
 	private static final int PORT_CONNECT_TIMEOUT = 2000;
 
