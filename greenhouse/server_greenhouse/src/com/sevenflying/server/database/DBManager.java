@@ -71,13 +71,14 @@ public class DBManager {
 		pre.executeUpdate();
 	}
 	
+	/** Gets the db id of a sensor */
 	private int getSensorDBid(Sensor sensor) throws SQLException {
 		PreparedStatement pre = conn.prepareStatement("SELECT id FROM Sensors WHERE pinid = ? AND type = ?;");
 		pre.setString(1, sensor.getPinId());
 		pre.setString(2, Character.toString(sensor.getType().getIdentifier()));
 		ResultSet result = pre.executeQuery();
 		int ret = -1;
-		if (result != null) {
+		if (result.next()) {
 			ret = result.getInt(1);
 		}
 		result.close();
@@ -86,8 +87,37 @@ public class DBManager {
 		return ret;
 	}
 	
+	private int getMaxId(String tableName) throws SQLException {
+		Statement sta = conn.createStatement();
+		String query = "SELECT max(id) from " + tableName + ";";
+		ResultSet result = sta.executeQuery(query);
+		int ret = -1;
+		if(result.next()) 
+			ret = result.getInt(1);
+		result.close();
+		sta.close();
+		return ret;
+	}
+	
+	/** Inserts a new reading from a sensor into the db
+	 * @param sensor 
+	 * @param value
+	 * @throws SQLException
+	 */
 	public void insertReading(Sensor sensor, double value) throws SQLException {
-		System.out.println(getSensorDBid(sensor));
+		int idSensor = getSensorDBid(sensor);
+		System.out.println(idSensor);
+		int maxId = getMaxId("Readings");
+		System.out.println(maxId);
+		if(idSensor != -1 && maxId != -1) {
+			PreparedStatement pre = conn.prepareStatement("INSERT into Readings values (?, ?, ?);");
+			pre.setInt(1, maxId + 1);
+			pre.setInt(2, idSensor);
+			pre.setDouble(3, value);
+			pre.executeUpdate();
+			pre.close();
+		}
+
 	}
 	
 }
