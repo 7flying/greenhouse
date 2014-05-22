@@ -5,12 +5,12 @@ public abstract class BlossomSensor {
 
 	// Name of the sensor
 	private String name;
-	// Maps to port
-	private String id;
+	// Maps to port (Axx or Dxx, analogic, digital)
+	private String pinId;
 	
-	public BlossomSensor(String name, String id) {
+	public BlossomSensor(String name, String pinId) {
 		this.name = name;
-		this.id = id;
+		this.pinId = pinId;
 	}
 
 	public String getName() {
@@ -21,7 +21,7 @@ public abstract class BlossomSensor {
 		this.name = name;
 	}
 	
-	public String getId() {
-		return id;
+	public String getPinId() {
+		return pinId;
 	}
 }

@@ -31,13 +31,13 @@ public class BlossomController implements PortEvent {
 	}
 
 	public void addSensor(Sensor sensor) {
-		if(!sensorMap.containsKey(sensor.getType() + sensor.getId()))
-			sensorMap.put(sensor.getType() + sensor.getId(), sensor);
+		if(!sensorMap.containsKey(sensor.getType() + sensor.getPinId()))
+			sensorMap.put(sensor.getType() + sensor.getPinId(), sensor);
 	}
 
 	public void addActuator(Actuator actuator) {
-		if(!actuatorMap.containsKey(actuator.getType() + actuator.getId()))
-			actuatorMap.put(actuator.getType() + actuator.getId(), actuator);
+		if(!actuatorMap.containsKey(actuator.getType() + actuator.getPinId()))
+			actuatorMap.put(actuator.getType() + actuator.getPinId(), actuator);
 	}
 
 	/** Requests the update of the given sensor
@@ -47,12 +47,12 @@ public class BlossomController implements PortEvent {
 		if(sensorMap.containsKey(sensorName)) {
 			// Type+id
 			communicator.sendData(sensorMap.get(sensorName).getType() +
-					new Integer(sensorMap.get(sensorName).getId()).toString());
+					new Integer(sensorMap.get(sensorName).getPinId()).toString());
 		}
 	}
 
 	public void dataReceived(String data) {
-		// first 3 chars -> Type+id
+		// first 4 chars -> Type + id
 		String type = data.substring(0, 1);
 		String id = data.substring(1, 3);
 		if(sensorMap.containsKey(type + id)) {
