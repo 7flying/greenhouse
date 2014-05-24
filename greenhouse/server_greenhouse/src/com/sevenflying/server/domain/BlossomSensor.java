@@ -1,6 +1,5 @@
 package com.sevenflying.server.domain;
 
-
 public abstract class BlossomSensor {
 
 	// Name of the sensor
@@ -24,4 +23,9 @@ public abstract class BlossomSensor {
 	public String getPinId() {
 		return pinId;
 	}
+
+	public String toString() {
+		return "BlossomSensor [name=" + name + ", pinId=" + pinId;
+	}
+	
 }

@@ -47,19 +47,18 @@ public class BlossomController implements PortEvent {
 		if(sensorMap.containsKey(sensorName)) {
 			// Type+id
 			communicator.sendData(sensorMap.get(sensorName).getType() +
-					new Integer(sensorMap.get(sensorName).getPinId()).toString());
+					sensorMap.get(sensorName).getPinId());
 		}
 	}
 
 	public void dataReceived(String data) {
 		// first 4 chars -> Type + id
 		String type = data.substring(0, 1);
-		String id = data.substring(1, 3);
+		String id = data.substring(1, 4);
 		if(sensorMap.containsKey(type + id)) {
-			sensorMap.get(type + id).update(data.substring(3));
+			sensorMap.get(type + id).update(Double.parseDouble(data.substring(4)));
 		}
 	}
-
 
 	public static void main(String[] args) {
 		/*
