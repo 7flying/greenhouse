@@ -3,11 +3,14 @@ package com.sevenflying.testing;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener; 
+
 import java.util.Enumeration;
+import java.util.Scanner;
 
 
 public class MainCommunicatorTest implements SerialPortEventListener {
@@ -108,8 +111,16 @@ public class MainCommunicatorTest implements SerialPortEventListener {
 	public static void main(String[] args) throws Exception {
 		MainCommunicatorTest main = new MainCommunicatorTest();
 		main.initialize();
+		final Scanner sca = new Scanner(System.in);
 		Thread t=new Thread() {
 			public void run() {
+				// Simple echo to see that this works
+				String toWrite = sca.nextLine();
+				while(!toWrite.equals("END")) {
+					//main.sendData(toWrite);
+					toWrite = sca.nextLine();
+				}
+				sca.close();
 				//the following line will keep this app alive for 1000 seconds,
 				//waiting for events to occur and responding to them (printing incoming messages to console).
 				try {Thread.sleep(1000000);} catch (InterruptedException ie) {}

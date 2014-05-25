@@ -73,6 +73,9 @@ public class Communicator implements SerialPortEventListener {
 				serialPort = (SerialPort) selectedPortId.open(portName, PORT_CONNECT_TIMEOUT);
 				// TODO some magic here needed to check
 				serialPort.setSerialPortParams(dataRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE); 
+				// TODO more magic
+				//serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+				//serialPort.setRTS(true);
 				// Open the stream
 				input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 				output = new BufferedWriter(new OutputStreamWriter(serialPort.getOutputStream()));
@@ -105,8 +108,8 @@ public class Communicator implements SerialPortEventListener {
 		
 		if(anEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				portEvent.dataReceived(input.readLine());
-				//System.out.println(input.readLine());
+				/* TODO [MAIN] */ portEvent.dataReceived(input.readLine());
+				/*TODO [DEBUG] */System.out.println(input.readLine());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

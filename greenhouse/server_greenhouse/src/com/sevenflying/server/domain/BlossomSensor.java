@@ -4,7 +4,7 @@ public abstract class BlossomSensor {
 
 	// Name of the sensor
 	private String name;
-	// Maps to port (Axx or Dxx, analogic, digital)
+	// Maps to port (Axx or Dxx, analog, digital)
 	private String pinId;
 	
 	public BlossomSensor(String name, String pinId) {

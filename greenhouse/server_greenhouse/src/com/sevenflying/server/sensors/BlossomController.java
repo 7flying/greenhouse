@@ -1,7 +1,6 @@
 package com.sevenflying.server.sensors;
 
 import java.util.HashMap;
-
 import com.sevenflying.server.communicator.Communicator;
 import com.sevenflying.server.communicator.PortEvent;
 import com.sevenflying.server.domain.Actuator;
@@ -30,6 +29,10 @@ public class BlossomController implements PortEvent {
 		return controller;
 	}
 
+	public void close() {
+		communicator.close();
+	}
+	
 	public void addSensor(Sensor sensor) {
 		if(!sensorMap.containsKey(sensor.getType() + sensor.getPinId()))
 			sensorMap.put(sensor.getType() + sensor.getPinId(), sensor);
@@ -60,28 +63,9 @@ public class BlossomController implements PortEvent {
 		}
 	}
 
-	public static void main(String[] args) {
-		/*
-		final Scanner sca = new Scanner(System.in);
-		SensorsController handler = new SensorsController();
-		try {
-			handler.connect("COM5", Communicator.DATA_RATE);
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					// Simple echo to see that this works
-					String toWrite = sca.nextLine();
-					while(!toWrite.equals("END")) {
-					//	handler.sendData(toWrite);
-						toWrite = sca.nextLine();
-					}
-					sca.close();
-				}
-			});
-			t.start();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		 */
+	public void sendDataTESTINGMETHOD(String data) {
+		communicator.sendData(data);
 	}
+	
+
 }
