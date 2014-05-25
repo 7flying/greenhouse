@@ -1,6 +1,6 @@
 #include "DHT.h"
 #define DHT_PIN 7
-#define PHOCELL_PIN 0
+#define PHOCELL_PIN 5
 #define RATE 115200
 
 // DHT sensor
@@ -30,8 +30,11 @@ void loop(void) {
     }
     if(isnan(response))
       response = 444; // failure
-    Serial.println(response);
+    Serial.print(response);
+    if(response == 444 || response == 400)
+      Serial.println();
+    else
+      Serial.println(command);
   }
   delay(2100); // At least 2s
 }
-
