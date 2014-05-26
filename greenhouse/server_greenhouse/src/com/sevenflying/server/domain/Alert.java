@@ -20,7 +20,7 @@ public class Alert {
 	}
 
 	/** Checks if the Alert has to be fired */
-	public void check() {
+	public void check() { // TODO looks dirty, change it 
 		boolean check = false, fire = false;
 		double lastValue = 0;
 		try {

@@ -55,7 +55,7 @@ public class Sensor extends BlossomSensor {
 		powerSavingMode = activate;
 	}
 
-	public boolean getPowerSavingMode() {
+	public boolean isPowerSavingOn() {
 		return powerSavingMode;
 	}
 

@@ -42,6 +42,31 @@ public class BlossomController implements PortEvent {
 		if(!actuatorMap.containsKey(actuator.getType() + actuator.getPinId()))
 			actuatorMap.put(actuator.getType() + actuator.getPinId(), actuator);
 	}
+	
+	public Sensor getSensor(String name) {
+		return sensorMap.get(name);
+	}
+	
+	public Actuator getActuator(String name) {
+		return actuatorMap.get(name);
+	}
+	
+
+	public HashMap<String, Sensor> getSensorMap() {
+		return sensorMap;
+	}
+
+	public void setSensorMap(HashMap<String, Sensor> sensorMap) {
+		this.sensorMap = sensorMap;
+	}
+
+	public HashMap<String, Actuator> getActuatorMap() {
+		return actuatorMap;
+	}
+
+	public void setActuatorMap(HashMap<String, Actuator> actuatorMap) {
+		this.actuatorMap = actuatorMap;
+	}
 
 	/** Requests the update of the given sensor
 	 * @param sensorName 
@@ -67,5 +92,6 @@ public class BlossomController implements PortEvent {
 		communicator.sendData(data);
 	}
 	
+	// TODO launch actuator
 
 }
