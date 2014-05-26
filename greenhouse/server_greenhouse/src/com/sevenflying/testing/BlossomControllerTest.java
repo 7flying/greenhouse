@@ -1,7 +1,9 @@
 package com.sevenflying.testing;
 
 import java.util.Scanner;
-import com.sevenflying.server.sensors.BlossomController;
+
+import com.sevenflying.server.communicator.BlossomController;
+
 
 public class BlossomControllerTest {
 

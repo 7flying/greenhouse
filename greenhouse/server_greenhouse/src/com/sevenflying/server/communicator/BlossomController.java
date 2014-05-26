@@ -1,4 +1,4 @@
-package com.sevenflying.server.sensors;
+package com.sevenflying.server.communicator;
 
 import java.util.HashMap;
 import com.sevenflying.server.communicator.Communicator;
