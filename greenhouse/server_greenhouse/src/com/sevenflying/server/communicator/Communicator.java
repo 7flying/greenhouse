@@ -39,6 +39,8 @@ public class Communicator implements SerialPortEventListener {
 	// Timeout for connecting to a port
 	private static final int PORT_CONNECT_TIMEOUT = 2000;
 
+	private boolean debugMode = false;
+	
 	public Communicator(PortEvent portEvent) {
 		this.portEvent = portEvent;
 		this.portMap = new HashMap<String, CommPortIdentifier>();
@@ -108,8 +110,10 @@ public class Communicator implements SerialPortEventListener {
 		
 		if(anEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				/* TODO [MAIN] */ portEvent.dataReceived(input.readLine());
-				/*TODO [DEBUG] */System.out.println(input.readLine());
+				if(debugMode)
+					System.out.println(input.readLine());
+				else
+					portEvent.dataReceived(input.readLine());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -128,4 +132,8 @@ public class Communicator implements SerialPortEventListener {
 		}
 	}
 	
+	// 
+	public void setDebugMode(boolean activate) {
+		this.debugMode = activate;
+	}
 }

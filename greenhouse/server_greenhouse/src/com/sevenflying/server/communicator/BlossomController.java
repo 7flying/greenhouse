@@ -92,6 +92,9 @@ public class BlossomController implements PortEvent {
 		communicator.sendData(data);
 	}
 	
+	public void setDebugMode(boolean activate) {
+		communicator.setDebugMode(activate);
+	}
 	// TODO launch actuator
 
 }

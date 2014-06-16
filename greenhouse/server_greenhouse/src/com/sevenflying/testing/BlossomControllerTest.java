@@ -11,12 +11,12 @@ public class BlossomControllerTest {
 
 		Scanner sca = new Scanner(System.in);
 		BlossomController handler = BlossomController.getInstance("COM5");
-
+		handler.setDebugMode(true);
 		// Simple echo to see that this works
 		String toWrite = sca.nextLine();
 		while(!toWrite.equals("E")) {
-			//System.out.println("Echo: '" + toWrite + "'");
-			//handler.sendDataTESTINGMETHOD(toWrite);
+			System.out.println("Echo: '" + toWrite + "'");
+			handler.sendDataTESTINGMETHOD(toWrite);
 			//handler.communicator.sendData("helrlo\n");
 			toWrite = sca.nextLine();
 		}
