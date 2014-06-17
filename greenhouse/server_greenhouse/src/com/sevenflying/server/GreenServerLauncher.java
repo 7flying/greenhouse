@@ -14,14 +14,17 @@ public class GreenServerLauncher {
 		manager.connect(DBManager.DBPath);
 		manager.createDatabase();
 
-		Sensor dht = new Sensor("DHT22", "D07", SensorType.TEMPERATURE, 2100);
-		Sensor photo = new Sensor("Photoresistor ", "A05", SensorType.LIGHT, 1000);
-		manager.insertSensor(dht);
+		Sensor dhtTemp = new Sensor("DHT22", "D07", SensorType.TEMPERATURE, 2100, true);
+		Sensor dhtHumi = new Sensor("DHT22", "D07", SensorType.HUMIDITY, 4100, true);
+		Sensor photo = new Sensor("Photoresistor ", "A05", SensorType.LIGHT, 1000, false);
+		manager.insertSensor(dhtTemp);
+		manager.insertSensor(dhtHumi);
 		manager.insertSensor(photo);
 		manager.disconnect();
 
 		BlossomController controller = BlossomController.getInstance("COM5");
-		controller.addSensor(dht);
+		controller.addSensor(dhtTemp);
+		controller.addSensor(dhtHumi);
 		controller.addSensor(photo);
 		
 		GreenServer server = new GreenServer("COM5");

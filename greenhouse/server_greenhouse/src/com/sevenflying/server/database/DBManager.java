@@ -20,7 +20,7 @@ public class DBManager {
 	private static String TIME_DATE_FORMAT = "dd/MM/yy - HH:mm:ss";
 	private static final String READINGS_TABLE_NAME = "Readings";
 	
-	public static DBManager getInstance() {
+	public synchronized static DBManager getInstance() {
 		if(manager == null)
 			manager = new DBManager();
 		return manager;
@@ -76,7 +76,7 @@ public class DBManager {
 	/** Inserts the given sensor into the database
 	 * @param sensor - to insert
 	 * @throws SQLException	 */
-	public void insertSensor(Sensor sensor) throws SQLException {
+	public synchronized void insertSensor(Sensor sensor) throws SQLException {
 		PreparedStatement pre = conn.prepareStatement("INSERT into Sensors (name, pinid, type, refresh) values (?,?,?,?);");
 		pre.setString(1, sensor.getName());
 		pre.setString(2, sensor.getPinId());
@@ -121,7 +121,7 @@ public class DBManager {
 	}
 	
 	/** Sets the db's time-date format for storing time-dates, default: 'dd/MM/yy - HH:mm:ss' */
-	public void setTimeDateFormat(String format) {
+	public synchronized void setTimeDateFormat(String format) {
 		TIME_DATE_FORMAT = format;
 	}
 	
@@ -129,7 +129,7 @@ public class DBManager {
 	 * @param sensor - sensor that made the reading
 	 * @param value - reading
 	 * @throws SQLException 	 */
-	public void insertReading(Sensor sensor, double value) throws SQLException {
+	public synchronized void insertReading(Sensor sensor, double value) throws SQLException {
 		int idSensor = getSensorDBid(sensor);
 		int maxId = getMaxId(READINGS_TABLE_NAME);
 		if(idSensor != -1 && maxId != -1) {

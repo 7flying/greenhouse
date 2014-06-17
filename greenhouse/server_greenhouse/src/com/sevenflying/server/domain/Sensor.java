@@ -14,24 +14,22 @@ public class Sensor extends BlossomSensor {
 	// Hour-date of the last refresh, format: 'dd/MM/yy - HH:mm:ss'
 	private String lastRefresh;	
 	private SensorType type;
+	// If this flag is enabled it must be waited the refresh rate to avoid halting the sensor
+	private boolean ensureRefresh = false;
 
-	public Sensor(String name, String pinId, SensorType type, long refreshRate) {
+	public Sensor(String name, String pinId, SensorType type, long refreshRate, boolean ensureRefresh) {
 		super(name, pinId);
 		this.type = type;
 		this.refreshRate = refreshRate;
+		this.ensureRefresh = ensureRefresh;
 	}
 
 	/** Updates the db with the sensor's last reading
 	 * @param value - last read value
 	 */
 	public void update(double value){
-		try {
-			DBManager manager = DBManager.getInstance();
-			manager.connect(DBManager.DBPath);
-			manager.insertReading(this, value);
-			manager.disconnect();
-			System.out.println(this + " value: " + value + " updated.");
-		} catch(Exception e) { e.printStackTrace();	}
+		SensorUpdater updater = new SensorUpdater(this, value);
+		updater.run();
 	}
 
 	/** Gets the sensor's last stored value
@@ -80,10 +78,40 @@ public class Sensor extends BlossomSensor {
 		return type;
 	}
 
+	public boolean isRefreshEnsured() {
+		return ensureRefresh;
+	}
+	
+	public void setEnsureRefresh(boolean ensureRefresh) {
+		this.ensureRefresh = ensureRefresh;
+	}
+	
 	public String toString() {	
 		return super.toString() + " refreshRate=" + refreshRate + ", powerSavingMode="
 				+ powerSavingMode + ", lastRefresh=" + lastRefresh + ", type="
-				+ type + "]";
+				+ type + ", ensureRefresh=" + ensureRefresh + "]";
 	}
 
+}
+
+/**  Manages the update of the sensor */
+class SensorUpdater extends Thread {
+	
+	private Sensor sensor;
+	private double value;
+	
+	public SensorUpdater(Sensor sensor, double value) {
+		this.sensor = sensor;
+		this.value = value;
+	}
+	
+	public void run() {
+		try {
+			DBManager manager = DBManager.getInstance();
+			manager.connect(DBManager.DBPath);
+			manager.insertReading(sensor, value);
+			manager.disconnect();
+			System.out.println(sensor + " value: " + value + " updated.");
+		} catch(Exception e) { e.printStackTrace();	}
+	}
 }

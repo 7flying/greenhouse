@@ -1,6 +1,7 @@
 package com.sevenflying.server.communicator;
 
 import java.util.HashMap;
+
 import com.sevenflying.server.communicator.Communicator;
 import com.sevenflying.server.communicator.PortEvent;
 import com.sevenflying.server.domain.Actuator;
@@ -73,6 +74,15 @@ public class BlossomController implements PortEvent {
 	 */
 	public void requestUpdate(String sensorKey) {
 		if(sensorMap.containsKey(sensorKey)) {
+			// Before asking we wait the required time
+			if(sensorMap.get(sensorKey).isRefreshEnsured()) {
+				System.out.println(" - Waiting...");
+				try {
+					Thread.sleep(sensorMap.get(sensorKey).getRefreshRate());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			// Type+id+X
 			communicator.sendData(sensorKey + TERMINATION_CHAR);
 		}
