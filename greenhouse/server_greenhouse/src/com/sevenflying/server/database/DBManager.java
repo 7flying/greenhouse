@@ -18,7 +18,7 @@ public class DBManager {
 	private static DBManager manager = null;
 	private Connection conn = null;
 	private static String TIME_DATE_FORMAT = "dd/MM/yy - HH:mm:ss";
-	private static String READINGS_TABLE_NAME = "Readings";
+	private static final String READINGS_TABLE_NAME = "Readings";
 	
 	public static DBManager getInstance() {
 		if(manager == null)
@@ -35,6 +35,7 @@ public class DBManager {
 					+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 					+ "name TEXT NOT NULL,"
 					+ "pinid TEXT NOT NULL," // cannot be unique since a sensor may give two different type of readings (temp+humi)
+											 // a 'real' sensor may count as two different db sensors with the same pinid
 					+ "type char(1) NOT NULL,"
 					+ "refresh INTEGER NOT NULL check (refresh > 0)"
 					+ ");");
@@ -49,6 +50,7 @@ public class DBManager {
 					+ ");");
 			
 			sta.close();
+			System.out.println("$ Db created.");
 		} catch(SQLException e) {
 			System.err.println("Error at database creation.");
 			e.printStackTrace();

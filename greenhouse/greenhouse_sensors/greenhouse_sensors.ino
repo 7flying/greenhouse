@@ -5,7 +5,7 @@
 // DHT sensor
 DHT dht(DHT_PIN, DHT22);
 // Holds the command
-char buffer[3];
+char buffer[4];
 // Buffer index
 uint8_t buffInd = 0;
 
@@ -18,9 +18,9 @@ void process(void) {
   float reading;
   uint8_t err = 0;
   switch(buffer[0]) {
-    case 'A':
+    case 'A': case 'L':
       // Read an analog sensor, A00 - A05
-      reading = analogRead(buffer[2] - 48); // See ascii table
+      reading = analogRead(buffer[3] - 48); // See ascii table
       break;
     case 'T':
       // Requests temperature
@@ -34,7 +34,7 @@ void process(void) {
       err = 1;
   }
   // Echo the command  
-  for(uint8_t i = 0; i<3; i++)
+  for(uint8_t i = 0; i<4; i++)
     Serial.print(buffer[i]);
   // Mark
   Serial.print('X');
@@ -50,7 +50,6 @@ void loop(void) {
     if(command == 'X') {
       buffInd = 0;
       process();
-      delay(2100);
     } else {
       buffer[buffInd] = command;
       buffInd++;

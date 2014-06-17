@@ -10,7 +10,7 @@ public class BlossomController implements PortEvent {
 
 	private static BlossomController controller = null;
 	private Communicator communicator;
-
+	private static final char TERMINATION_CHAR = 'X';
 	// Map containing the sensors
 	private HashMap<String, Sensor> sensorMap;
 	// Map containing the actuators
@@ -32,25 +32,25 @@ public class BlossomController implements PortEvent {
 	public void close() {
 		communicator.close();
 	}
-	
+
 	public void addSensor(Sensor sensor) {
-		if(!sensorMap.containsKey(sensor.getType() + sensor.getPinId()))
-			sensorMap.put(sensor.getType() + sensor.getPinId(), sensor);
+		if(!sensorMap.containsKey(sensor.getType().getIdentifier() + sensor.getPinId()))
+			sensorMap.put(sensor.getType().getIdentifier() + sensor.getPinId(), sensor);
 	}
 
 	public void addActuator(Actuator actuator) {
-		if(!actuatorMap.containsKey(actuator.getType() + actuator.getPinId()))
-			actuatorMap.put(actuator.getType() + actuator.getPinId(), actuator);
+		if(!actuatorMap.containsKey(actuator.getType().getIdentifier() + actuator.getPinId()))
+			actuatorMap.put(actuator.getType().getIdentifier() + actuator.getPinId(), actuator);
 	}
-	
+
 	public Sensor getSensor(String name) {
 		return sensorMap.get(name);
 	}
-	
+
 	public Actuator getActuator(String name) {
 		return actuatorMap.get(name);
 	}
-	
+
 
 	public HashMap<String, Sensor> getSensorMap() {
 		return sensorMap;
@@ -69,29 +69,35 @@ public class BlossomController implements PortEvent {
 	}
 
 	/** Requests the update of the given sensor
-	 * @param sensorName 
+	 * @param sensorKey 
 	 */
-	public void requestUpdate(String sensorName) {
-		if(sensorMap.containsKey(sensorName)) {
-			// Type+id
-			communicator.sendData(sensorMap.get(sensorName).getType() +
-					sensorMap.get(sensorName).getPinId());
+	public void requestUpdate(String sensorKey) {
+		if(sensorMap.containsKey(sensorKey)) {
+			// Type+id+X
+			communicator.sendData(sensorKey + TERMINATION_CHAR);
 		}
 	}
 
 	public void dataReceived(String data) {
-		// first 4 chars -> Type + id
-		String type = data.substring(0, 1);
-		String id = data.substring(1, 4);
-		if(sensorMap.containsKey(type + id)) {
-			sensorMap.get(type + id).update(Double.parseDouble(data.substring(4)));
+		// It returns:
+		// type-id-X-data: if everything went fine,
+		// type-id-X: error
+		if(data.length() > 5) {
+			System.out.println("$ Echo: " + data);
+			// first 4 chars -> Type + id
+			if(sensorMap.containsKey(data.substring(0, 4))) {
+				// pos 4 char -> X
+				sensorMap.get(data.substring(0, 4)).update(Double.parseDouble(data.substring(5)));
+			}
+		} else {
+			System.out.println("$ Error at " + data);
 		}
 	}
 
 	public void sendDataTESTINGMETHOD(String data) {
 		communicator.sendData(data);
 	}
-	
+
 	public void setDebugMode(boolean activate) {
 		communicator.setDebugMode(activate);
 	}

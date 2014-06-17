@@ -114,6 +114,7 @@ public class Communicator implements SerialPortEventListener {
 					System.out.println(input.readLine());
 				else
 					portEvent.dataReceived(input.readLine());
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

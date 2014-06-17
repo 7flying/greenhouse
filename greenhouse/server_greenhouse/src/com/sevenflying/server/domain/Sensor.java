@@ -15,8 +15,8 @@ public class Sensor extends BlossomSensor {
 	private String lastRefresh;	
 	private SensorType type;
 
-	public Sensor(String name, String id, SensorType type, long refreshRate) {
-		super(name, id);
+	public Sensor(String name, String pinId, SensorType type, long refreshRate) {
+		super(name, pinId);
 		this.type = type;
 		this.refreshRate = refreshRate;
 	}
@@ -30,6 +30,7 @@ public class Sensor extends BlossomSensor {
 			manager.connect(DBManager.DBPath);
 			manager.insertReading(this, value);
 			manager.disconnect();
+			System.out.println(this + " value: " + value + " updated.");
 		} catch(Exception e) { e.printStackTrace();	}
 	}
 

@@ -15,12 +15,14 @@ public class GreenServer extends Thread {
 	}
 
 	public void run() {
+		long testRun = 10000, timeOn = 0;
 		HashMap<String, Long> timeMap = new HashMap<String, Long>();
 		Set<String> sensorKeys = controller.getSensorMap().keySet();
 		for(String key : sensorKeys)
 			timeMap.put(key, System.currentTimeMillis());
 
-		while(true) {
+		while(timeOn < testRun) {
+			long current = System.currentTimeMillis();
 			synchronized(controller) {
 				sensorKeys = controller.getSensorMap().keySet();
 				for(String key : sensorKeys) {
@@ -28,6 +30,7 @@ public class GreenServer extends Thread {
 					if(controller.getSensor(key) != null) {
 						if(!controller.getSensor(key).isPowerSavingOn()) {
 							if(System.currentTimeMillis() - timeMap.get(key) >= controller.getSensor(key).getRefreshRate()) {
+								System.out.println("$ Requesting update of: " + key);
 								controller.requestUpdate(key);
 								timeMap.put(key, new Long(System.currentTimeMillis()));
 							}
@@ -41,7 +44,9 @@ public class GreenServer extends Thread {
 			try {
 				sleep(10);
 			} catch (InterruptedException e) { e.printStackTrace(); }
+			timeOn += System.currentTimeMillis() - current;
 		}
+		controller.close();
 	}
 }
 
