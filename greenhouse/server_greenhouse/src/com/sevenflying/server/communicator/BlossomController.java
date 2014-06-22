@@ -11,6 +11,7 @@ public class BlossomController implements PortEvent {
 
 	private static BlossomController controller = null;
 	private Communicator communicator;
+	private String portName;
 	private static final char TERMINATION_CHAR = 'X';
 	// Map containing the sensors
 	private HashMap<String, Sensor> sensorMap;
@@ -18,8 +19,8 @@ public class BlossomController implements PortEvent {
 	private HashMap<String, Actuator> actuatorMap;
 
 	private BlossomController(String portName) {
+		this.portName = portName;
 		communicator = new Communicator(this);
-		communicator.connect(portName, Communicator.DATA_RATE);
 		sensorMap = new HashMap<String, Sensor>();
 		actuatorMap = new HashMap<String, Actuator>();
 	}
@@ -30,6 +31,10 @@ public class BlossomController implements PortEvent {
 		return controller;
 	}
 
+	public void connect() {
+		communicator.connect(portName, Communicator.DATA_RATE);
+	}
+	
 	public void close() {
 		communicator.close();
 	}

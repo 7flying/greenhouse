@@ -1,8 +1,10 @@
 package com.sevenflying.server.domain;
 
 import java.sql.SQLException;
+
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 
+/** This Class holds the Alerts that a given Client is subscribed to */
 public class Alert {
 	
 	private AlertType type;
@@ -77,6 +79,16 @@ public class Alert {
 
 	public void setLastValue(double lastValue) {
 		this.lastValue = lastValue;
+	}
+
+	public boolean equals(Object al) {
+		if(this.type == ((Alert) al).getType() &&
+		   this.sensor.equals(((Alert) al).getSensor()) &&
+		   this.compareValue == ((Alert) al).compareValue &&
+		   this.lastValue == ((Alert) al).lastValue)
+			return true;
+		else
+			return false;
 	}
 	
 }

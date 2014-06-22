@@ -16,9 +16,17 @@ public class Client {
 		this.alerts = new ArrayList<Alert>();
 	}
 	
+	/** Adds a Notification to the client's notification list.
+	 *  If there was a previous one the value is updated.
+	 * @param alert - Alert 
+	 */
 	public void notify(Alert alert) {
-		//TODO Check if the notification is repeated before adding it
-		notifications.add(new Notification(id, alert.getLastValue(), alert.getSensor().getName(), alert.getSensor().getType()));
+		Notification temp = new Notification(id, alert.getLastValue(), alert.getSensor().getName(), alert.getSensor().getType());
+		// Check if the notification is repeated if so, update the sensor's value
+		if(notifications.contains(temp)) {
+			notifications.remove(temp);
+		}
+		notifications.add(temp);
 	}
 
 	public String getId() {
@@ -39,10 +47,5 @@ public class Client {
 
 	public void setAlert(Alert alert) {
 		this.alerts.add(alert);
-	}
-
-
-	
-	
-	
+	}	
 }

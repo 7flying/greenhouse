@@ -13,8 +13,8 @@ public class DBManagerTest {
 		DBManager manager = DBManager.getInstance();
 		manager.connect("F:\\dump\\greenhouse\\db.sqlite");
 		manager.createDatabase();
-		Sensor s = new Sensor("whatever", "A05", SensorType.TEMPERATURE, 2100);
-		Sensor s2 = new Sensor("second sensor", "A05", SensorType.HUMIDITY, 2100);
+		Sensor s = new Sensor("whatever", "A05", SensorType.TEMPERATURE, 2100, true);
+		Sensor s2 = new Sensor("second sensor", "A05", SensorType.HUMIDITY, 2100, true);
 		manager.insertSensor(s);
 		manager.insertSensor(s2);
 		manager.insertReading(s2, 34);

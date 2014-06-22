@@ -35,5 +35,13 @@ public class Notification implements Serializable {
 	public SensorType getType() {
 		return type;
 	}	
-	
+
+	public boolean equals(Object not) {
+		if(this.clientId.equals(((Notification) not).getClientId()) &&
+		   this.sensorName.equals(((Notification) not).sensorName) &&
+		   this.type == ((Notification) not).getType())
+			return true;
+		else
+			return false;
+	}
 }
