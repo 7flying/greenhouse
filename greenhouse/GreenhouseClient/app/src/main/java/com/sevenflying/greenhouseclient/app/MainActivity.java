@@ -14,7 +14,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPaAdapter;
     private ActionBar actionBar;
-    private final String[] tabNames = {"Status", "Sensors", "Alers"}; //TODO LOCALES
+    private final String[] tabNames = {"Status", "Sensors", "Alerts"}; //TODO LOCALES
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
