@@ -5,9 +5,9 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.domain.Sensor;
 
 import java.util.ArrayList;
 
@@ -16,20 +16,13 @@ import java.util.ArrayList;
  */
 public class SensorsFragment extends ListFragment {
 
-    private ListView listView;
-    private ArrayList<Sensor> listSensors;
-    private SensorsArrayAdapter adapter;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
+        View v = super.onCreateView(inflater, container, savedInstance);
+        ArrayList<Sensor> list = new ArrayList<Sensor>();
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
-        View root =  inflater.inflate(R.layout.fragment_sensors, container, false);
-        listView = (ListView) root.findViewById(R.id.list_sensors);
-        return root;
-    }
-
-    public void onActivityCreated(Bundle savedInstance) {
-        super.onActivityCreated(savedInstance);
-        listSensors.add(new Sensor("Temperature", "25.8", "Cº"));
-        adapter = new SensorsArrayAdapter(getActivity(), android.R.id.list, listSensors);
-        listView.setAdapter(adapter);
+        list.add(new Sensor("Temperature", "25.6", "Cº"));
+        list.add(new Sensor("Humidity", "40", "ux"));
+        setListAdapter(new SensorAdapter(getActivity(), list));
+        return v;
     }
 }

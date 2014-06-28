@@ -1,4 +1,4 @@
-package com.sevenflying.greenhouseclient.app.sensortab;
+package com.sevenflying.greenhouseclient.domain;
 
 /**
  * Created by user on 27/06/2014.

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <ListView
-        android:id="@+id/list_sensors"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SensorsFragment"
+    android:id="@+id/itemListFragment"
+    android:name="com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
