@@ -6,7 +6,7 @@
         android:id="@+id/icon_sensor"
         android:src="@drawable/sensor"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50sp"
         android:layout_marginRight="6dp"
         android:contentDescription="image"/>
     <TextView

@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class SensorAdapter extends ArrayAdapter<Sensor> {
 
-    public SensorAdapter(Context context, List<Sensor> list) {
-        super(context, 0, list);
+    public SensorAdapter(Context context, int resource, List<Sensor> list) {
+        super(context, resource, list);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

@@ -55,7 +55,7 @@ public class SensorView extends RelativeLayout {
         //sensorValue.setText("SOMETHING");
         sensorUnit.setText(sensor.getUnit());
         //sensorUnit.setText("WENT WRONG");
-        sensorDefaultImage.setImageResource(R.drawable.ic_launcher);
+        sensorDefaultImage.setImageResource(R.drawable.sensor);
     }
 
     public TextView getSensorName() {
