@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import com.sevenflying.server.net.domain.Notification;
 
-public class Client {
+public class Client { // TODO rethink -> maybe won't needed
 
 	private String id;
+	// Notifications to be sent to the client
 	private ArrayList<Notification> notifications;
+	// Alerts to which the Client is subscribed to
 	private ArrayList<Alert> alerts;
 	
 	public Client(String id) {

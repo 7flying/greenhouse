@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 
 /** This Class holds the Alerts that a given Client is subscribed to */
-public class Alert {
+public class Alert { // TODO makes more sense at the client
 	
 	private AlertType type;
 	private Sensor sensor;
@@ -33,20 +33,19 @@ public class Alert {
 		if(check) {
 			switch(type) {
 				case GREATER:
-					fire = (lastValue > compareValue) ? true : false;
+					fire = (lastValue > compareValue);
 				case LESS:
-					fire = (lastValue < compareValue) ? true : false;
+					fire = (lastValue < compareValue);
 				case EQUAL:
-					fire = (lastValue == compareValue) ? true : false;
+					fire = (lastValue == compareValue);
 				case GREATER_EQUAL:
-					fire = (lastValue >= compareValue) ? true : false;
+					fire = (lastValue >= compareValue);
 				case LESS_EQUAL:
-					fire = (lastValue <= compareValue) ? true : false;
+					fire = (lastValue <= compareValue);
 			}
 			this.lastValue = lastValue;
 		}
 		return fire;
-		
 	}
 
 	public AlertType getType() {

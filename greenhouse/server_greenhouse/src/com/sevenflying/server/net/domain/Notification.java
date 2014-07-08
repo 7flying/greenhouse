@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.sevenflying.server.domain.SensorType;
 
 /** Notification sent to the client with simple data to show sensor info - value */
-public class Notification implements Serializable {
+public class Notification implements Serializable { // TODO makes more sense at the client
 
 	private static final long serialVersionUID = -8306022585591964551L;
 	private String clientId;

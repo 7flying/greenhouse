@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.sevenflying.greenhouseclient.app.alertstab.AlertsFragment;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorsFragment;
+import com.sevenflying.greenhouseclient.app.statustab.StatusFragment;
 
 /**
  * Created by 7flying on 25/06/2014.

@@ -1,6 +1,8 @@
 package com.sevenflying.server.net;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -25,10 +27,25 @@ public class NetServer {
 		while(true) {
 			try {
 				s = ss.accept();
+				processConnection(s);
 				// moveThisToThread()
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public void processConnection(Socket s) {
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+			String command = (String) ois.readObject();
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -48,11 +65,12 @@ public class NetServer {
 		// to add a notification to them
 		Set<String> keys = clients.keySet();
 		for(String key : keys) {
-			for(Alert a : clients.get(key).getAlerts()) {
-				if(a.check())
-					clients.get(key).notify(a);
+			for(Alert alert : clients.get(key).getAlerts()) {
+				if(alert.check())
+					clients.get(key).notify(alert);
 			}
 		}
 	}
 	
 }
+

@@ -1,10 +1,12 @@
-package com.sevenflying.greenhouseclient.app;
+package com.sevenflying.greenhouseclient.app.alertstab;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.sevenflying.greenhouseclient.app.R;
 
 /**
  * Created by user on 25/06/2014.

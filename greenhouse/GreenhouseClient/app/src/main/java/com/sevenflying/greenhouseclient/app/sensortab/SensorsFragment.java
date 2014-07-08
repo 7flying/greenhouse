@@ -21,7 +21,7 @@ public class SensorsFragment extends Fragment {
 	private ArrayList<Sensor> sensorList;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
-        
+
 		if(container == null)
 			return null;
 		else {

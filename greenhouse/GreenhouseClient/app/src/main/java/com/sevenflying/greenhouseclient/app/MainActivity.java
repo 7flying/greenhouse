@@ -25,13 +25,26 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar = getActionBar();
         tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabsPaAdapter);
-        // actionBar.setHomeButtonEnabled(false);
+        // actionBar.setHomeButtonEnabled(false); // -> check min API
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Adding Tabs
         for(String name : tabNames)
             actionBar.addTab(actionBar.newTab().setText(name).setTabListener(this));
 
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {}
+
+            @Override
+            public void onPageSelected(int i) {
+                actionBar.setSelectedNavigationItem(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {}
+        });
     }
 
 
@@ -48,13 +61,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 
     }
 
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        // Listener to tab change event
+        viewPager.setCurrentItem(tab.getPosition());
+    }
 }
