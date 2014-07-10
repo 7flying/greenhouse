@@ -17,6 +17,7 @@ import com.sevenflying.greenhouseclient.domain.Sensor;
 public class SensorView extends RelativeLayout {
 
     private TextView sensorName;
+    private TextView sensorPin;
     private TextView sensorValue;
     private TextView sensorUnit;
     private ImageView sensorDefaultImage;
@@ -39,6 +40,7 @@ public class SensorView extends RelativeLayout {
         super(context, attrs, defStyle);
         LayoutInflater.from(context).inflate(R.layout.sensor_list_row, this, true);
         sensorName = (TextView) findViewById(R.id.text_sensor_name);
+        sensorPin = (TextView) findViewById(R.id.text_sensor_pin);
         sensorValue = (TextView) findViewById(R.id.text_sensor_value);
         sensorUnit = (TextView) findViewById(R.id.text_sensor_unit);
         sensorDefaultImage = (ImageView) findViewById(R.id.icon_sensor);
@@ -47,19 +49,19 @@ public class SensorView extends RelativeLayout {
 
 
     public void setSensor(Sensor sensor) {
-        if(sensor.getName() == null)
-            sensor.setName("ERROOR");
         sensorName.setText(sensor.getName());
-        //sensorName.setText("HI");
-        sensorValue.setText(sensor.getValue());
-        //sensorValue.setText("SOMETHING");
-        sensorUnit.setText(sensor.getUnit());
-        //sensorUnit.setText("WENT WRONG");
+        sensorPin.setText(" - " + sensor.getPinId());
+        sensorValue.setText(Double.toString(sensor.getValue()));
+        sensorUnit.setText(sensor.getType().getUnit());
         sensorDefaultImage.setImageResource(R.drawable.sensor);
     }
 
     public TextView getSensorName() {
         return sensorName;
+    }
+
+    public TextView getSensorPin() {
+        return sensorPin;
     }
 
     public TextView getSensorValue() {
