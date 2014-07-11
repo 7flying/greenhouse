@@ -1,9 +1,11 @@
 package com.sevenflying.greenhouseclient.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by 7flying on 10/07/2014.
  */
-public class Sensor {
+public class Sensor implements Serializable {
 
     private String name;
     private String pinId;

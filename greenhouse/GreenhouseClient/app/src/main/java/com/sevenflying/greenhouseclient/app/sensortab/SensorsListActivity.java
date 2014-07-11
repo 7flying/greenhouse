@@ -13,16 +13,13 @@ public class SensorsListActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sensors);
-
+        setContentView(R.layout.fragment_sensors_list);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
-
     @Override
     protected void onResume() {
         super.onResume();
