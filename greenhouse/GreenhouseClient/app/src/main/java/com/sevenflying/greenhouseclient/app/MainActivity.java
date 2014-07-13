@@ -29,6 +29,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // actionBar.setHomeButtonEnabled(false); // -> check min API
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+
         // Adding Tabs
         for(String name : tabNames)
             actionBar.addTab(actionBar.newTab().setText(name).setTabListener(this));

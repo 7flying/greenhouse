@@ -16,12 +16,14 @@ import java.util.StringTokenizer;
 /** Task that requests sensor values.
  * Created by 7flying on 10/07/2014.
  */
-public class SensorsValueUpdater extends AsyncTask<Void,Integer, List<Sensor>> {
+public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
     private SensorAdapter adapter;
+    private List<Sensor> buffer;
     private final String GETSENSORS = "GETSENSORS"; // TODO
     public SensorsValueUpdater(SensorAdapter adapter) {
         this.adapter = adapter;
+        buffer = new ArrayList<Sensor>();
     }
 
     @Override
@@ -50,9 +52,16 @@ public class SensorsValueUpdater extends AsyncTask<Void,Integer, List<Sensor>> {
                     sensor.setType(temp.get(2).charAt(0));
                     sensor.setRefreshRate(new Long(temp.get(3)).longValue());
                     sensor.setValue(new Double(temp.get(4)).doubleValue());
+
                     ret.add(sensor);
+                    publishProgress(sensor);
+                    oos.writeObject("ACK");
+                    oos.flush();
+                    numSensors--;
+                } else {
+                    oos.writeObject("NACK");
+                    oos.flush();
                 }
-                numSensors--;
             }
             s.close();
             oos.close();
@@ -61,14 +70,18 @@ public class SensorsValueUpdater extends AsyncTask<Void,Integer, List<Sensor>> {
             e.printStackTrace();
         }
         return ret;
+
     }
 
+
     protected void onPostExecute(List<Sensor> result) {
-        ArrayList<Sensor> listToUpdate = new ArrayList<Sensor>();
-        for(Sensor s : result)
-            listToUpdate.add(s);
-        adapter.addAll(listToUpdate);
-        adapter.notifyDataSetChanged();
-       // super.onPostExecute(result);
+        for(Sensor s : result) {
+            if(!buffer.contains(s)) {
+                buffer.add(s);
+                adapter.add(s);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
+
 }

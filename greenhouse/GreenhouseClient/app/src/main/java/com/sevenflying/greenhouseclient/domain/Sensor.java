@@ -4,7 +4,7 @@ import com.sevenflying.greenhouseclient.app.R;
 
 import java.io.Serializable;
 
-/**
+/** Sensor class
  * Created by 7flying on 10/07/2014.
  */
 public class Sensor implements Serializable {
@@ -53,6 +53,9 @@ public class Sensor implements Serializable {
                 break;
             case 'L':
                 this.type = SensorType.LIGHT;
+                break;
+            default:
+                this.type = SensorType.UNKNOWN;
                 break;
         }
     }

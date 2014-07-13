@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Set;
 
 import com.sevenflying.server.domain.Alert;
@@ -43,11 +44,32 @@ public class NetServer {
 			String command = (String) ois.readObject();
 			System.out.println("$ Received '" + command + "'");
 			if(command.contains(Constants.GETSENSORS)) {
+				// TODO get sensors from database
 				System.out.println("$ GETSENSORS received");
-				String cs = "DHT22:D04:T:2000:26.5\n";
-				oos.writeObject(cs);
+				// first tell to the client how many we are sending
+				Random r = new Random();
+				int number = r.nextInt(10) + 60;
+				System.out.println(" $ Generating " + number + " sensors");
+				oos.writeObject(Integer.valueOf(number).toString());
 				oos.flush();
-				System.out.println("$ SENSOR sent");
+				while(number > 0) {
+					System.out.println("------");
+					String [] types = {"T", "H", "L"};
+					String chosenType = types[r.nextInt(3)];
+					String s1 = "DHT"+ number +":D04:" + chosenType +":2000:26.5";
+					System.out.println("$ Generated : " + s1);
+					oos.writeObject(s1);
+					oos.flush();
+					System.out.println("\t$ SENSOR sent");
+					String control = (String) ois.readObject();
+					if(control.equals("ACK")){
+						System.out.println("\t ACK");
+						number--;
+					} else {
+						System.out.println("\t NACK");
+					}
+					System.out.println("------");
+				}
 			}
 			s.close();
 			oos.close();

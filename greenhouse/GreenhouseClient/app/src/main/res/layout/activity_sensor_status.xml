@@ -2,19 +2,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#149" >
+    android:id="@+id/">
+
+    <ImageView
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:id="@+id/image_sensor"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        />
+    
+    <TextView
+        android:id="@+id/text_sensor_value"
+        android:textSize="50sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_sensor"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:text="35.5ºC"
+        />
+    <TextView
+        android:id="@+id/text_sensor_updated_at"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/text_sensor_value"
+        android:layout_toRightOf="@id/image_sensor"
+        android:layout_alignLeft="@id/text_sensor_value"
+        android:text="Updated 13/7/2014 18:25"/>
+    <!-- -->
 
     <TextView
-        android:id="@+id/one"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Here we magically show current sensor's status!"
-        android:textSize="20dp"
-        android:layout_centerInParent="true"/>
-    <TextView
-        android:id="@+id/show_data_here"
-        android:layout_below="@id/one"
+        android:id="@+id/text_sensor_name"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="DHT-22"
+        android:layout_below="@id/image_sensor"
+        android:layout_alignLeft="@id/image_sensor"
+        android:layout_alignStart="@id/image_sensor"
+        android:layout_marginTop="20dp" />
+    <TextView
+        android:id="@+id/text_sensor_type"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/text_sensor_name"
+        android:layout_below="@id/image_sensor"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Temperature sensor"
+         />
+
 </RelativeLayout>

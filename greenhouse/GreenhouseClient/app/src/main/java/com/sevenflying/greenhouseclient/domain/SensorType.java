@@ -5,7 +5,7 @@ package com.sevenflying.greenhouseclient.domain;
  */
 public enum SensorType {
 
-	HUMIDITY, LIGHT, TEMPERATURE;
+	HUMIDITY, LIGHT, TEMPERATURE, UNKNOWN;
 	
 	/** Gets the measuring unit of the sensor.
 	 * @return meassuring unit
