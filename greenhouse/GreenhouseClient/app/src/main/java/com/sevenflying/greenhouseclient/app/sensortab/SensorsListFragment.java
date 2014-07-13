@@ -1,9 +1,8 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,21 +38,10 @@ public class SensorsListFragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 // display further sensor data
                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-
                     // Arguments
-                    SensorStatusFragment statusFragment = new SensorStatusFragment();
-                    Bundle args = new Bundle();
-                    args.putSerializable("sensor", sensorList.get(index));
-                    statusFragment.setArguments(args);
-                    // Transaction
-                    getFragmentManager().beginTransaction().hide(SensorsListFragment.this).attach(statusFragment);
-                    /*
-                    FragmentTransaction trans = getChildFragmentManager().beginTransaction();
-                    trans.replace(R.id.sensorsListView, statusFragment);
-                    //trans.addToBackStack(null);
-                    //trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    trans.commit();
-                    */
+                    Intent intent = new Intent(SensorsListFragment.this.getActivity(), SensorStatusActivity.class);
+                    intent.putExtra("sensor", sensorList.get(index));
+                    startActivity(intent);
                 }
             });
 

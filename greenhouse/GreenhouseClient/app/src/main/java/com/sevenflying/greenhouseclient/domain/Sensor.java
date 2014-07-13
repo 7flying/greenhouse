@@ -92,4 +92,14 @@ public class Sensor implements Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Sensor{" +
+                "name='" + name + '\'' +
+                ", pinId='" + pinId + '\'' +
+                ", refreshRate=" + refreshRate +
+                ", type=" + type +
+                ", value=" + value +
+                '}';
+    }
 }
