@@ -1,5 +1,7 @@
 package com.sevenflying.greenhouseclient.domain;
 
+import com.sevenflying.greenhouseclient.app.R;
+
 import java.io.Serializable;
 
 /**
@@ -76,6 +78,19 @@ public class Sensor implements Serializable {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public int getDrawableId() {
+        switch (type){
+            case HUMIDITY:
+                return R.drawable.humidity_sensor;
+            case TEMPERATURE:
+                return R.drawable.temperature_sensor;
+            case LIGHT:
+                return R.drawable.light_sensor;
+            default:
+                return R.drawable.sensor;
+        }
     }
 
     @Override

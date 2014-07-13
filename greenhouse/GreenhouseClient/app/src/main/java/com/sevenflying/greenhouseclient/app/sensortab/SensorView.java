@@ -46,14 +46,12 @@ public class SensorView extends RelativeLayout {
         sensorDefaultImage = (ImageView) findViewById(R.id.icon_sensor);
     }
 
-
-
     public void setSensor(Sensor sensor) {
         sensorName.setText(sensor.getName());
         sensorPin.setText(" - " + sensor.getPinId());
         sensorValue.setText(Double.toString(sensor.getValue()));
         sensorUnit.setText(sensor.getType().getUnit());
-        sensorDefaultImage.setImageResource(R.drawable.sensor);
+        sensorDefaultImage.setImageResource(sensor.getDrawableId());
     }
 
     public TextView getSensorName() {

@@ -36,20 +36,23 @@ public class SensorsValueUpdater extends AsyncTask<Void,Integer, List<Sensor>> {
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             oos.writeObject(GETSENSORS);
             oos.flush();
-
-            String ss = (String) ois.readObject();
-            if(ss != null) {
-                Sensor sensor = new Sensor();
-                StringTokenizer tokenizer = new StringTokenizer(ss, ":");
-                ArrayList<String> temp = new ArrayList<String>();
-                while(tokenizer.hasMoreTokens())
-                    temp.add(tokenizer.nextToken());
-                sensor.setName(temp.get(0));
-                sensor.setPinId(temp.get(1));
-                sensor.setType(temp.get(2).charAt(0));
-                sensor.setRefreshRate(new Long(temp.get(3)).longValue());
-                sensor.setValue(new Double(temp.get(4)).doubleValue());
-                ret.add(sensor);
+            int numSensors = Integer.parseInt((String) ois.readObject());
+            while(numSensors > 0) {
+                String ss = (String) ois.readObject();
+                if(ss != null) {
+                    Sensor sensor = new Sensor();
+                    StringTokenizer tokenizer = new StringTokenizer(ss, ":");
+                    ArrayList<String> temp = new ArrayList<String>();
+                    while(tokenizer.hasMoreTokens())
+                        temp.add(tokenizer.nextToken());
+                    sensor.setName(temp.get(0));
+                    sensor.setPinId(temp.get(1));
+                    sensor.setType(temp.get(2).charAt(0));
+                    sensor.setRefreshRate(new Long(temp.get(3)).longValue());
+                    sensor.setValue(new Double(temp.get(4)).doubleValue());
+                    ret.add(sensor);
+                }
+                numSensors--;
             }
             s.close();
             oos.close();
