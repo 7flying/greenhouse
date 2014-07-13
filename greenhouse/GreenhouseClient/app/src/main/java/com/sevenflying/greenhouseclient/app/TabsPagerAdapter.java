@@ -14,7 +14,6 @@ import com.sevenflying.greenhouseclient.app.statustab.StatusFragment;
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     private FragmentManager fragmentManager;
-    private Fragment sensorListFragment = null;
 
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -26,9 +25,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new StatusFragment();
             case 1:
-                if(sensorListFragment == null) {
-                    sensorListFragment = new SensorsListFragment(/* TODO listener here? */);
-                }
                 return new SensorsListFragment();
             case 2:
                 return new AlertsFragment();

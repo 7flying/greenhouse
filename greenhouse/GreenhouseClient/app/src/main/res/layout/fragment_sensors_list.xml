@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SensorsFragment"
-    android:id="@+id/itemListFragment"
-    android:name="com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ListView
         android:id="@+id/sensorsListView"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"></ListView>
+        android:layout_height="fill_parent"/>
 </RelativeLayout>

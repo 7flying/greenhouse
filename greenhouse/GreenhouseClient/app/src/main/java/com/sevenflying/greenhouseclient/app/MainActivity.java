@@ -16,6 +16,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private ActionBar actionBar;
     private final String[] tabNames = {"Status", "Sensors", "Alerts"}; //TODO LOCALES
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
