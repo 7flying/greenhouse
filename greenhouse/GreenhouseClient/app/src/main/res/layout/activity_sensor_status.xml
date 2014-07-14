@@ -1,15 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/">
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/image_sensor"
         android:layout_width="105dp"
         android:layout_height="105dp"
-        android:id="@+id/image_sensor"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
+        android:contentDescription="@string/content_image_sensor_desc"
         />
     
     <TextView
@@ -20,10 +20,21 @@
         android:layout_toRightOf="@id/image_sensor"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
-        android:text="35.5ºC"
+        android:text="35.5"
         />
     <TextView
-        android:id="@+id/text_sensor_updated_at"
+        android:id="@+id/text_sensor_value_unit"
+        android:textSize="50sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/text_sensor_value"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp"
+        android:text="ºC"
+        />
+
+    <TextView
+        android:id="@+id/text_sensor_updated_at_word"
         android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,9 +42,31 @@
         android:layout_below="@id/text_sensor_value"
         android:layout_toRightOf="@id/image_sensor"
         android:layout_alignLeft="@id/text_sensor_value"
-        android:text="Updated 13/7/2014 18:25"/>
-    <!-- -->
+        android:text="@string/xml_sensor_updated_word"/>
 
+    <TextView
+        android:id="@+id/text_sensor_updated_at"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/text_sensor_value"
+        android:layout_toRightOf="@id/text_sensor_updated_at_word"
+        android:text="13/7/2014 18:25"/>
+
+    <!-- Data part-->
+    <!-- Sensor name -->
+    <TextView
+        android:id="@+id/static_text_sensor_name"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/xml_sensor_name"
+        android:layout_below="@id/image_sensor"
+        android:layout_alignLeft="@id/image_sensor"
+        android:layout_alignStart="@id/image_sensor"
+        android:layout_marginTop="20dp" />
     <TextView
         android:id="@+id/text_sensor_name"
         android:textSize="20sp"
@@ -41,19 +74,92 @@
         android:layout_height="wrap_content"
         android:text="DHT-22"
         android:layout_below="@id/image_sensor"
+        android:layout_toRightOf="@id/static_text_sensor_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"/>
+    <!-- Sensor type -->
+    <TextView
+        android:id="@+id/static_text_sensor_type"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/xml_sensor_type"
+        android:layout_below="@id/static_text_sensor_name"
         android:layout_alignLeft="@id/image_sensor"
         android:layout_alignStart="@id/image_sensor"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
     <TextView
         android:id="@+id/text_sensor_type"
         android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/text_sensor_name"
-        android:layout_below="@id/image_sensor"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="Temperature sensor"
-         />
+        android:text="Temperature"
+        android:layout_below="@id/text_sensor_name"
+        android:layout_toRightOf="@id/static_text_sensor_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/static_text_sensor_type_word"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/xml_sensor_sensor_word"
+        android:layout_below="@id/text_sensor_name"
+        android:layout_toRightOf="@id/text_sensor_type"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Sensor refresh rate -->
+    <TextView
+        android:id="@+id/static_text_sensor_refresh"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/xml_sensor_refresh_rate"
+        android:layout_below="@id/static_text_sensor_type"
+        android:layout_alignLeft="@id/image_sensor"
+        android:layout_alignStart="@id/image_sensor"
+        android:layout_marginTop="10dp" />
+    <TextView
+        android:id="@+id/text_sensor_refresh"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2.5"
+        android:layout_below="@id/text_sensor_type"
+        android:layout_toRightOf="@id/static_text_sensor_refresh"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/static_text_sensor_refresh_word"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/xml_sensor_seconds_word"
+        android:layout_below="@id/static_text_sensor_type_word"
+        android:layout_toRightOf="@id/text_sensor_refresh"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
+    <!-- Sensor pin -->
+    <TextView
+        android:id="@+id/static_text_sensor_pin"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/xml_sensor_pin"
+        android:layout_below="@id/static_text_sensor_refresh"
+        android:layout_alignLeft="@id/image_sensor"
+        android:layout_alignStart="@id/image_sensor"
+        android:layout_marginTop="10dp" />
+    <TextView
+        android:id="@+id/text_sensor_pin"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="D05"
+        android:layout_below="@id/text_sensor_refresh"
+        android:layout_toRightOf="@id/static_text_sensor_pin"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>

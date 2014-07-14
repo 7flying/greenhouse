@@ -37,4 +37,17 @@ public enum SensorType {
 				return '?';
 		}
 	}
+
+    public String toString() {
+        switch (this) {
+            case HUMIDITY:
+                return "Humidity";
+            case LIGHT:
+                return "Light";
+            case TEMPERATURE:
+                return "Temperature";
+            default:
+                return "Unknown";
+        }
+    }
 }

@@ -9,7 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -20,7 +22,6 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
     private SensorAdapter adapter;
     private List<Sensor> buffer;
-    private final String GETSENSORS = "GETSENSORS"; // TODO
     public SensorsValueUpdater(SensorAdapter adapter) {
         this.adapter = adapter;
         buffer = new ArrayList<Sensor>();
@@ -36,7 +37,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
             Socket s = new Socket(add, serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(GETSENSORS);
+            oos.writeObject(Commands.GETSENSORS);
             oos.flush();
             int numSensors = Integer.parseInt((String) ois.readObject());
             while(numSensors > 0) {
@@ -52,7 +53,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                     sensor.setType(temp.get(2).charAt(0));
                     sensor.setRefreshRate(new Long(temp.get(3)).longValue());
                     sensor.setValue(new Double(temp.get(4)).doubleValue());
-
+                    sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(new GregorianCalendar().getTime()));
                     ret.add(sensor);
                     publishProgress(sensor);
                     oos.writeObject("ACK");

@@ -8,13 +8,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
-
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPaAdapter;
     private ActionBar actionBar;
-    private final String[] tabNames = {"Status", "Sensors", "Alerts"}; //TODO LOCALES
+    private final int[] tabNames = {R.string.tab_status, R.string.tab_sensors,  R.string.tab_alerts};
 
 
     @Override
@@ -26,12 +25,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar = getActionBar();
         tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabsPaAdapter);
-        // actionBar.setHomeButtonEnabled(false); // -> check min API
+        //getActionBar().setHomeButtonEnabled(true); //TODO -> check min API
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 
         // Adding Tabs
-        for(String name : tabNames)
+        for(int name : tabNames)
             actionBar.addTab(actionBar.newTab().setText(name).setTabListener(this));
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

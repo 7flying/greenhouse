@@ -16,13 +16,16 @@ public class Sensor implements Serializable {
 	private SensorType type;
     // Sensor's last obtained value
     private double value;
+    // When the sensor was updated
+    private String updatedAt;
 
-	public Sensor(String name, String pinId, SensorType type, long refreshRate, double value) {
+	public Sensor(String name, String pinId, SensorType type, long refreshRate, double value, String updatedAt) {
 		this.name = name;
         this.pinId = pinId;
 		this.type = type;
 		this.refreshRate = refreshRate;
         this.value = value;
+        this.updatedAt = updatedAt;
 	}
 
     public Sensor() {}
@@ -94,6 +97,14 @@ public class Sensor implements Serializable {
             default:
                 return R.drawable.sensor;
         }
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

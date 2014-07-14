@@ -5,4 +5,22 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="sensor_icon_descp">Sensor icon</string>
+    <!-- Tab names -->
+    <string name="tab_status">Status</string>
+    <string name="tab_sensors">Sensors</string>
+    <string name="tab_alerts">Alerts</string>
+    <!-- Sensor info -->
+    <string name="action_bar_sensor_info">Sensor</string>
+
+    <!-- xmls -->
+    <!-- activity_sensor_status-->
+    <string name="content_image_sensor_desc">Sensor image</string>
+    <string name="xml_sensor_updated_word">Updated:</string>
+    <string name="xml_sensor_name">Name:</string>
+    <string name="xml_sensor_type">Type:</string>
+    <string name="xml_sensor_sensor_word">sensor</string>
+    <string name="xml_sensor_pin">PIN:</string>
+    <string name="xml_sensor_refresh_rate">Refresh rate:</string>
+    <string name="xml_sensor_seconds_word">secs</string>
+
 </resources>
