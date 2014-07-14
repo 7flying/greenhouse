@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
@@ -22,6 +23,7 @@ public class SensorsListFragment extends Fragment {
 
 	private ListView listView;
 	private ArrayList<Sensor> sensorList;
+    private LinearLayout layout;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
 
@@ -30,6 +32,7 @@ public class SensorsListFragment extends Fragment {
 		else {
 			View view = inflater.inflate(R.layout.fragment_sensors_list, container, false);
 			listView = (ListView) view.findViewById(R.id.sensorsListView);
+            layout = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             sensorList = new ArrayList<Sensor>();
         	SensorAdapter adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
             listView.setAdapter(adapter);
@@ -46,7 +49,7 @@ public class SensorsListFragment extends Fragment {
             });
 
             // populate list by updaters
-            SensorsValueUpdater updater = new SensorsValueUpdater(adapter);
+            SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layout);
             updater.execute();
             return view;
 		}

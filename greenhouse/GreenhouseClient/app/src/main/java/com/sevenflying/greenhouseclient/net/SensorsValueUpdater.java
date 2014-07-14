@@ -1,7 +1,13 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
@@ -22,9 +28,18 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
     private SensorAdapter adapter;
     private List<Sensor> buffer;
-    public SensorsValueUpdater(SensorAdapter adapter) {
+    private LinearLayout layout;
+
+    public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layout) {
         this.adapter = adapter;
+        this.layout = layout;
         buffer = new ArrayList<Sensor>();
+    }
+
+    protected void onPreExecute() {
+      //  dialog.setMessage("Loading sensors...");
+      //  dialog.show();
+        layout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -74,7 +89,6 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
     }
 
-
     protected void onPostExecute(List<Sensor> result) {
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
@@ -83,6 +97,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                 adapter.notifyDataSetChanged();
             }
         }
+        layout.setVisibility(View.GONE);
     }
 
 }
