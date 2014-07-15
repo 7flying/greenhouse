@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<!--RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"-->
+    <TextView
+        android:id="@+id/alert_sensor_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:textSize="25sp"
+        android:text="DHT-22"/>
+    <TextView
+        android:id="@+id/alert_sensor_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/alert_sensor_name"
+        android:textSize="25sp"
+        android:text="humidity"/>
+    <TextView
+        android:id="@+id/alert_type_symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:text=">"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/alert_sensor_type"
+        android:layout_toEndOf="@+id/alert_sensor_type"
+        android:layout_marginLeft="26dp" />
+    <TextView
+        android:id="@+id/alert_compare_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="45sp"
+        android:layout_toRightOf="@id/alert_type_symbol"
+        android:layout_centerHorizontal="true"
+        android:text="20"/>
+    <TextView
+        android:id="@+id/alert_sensor_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="45sp"
+        android:layout_toRightOf="@id/alert_compare_value"
+        android:layout_centerHorizontal="true"
+        android:text="%"/>
+    <ToggleButton
+        android:id="@+id/button_on_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/alert_sensor_unit"
+        android:onClick="onToggleClicked" />
+
+<!--RelativeLayout-->
+    </merge>

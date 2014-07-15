@@ -1,13 +1,10 @@
 package com.sevenflying.greenhouseclient.net;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
+
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 

@@ -1,4 +1,4 @@
-package com.sevenflying.greenhouseclient.app.sensortab;
+package com.sevenflying.greenhouseclient.app.alertstab;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -6,16 +6,16 @@ import android.support.v4.app.FragmentActivity;
 import com.sevenflying.greenhouseclient.app.R;
 
 /**
- * Created by 7flying on 28/06/2014.
+ * Created by 7flying on 15/07/2014.
  */
-public class SensorsListActivity extends FragmentActivity {
+public class AlertListActivity extends FragmentActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sensors_list);
+        setContentView(R.layout.fragment_alert_list);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -25,3 +25,4 @@ public class SensorsListActivity extends FragmentActivity {
         super.onResume();
     }
 }
+

@@ -5,20 +5,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.Set;
-
-import com.sevenflying.server.domain.Alert;
-import com.sevenflying.server.domain.Client;
-import com.sevenflying.server.net.domain.Notification;
 
 public class NetServer {
 
-	private HashMap<String, Client> clients;
-
 	public NetServer() {
-		clients = new HashMap<String, Client>();
+		
 	}
 
 	public void launch() throws IOException {
@@ -48,7 +40,7 @@ public class NetServer {
 				System.out.println("$ GETSENSORS received");
 				// first tell to the client how many we are sending
 				Random r = new Random();
-				int number = r.nextInt(10) + 60;
+				int number = r.nextInt(10) + 10;
 				System.out.println(" $ Generating " + number + " sensors");
 				oos.writeObject(Integer.valueOf(number).toString());
 				oos.flush();
@@ -80,7 +72,7 @@ public class NetServer {
 			e.printStackTrace();
 		}
 	}
-
+/*
 	public void moveThisToThread() {
 		// Read client id from connection
 		String id = "";
@@ -103,6 +95,7 @@ public class NetServer {
 			}
 		}
 	}
+	*/
 	public static void main(String [] args) throws IOException {
 		NetServer ns = new NetServer();
 		ns.launch();

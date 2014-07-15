@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.sevenflying.greenhouseclient.app.alertstab.AlertsFragment;
+import com.sevenflying.greenhouseclient.app.alertstab.AlertListFragment;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorsListFragment;
 import com.sevenflying.greenhouseclient.app.statustab.StatusFragment;
 
@@ -27,7 +27,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new SensorsListFragment();
             case 2:
-                return new AlertsFragment();
+                return new AlertListFragment();
             default:
                 return null;
         }

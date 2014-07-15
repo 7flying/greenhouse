@@ -16,7 +16,7 @@ import com.sevenflying.greenhouseclient.net.SensorsValueUpdater;
 
 import java.util.ArrayList;
 
-/**
+/** This fragment shows the sensor list retrieved from the server.
  * Created by 7flying on 25/06/2014.
  */
 public class SensorsListFragment extends Fragment {
