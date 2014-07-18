@@ -7,7 +7,7 @@
     <string name="sensor_icon_descp">Sensor icon</string>
     <!-- Tab names -->
     <string name="tab_status">Status</string>
-    <string name="tab_sensors">Sensors \ Actuators</string>
+    <string name="tab_sensors">Sensors</string>
     <string name="tab_alerts">Alerts</string>
     <string name="tab_actuators">Actuators</string>
     <!-- Sensor info -->

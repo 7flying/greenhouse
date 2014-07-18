@@ -1,59 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-<!--RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"> -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"-->
-    <TextView
-        android:id="@+id/alert_sensor_name"
-        android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/layout_sensor_name_type"
+        android:layout_width="0dp"
+        android:layout_weight="1.5"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:textSize="25sp"
-        android:text="DHT-22"/>
-    <TextView
-        android:id="@+id/alert_sensor_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/alert_sensor_name"
-        android:textSize="25sp"
-        android:text="humidity"/>
-    <TextView
-        android:id="@+id/alert_type_symbol"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="50sp"
-        android:text=">"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/alert_sensor_type"
-        android:layout_toEndOf="@+id/alert_sensor_type"
-        android:layout_marginLeft="26dp" />
-    <TextView
-        android:id="@+id/alert_compare_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="45sp"
-        android:layout_toRightOf="@id/alert_type_symbol"
-        android:layout_centerHorizontal="true"
-        android:text="20"/>
-    <TextView
-        android:id="@+id/alert_sensor_unit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="45sp"
-        android:layout_toRightOf="@id/alert_compare_value"
-        android:layout_centerHorizontal="true"
-        android:text="%"/>
-    <ToggleButton
-        android:id="@+id/button_on_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/alert_sensor_unit"
-        android:onClick="onToggleClicked" />
+        android:orientation="vertical"
+        android:paddingLeft="6dp">
+        <TextView
+            android:id="@+id/alert_sensor_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="19sp"
+            android:text="DHT-22"/>
+        <TextView
+            android:id="@+id/alert_sensor_type"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="19sp"
+            android:text="humidity"/>
+        </LinearLayout>
 
-<!--RelativeLayout-->
-    </merge>
+    <LinearLayout
+        android:id="@+id/layout_compare_value"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/alert_type_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text=">"
+            android:layout_marginLeft="10dp" />
+        <TextView
+            android:id="@+id/alert_compare_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_marginLeft="2dp"
+            android:text="20"/>
+        <TextView
+            android:id="@+id/alert_sensor_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_marginLeft="2dp"
+            android:text="%"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <ToggleButton
+                android:id="@+id/button_on_off"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/layout_compare_value"
+                />
+         </LinearLayout>
+</LinearLayout>
+    <!--/merge-->
