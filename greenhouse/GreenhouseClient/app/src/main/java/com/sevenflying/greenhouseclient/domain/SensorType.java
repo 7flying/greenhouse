@@ -17,7 +17,7 @@ public enum SensorType {
 			case LIGHT:
 				return "lux";
 			case TEMPERATURE:
-				return "C";
+				return "ºC";
 			default:
 				return "UNKNOWN";
 		}

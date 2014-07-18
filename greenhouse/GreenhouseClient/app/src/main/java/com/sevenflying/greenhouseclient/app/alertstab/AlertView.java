@@ -33,11 +33,11 @@ public class AlertView extends RelativeLayout {
     }
 
     public AlertView(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public AlertView(Context context, AttributeSet attrs) {
-        super(context, attrs, 0);
+        this(context, attrs, 0);
     }
 
     public AlertView(Context context, AttributeSet attrs, int defStyle) {
@@ -52,8 +52,7 @@ public class AlertView extends RelativeLayout {
     }
 
     public void setAlert(Alert alert) {
-        alert = new Alert(AlertType.GREATER, 30, true, "A02", "DHT-22", SensorType.TEMPERATURE);
-//        toggle.setEnabled(alert.isActive());
+        toggle.setEnabled(alert.isActive());
         textSensorName.setText(alert.getSensorName());
         textSensorType.setText(alert.getSensorType().toString().toLowerCase());
         textAlertTypeSymbol.setText(alert.getAlertType().getSymbol());

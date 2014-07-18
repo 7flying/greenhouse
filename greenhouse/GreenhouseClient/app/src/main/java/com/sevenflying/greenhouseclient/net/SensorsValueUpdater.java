@@ -34,8 +34,6 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     }
 
     protected void onPreExecute() {
-      //  dialog.setMessage("Loading sensors...");
-      //  dialog.show();
         layout.setVisibility(View.VISIBLE);
     }
 
@@ -63,8 +61,8 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                     sensor.setName(temp.get(0));
                     sensor.setPinId(temp.get(1));
                     sensor.setType(temp.get(2).charAt(0));
-                    sensor.setRefreshRate(new Long(temp.get(3)).longValue());
-                    sensor.setValue(new Double(temp.get(4)).doubleValue());
+                    sensor.setRefreshRate(Long.parseLong(temp.get(3)));
+                    sensor.setValue(Double.parseDouble(temp.get(4)));
                     sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(new GregorianCalendar().getTime()));
                     ret.add(sensor);
                     publishProgress(sensor);

@@ -23,8 +23,9 @@ public class AlertManager {
     private AlertManager() {
         mapSensorAlerts = new HashMap<String, List<Alert>>();
         // TODO for testing purposes
-        addAlert(new Alert(AlertType.GREATER, 30, true, "A02", "DHT-22", SensorType.TEMPERATURE));
-        addAlert(new Alert(AlertType.LESS_EQUAL, 20, true, "A02", "DHT-22", SensorType.TEMPERATURE));
+        addAlert(new Alert(AlertType.GREATER, 30.7, true, "A02", "DHT-22", SensorType.TEMPERATURE));
+        addAlert(new Alert(AlertType.LESS_EQUAL, 20.78, true, "A02", "DHT-22", SensorType.HUMIDITY));
+        addAlert(new Alert(AlertType.EQUAL, 200, true, "A07", "THERMISTOR", SensorType.LIGHT));
     }
 
     /* Checks if any of the alerts related to the sensor are fired.

@@ -10,12 +10,12 @@ import com.sevenflying.greenhouseclient.app.R;
  */
 public class AlertListActivity extends FragmentActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_alert_list);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

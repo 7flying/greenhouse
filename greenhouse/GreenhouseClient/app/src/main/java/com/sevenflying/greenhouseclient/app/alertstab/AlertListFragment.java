@@ -32,9 +32,9 @@ public class AlertListFragment extends Fragment {
             listView = (ListView) view.findViewById(R.id.alertsListView);
 
             AlertAdapter adapter = new AlertAdapter(getActivity(), R.layout.alert_list_row,new ArrayList<Alert>());
-
+            adapter.addAll(manager.getAlerts());
             listView.setAdapter(adapter);
-           // adapter.addAll(manager.getAlerts());
+
            // adapter.notifyDataSetChanged();
             /*
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

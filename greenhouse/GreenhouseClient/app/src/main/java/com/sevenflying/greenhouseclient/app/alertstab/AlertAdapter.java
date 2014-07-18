@@ -20,9 +20,8 @@ public class AlertAdapter extends ArrayAdapter<Alert> {
 
     public View getView(int post, View convertView, ViewGroup parent) {
         AlertView alertView = (AlertView) convertView;
-        if(alertView == null) {
+        if(alertView == null)
             alertView = AlertView.inflate(parent);
-        }
         alertView.setAlert(getItem(post));
         return  alertView;
     }
