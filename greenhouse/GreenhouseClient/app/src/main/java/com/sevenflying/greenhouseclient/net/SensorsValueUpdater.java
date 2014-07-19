@@ -1,11 +1,15 @@
 package com.sevenflying.greenhouseclient.net;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
+import com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity;
+import com.sevenflying.greenhouseclient.domain.AlertManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
 import java.io.ObjectInputStream;
@@ -27,20 +31,22 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     private List<Sensor> buffer;
     private LinearLayout layoutCharge, layoutNoConnection;
     private Exception exception;
+    private Context context;
 
     public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layoutCharge,
-           LinearLayout layoutNoConnection)
+           LinearLayout layoutNoConnection, Context context)
     {
         this.adapter = adapter;
         this.layoutCharge = layoutCharge;
         this.layoutNoConnection = layoutNoConnection;
         exception = null;
         buffer = new ArrayList<Sensor>();
+        this.context = context;
     }
 
     protected void onPreExecute() {
-        layoutCharge.setVisibility(View.VISIBLE);
         layoutNoConnection.setVisibility(View.GONE);
+        layoutCharge.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -71,7 +77,6 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                     sensor.setValue(Double.parseDouble(temp.get(4)));
                     sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(new GregorianCalendar().getTime()));
                     ret.add(sensor);
-                    publishProgress(sensor);
                     oos.writeObject("ACK");
                     oos.flush();
                     numSensors--;
@@ -99,6 +104,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                 buffer.add(s);
                 adapter.add(s);
                 adapter.notifyDataSetChanged();
+                AlertManager.getInstance(context).checkAlertsFrom(s.getPinId(),s.getType(), s.getValue());
             }
         }
         layoutCharge.setVisibility(View.GONE);

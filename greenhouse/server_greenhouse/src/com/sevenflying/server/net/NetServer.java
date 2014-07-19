@@ -48,7 +48,7 @@ public class NetServer {
 					System.out.println("------");
 					String [] types = {"T", "H", "L"};
 					String chosenType = types[r.nextInt(3)];
-					String s1 = "DHT"+ number +":D04:" + chosenType +":2000:26.5";
+					String s1 = "DHT"+ number +":D04:" + chosenType +":2000:" + number;
 					System.out.println("$ Generated : " + s1);
 					oos.writeObject(s1);
 					oos.flush();

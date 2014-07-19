@@ -13,7 +13,7 @@
     <!-- Sensor info -->
     <string name="action_bar_sensor_info">Sensor</string>
 
-    <!-- xmls -->
+    <!-- xmls layout-->
     <!-- activity_sensor_status-->
     <string name="content_image_sensor_desc">Sensor image</string>
     <string name="xml_sensor_updated_word">Updated:</string>
@@ -25,4 +25,7 @@
     <string name="xml_sensor_seconds_word">secs</string>
     <!-- fragment_sensor_list-->
     <string name="no_connection">No connection</string>
+    <!-- xmls menu-->
+    <string name="action_new">New</string>
+    <string name="action_refresh">Refresh</string>
 </resources>

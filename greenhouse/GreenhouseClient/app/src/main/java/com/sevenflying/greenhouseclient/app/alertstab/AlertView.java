@@ -52,7 +52,8 @@ public class AlertView extends RelativeLayout {
     }
 
     public void setAlert(Alert alert) {
-        toggle.setEnabled(alert.isActive());
+        toggle.setEnabled(true);
+        toggle.setChecked(alert.isActive());
         textSensorName.setText(alert.getSensorName());
         textSensorType.setText(alert.getSensorType().toString().toLowerCase());
         textAlertTypeSymbol.setText(alert.getAlertType().getSymbol());
@@ -84,13 +85,4 @@ public class AlertView extends RelativeLayout {
         return textSensorUnit;
     }
 
-    // TODO ERROR HERE!!!
-    public void addListener() {
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
-            }
-        });
-    }
 }

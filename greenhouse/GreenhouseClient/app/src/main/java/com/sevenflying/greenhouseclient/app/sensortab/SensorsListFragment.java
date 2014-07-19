@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Sensor;
@@ -25,20 +29,22 @@ public class SensorsListFragment extends Fragment {
 	private ArrayList<Sensor> sensorList;
     private LinearLayout layoutProgress;
     private LinearLayout layoutNoConnection;
+    private SensorAdapter adapter;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
 
         if(container == null)
 			return null;
 		else {
+            setMenuVisibility(true);
+            setHasOptionsMenu(true);
 			View view = inflater.inflate(R.layout.fragment_sensors_list, container, false);
 			listView = (ListView) view.findViewById(R.id.sensorsListView);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             layoutNoConnection = (LinearLayout) view.findViewById(R.id.linear_layout_connection);
             sensorList = new ArrayList<Sensor>();
-        	SensorAdapter adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
+        	adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
             listView.setAdapter(adapter);
-
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 // display further sensor data
@@ -51,11 +57,28 @@ public class SensorsListFragment extends Fragment {
             });
 
             // populate list by updaters
-            SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress, layoutNoConnection);
-            updater.execute();
+            updateSensors();
             return view;
 		}
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.sensor_list_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_refresh){
+           updateSensors();
+            Toast.makeText(getActivity().getApplicationContext(), "Click on refresh", Toast.LENGTH_LONG).show();
+           return true;
+        } else
+            return  super.onOptionsItemSelected(item);
+    }
 
+    public void updateSensors(){
+        SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
+                layoutNoConnection, getActivity().getApplicationContext());
+        updater.execute();
     }
 }

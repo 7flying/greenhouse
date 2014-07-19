@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sevenflying.greenhouseclient.app.MainActivity" >
     
-    <item android:id="@+id/action_settings"
+    <!--item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never" /-->
 </menu>

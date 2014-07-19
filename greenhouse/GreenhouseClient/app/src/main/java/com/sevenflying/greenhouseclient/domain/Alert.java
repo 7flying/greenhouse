@@ -1,5 +1,7 @@
 package com.sevenflying.greenhouseclient.domain;
 
+import android.util.Base64;
+
 /**
  * Created by 7flying on 15/07/2014.
  */
@@ -22,6 +24,8 @@ public class Alert {
         this.sensorName = sensorName;
         this.sensorType = sensorType;
 	}
+
+    public Alert(){}
 
 	/** Checks if the Alert has to be fired */
 	public boolean isFired(double lastValue) {
@@ -50,12 +54,52 @@ public class Alert {
 		this.type = type;
 	}
 
+    public void setAlertType(String symbol) throws Exception {
+        if(symbol.equals(">"))
+            this.type = AlertType.GREATER;
+        else{
+            if(symbol.equals(">="))
+                this.type = AlertType.GREATER_EQUAL;
+            else {
+                if(symbol.equals("="))
+                    this.type = AlertType.EQUAL;
+                else {
+                    if(symbol.equals("<"))
+                        this.type = AlertType.LESS;
+                    else {
+                        if(symbol.equals("<="))
+                            this.type = AlertType.LESS_EQUAL;
+                        else
+                            throw new Exception("Alert type unknown");
+                    }
+                }
+            }
+        }
+
+    }
+
     public SensorType getSensorType() {
         return sensorType;
     }
 
     public void setSensorType(SensorType type) {
         this.sensorType = type;
+    }
+
+    public void setSensorType(char type) throws Exception {
+        switch (type){
+            case 'T':
+                this.sensorType = SensorType.TEMPERATURE;
+                break;
+            case 'L':
+                this.sensorType = SensorType.LIGHT;
+                break;
+            case 'H':
+                this.sensorType = SensorType.HUMIDITY;
+                break;
+            default:
+                throw new Exception("Unknown sensor type");
+        }
     }
 
     public void setSensorPinId(String pinId) {
@@ -95,5 +139,21 @@ public class Alert {
 		else
 			return false;
 	}
+
+    public String toStoreString() {
+        String toWrite = "";
+        toWrite += Base64.encodeToString(getAlertType().getSymbol().getBytes(),
+                Base64.DEFAULT) + ":";
+        toWrite += Base64.encodeToString(Double.toString(getCompareValue()).getBytes(),
+                Base64.DEFAULT ) +":";
+        toWrite += Base64.encodeToString((isActive() ? "1" : "0").getBytes(),
+                Base64.DEFAULT) + ":";
+        toWrite += Base64.encodeToString(getSensorPinId().getBytes(),Base64.DEFAULT) + ":";
+        toWrite += Base64.encodeToString(getSensorName().getBytes(), Base64.DEFAULT) + ":";
+        toWrite += Base64.encodeToString(Character.toString(getSensorType().getIdentifier()).getBytes(),
+                Base64.DEFAULT);
+        toWrite += "\n";
+        return toWrite;
+    }
 	
 }
