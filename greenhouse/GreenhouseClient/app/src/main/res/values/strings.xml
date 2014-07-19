@@ -23,5 +23,6 @@
     <string name="xml_sensor_pin">PIN:</string>
     <string name="xml_sensor_refresh_rate">Refresh rate:</string>
     <string name="xml_sensor_seconds_word">secs</string>
-
+    <!-- fragment_sensor_list-->
+    <string name="no_connection">No connection</string>
 </resources>

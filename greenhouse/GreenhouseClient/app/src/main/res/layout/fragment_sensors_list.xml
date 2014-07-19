@@ -16,6 +16,20 @@
             android:layout_height="wrap_content" >
         </ProgressBar>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_layout_connection"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/text_progress_bar"
+            android:textSize="15sp"
+            android:text="@string/no_connection"/>
+    </LinearLayout>
     <ListView
         android:id="@+id/sensorsListView"
         android:layout_width="wrap_content"

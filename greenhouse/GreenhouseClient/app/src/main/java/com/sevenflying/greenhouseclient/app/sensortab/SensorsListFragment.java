@@ -23,7 +23,8 @@ public class SensorsListFragment extends Fragment {
 
 	private ListView listView;
 	private ArrayList<Sensor> sensorList;
-    private LinearLayout layout;
+    private LinearLayout layoutProgress;
+    private LinearLayout layoutNoConnection;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
 
@@ -32,7 +33,8 @@ public class SensorsListFragment extends Fragment {
 		else {
 			View view = inflater.inflate(R.layout.fragment_sensors_list, container, false);
 			listView = (ListView) view.findViewById(R.id.sensorsListView);
-            layout = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
+            layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
+            layoutNoConnection = (LinearLayout) view.findViewById(R.id.linear_layout_connection);
             sensorList = new ArrayList<Sensor>();
         	SensorAdapter adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
             listView.setAdapter(adapter);
@@ -49,7 +51,7 @@ public class SensorsListFragment extends Fragment {
             });
 
             // populate list by updaters
-            SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layout);
+            SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress, layoutNoConnection);
             updater.execute();
             return view;
 		}

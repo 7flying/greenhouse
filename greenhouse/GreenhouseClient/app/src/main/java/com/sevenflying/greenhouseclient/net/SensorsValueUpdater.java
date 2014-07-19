@@ -25,16 +25,22 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
     private SensorAdapter adapter;
     private List<Sensor> buffer;
-    private LinearLayout layout;
+    private LinearLayout layoutCharge, layoutNoConnection;
+    private Exception exception;
 
-    public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layout) {
+    public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layoutCharge,
+           LinearLayout layoutNoConnection)
+    {
         this.adapter = adapter;
-        this.layout = layout;
+        this.layoutCharge = layoutCharge;
+        this.layoutNoConnection = layoutNoConnection;
+        exception = null;
         buffer = new ArrayList<Sensor>();
     }
 
     protected void onPreExecute() {
-        layout.setVisibility(View.VISIBLE);
+        layoutCharge.setVisibility(View.VISIBLE);
+        layoutNoConnection.setVisibility(View.GONE);
     }
 
     @Override
@@ -78,13 +84,16 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
             oos.close();
             ois.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            exception = e;
         }
         return ret;
 
     }
 
     protected void onPostExecute(List<Sensor> result) {
+        if(exception != null)
+            layoutNoConnection.setVisibility(View.VISIBLE);
+
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
                 buffer.add(s);
@@ -92,7 +101,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                 adapter.notifyDataSetChanged();
             }
         }
-        layout.setVisibility(View.GONE);
+        layoutCharge.setVisibility(View.GONE);
     }
 
 }
