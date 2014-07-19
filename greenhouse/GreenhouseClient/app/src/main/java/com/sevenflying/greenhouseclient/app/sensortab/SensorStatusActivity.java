@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
 
@@ -39,7 +40,7 @@ public class SensorStatusActivity extends FragmentActivity {
         if(getIntent().hasExtra("sensor")) {
             Sensor s = (Sensor) getIntent().getSerializableExtra("sensor");
             imageView.setImageResource(s.getDrawableId());
-            textSensorValue.setText(Double.toString(s.getValue()));
+            textSensorValue.setText(GreenhouseUtils.suppressZeros(s.getValue()));
             textSensorUnit.setText( s.getType().getUnit());
             textSensorUpdatedAt.setText(s.getUpdatedAt());
             textSensorName.setText(s.getName());

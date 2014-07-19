@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.SensorType;
@@ -57,7 +58,7 @@ public class AlertView extends RelativeLayout {
         textSensorName.setText(alert.getSensorName());
         textSensorType.setText(alert.getSensorType().toString().toLowerCase());
         textAlertTypeSymbol.setText(alert.getAlertType().getSymbol());
-        textCompareValue.setText(Double.toString(alert.getCompareValue()));
+        textCompareValue.setText(GreenhouseUtils.suppressZeros(alert.getCompareValue()));
         textSensorUnit.setText(alert.getSensorType().getUnit());
     }
 

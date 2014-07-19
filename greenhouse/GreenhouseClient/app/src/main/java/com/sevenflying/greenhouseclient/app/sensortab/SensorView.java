@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
 /**
@@ -49,7 +50,7 @@ public class SensorView extends RelativeLayout {
     public void setSensor(Sensor sensor) {
         sensorName.setText(sensor.getName());
         sensorPin.setText(" - " + sensor.getPinId());
-        sensorValue.setText(Double.toString(sensor.getValue()));
+        sensorValue.setText(GreenhouseUtils.suppressZeros(sensor.getValue()));
         sensorUnit.setText(sensor.getType().getUnit());
         sensorDefaultImage.setImageResource(sensor.getDrawableId());
     }
