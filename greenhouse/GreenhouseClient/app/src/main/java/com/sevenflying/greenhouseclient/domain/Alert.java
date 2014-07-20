@@ -2,10 +2,12 @@ package com.sevenflying.greenhouseclient.domain;
 
 import android.util.Base64;
 
+import java.io.Serializable;
+
 /**
  * Created by 7flying on 15/07/2014.
  */
-public class Alert {
+public class Alert implements Serializable {
 	
 	private AlertType type;
 	private double compareValue;

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
@@ -23,8 +24,8 @@ import java.util.ArrayList;
  */
 public class AlertListFragment extends Fragment {
 
-    private ListView listView;
-    private AlertManager manager;
+    private AlertAdapter adapter;
+    private LinearLayout layoutNoAlerts;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
         if(container == null)
@@ -32,13 +33,15 @@ public class AlertListFragment extends Fragment {
         else{
             setHasOptionsMenu(true);
             View view =  inflater.inflate(R.layout.fragment_alert_list, container, false);
-            manager = AlertManager.getInstance(this.getActivity().getApplicationContext());
-            listView = (ListView) view.findViewById(R.id.alertsListView);
-
-            AlertAdapter adapter = new AlertAdapter(getActivity(), R.layout.alert_list_row, new ArrayList<Alert>());
+            AlertManager manager = AlertManager.getInstance(this.getActivity().getApplicationContext());
+            ListView listView = (ListView) view.findViewById(R.id.alertsListView);
+            layoutNoAlerts= (LinearLayout) view.findViewById(R.id.layout_no_alerts);
+            adapter = new AlertAdapter(getActivity(), R.layout.alert_list_row, new ArrayList<Alert>());
+            // Add previously created alerts if any
             adapter.addAll(manager.getAlerts());
             listView.setAdapter(adapter);
-
+            adapter.notifyDataSetChanged();
+            checkLayoutVisibility();
             return  view;
         }
     }
@@ -52,10 +55,18 @@ public class AlertListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_new) {
             // Start new Activity, AlertCreationActivity
-            startActivity(new Intent(AlertListFragment.this.getActivity(), AlertCreationActivity.class));
-
+            Intent intent = new Intent(AlertListFragment.this.getActivity(), AlertCreationActivity.class);
+            intent.putExtra("adapter", adapter);
+            startActivity(intent);
             return true;
         } else
             return super.onOptionsItemSelected(item);
+    }
+
+    public void checkLayoutVisibility() {
+        if(adapter.getCount() > 0)
+            layoutNoAlerts.setVisibility(View.GONE);
+        else
+            layoutNoAlerts.setVisibility(View.VISIBLE);
     }
 }

@@ -8,12 +8,13 @@ import android.widget.CompoundButton;
 
 import com.sevenflying.greenhouseclient.domain.Alert;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by 7flying on 15/07/2014.
  */
-public class AlertAdapter extends ArrayAdapter<Alert> {
+public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
 
     public AlertAdapter(Context context, int resource, List<Alert> list) {
         super(context, resource, list);
@@ -27,7 +28,7 @@ public class AlertAdapter extends ArrayAdapter<Alert> {
         alertView.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                getItem(post).setActive((compoundButton.isChecked() ? true : false));
+                getItem(post).setActive(compoundButton.isChecked());
             }
         });
 

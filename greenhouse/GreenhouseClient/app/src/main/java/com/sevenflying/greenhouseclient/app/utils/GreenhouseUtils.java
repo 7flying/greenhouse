@@ -9,7 +9,7 @@ public class GreenhouseUtils {
 
     /** Removes unimportant zeroes.
      * @param toFormat - number to format
-     * @return formated string
+     * @return formatted string
      */
     public static String suppressZeros(double toFormat) {
         DecimalFormat format = new DecimalFormat("#.##");

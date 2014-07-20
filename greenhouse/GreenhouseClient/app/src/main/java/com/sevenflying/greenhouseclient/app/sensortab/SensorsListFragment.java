@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Sensor;
@@ -70,7 +69,6 @@ public class SensorsListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_refresh){
            updateSensors();
-            Toast.makeText(getActivity().getApplicationContext(), "Click on refresh", Toast.LENGTH_LONG).show();
            return true;
         } else
             return  super.onOptionsItemSelected(item);

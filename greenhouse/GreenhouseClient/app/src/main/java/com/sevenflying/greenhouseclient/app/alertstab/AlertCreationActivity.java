@@ -31,19 +31,20 @@ public class AlertCreationActivity extends FragmentActivity {
                                                 AlertType.EQUAL, AlertType.LESS,
                                                 AlertType.LESS_EQUAL
     };
-    private Map<String, Sensor> formatedSensorMap;
+    private Map<String, Sensor> formattedSensorMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alert_creation);
-        formatedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormatedSensors();
+        formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormatedSensors();
+
         // Sensor list spinner
         Spinner sensorListSpinner = (Spinner) findViewById(R.id.sensor_list_spinner);
 
         ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
-                new ArrayList<String>(formatedSensorMap.keySet()));
+                new ArrayList<String>(formattedSensorMap.keySet()));
         sensorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sensorListSpinner.setAdapter(sensorAdapter);
 
@@ -76,20 +77,23 @@ public class AlertCreationActivity extends FragmentActivity {
         // Edit Text Value
         editTextValue = (EditText) findViewById(R.id.edit_alert_value);
 
-        // TODO MOVE TO ACTION BAR : button create alert
+        // TODO MOVE TO ACTION BAR ?¿?
         Button buttonCreate = (Button) findViewById(R.id.button_create_alert);
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Alert a = new Alert();
                 a.setActive(true);
-                a.setSensorType(formatedSensorMap.get(selectedSensor).getType());
-                a.setSensorName(formatedSensorMap.get(selectedSensor).getName());
-                a.setSensorPinId(formatedSensorMap.get(selectedSensor).getPinId());
+                a.setSensorType(formattedSensorMap.get(selectedSensor).getType());
+                a.setSensorName(formattedSensorMap.get(selectedSensor).getName());
+                a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
                 a.setCompareValue(Double.parseDouble(editTextValue.getText().toString()));
                 a.setAlertType(alertTypes[selectedAlert]);
+                // Make alert persistent
                 AlertManager.getInstance(getApplicationContext()).addAlert(a);
                 AlertManager.getInstance(getApplicationContext()).commit();
+
+                AlertCreationActivity.this.finish();
             }
         });
     }
