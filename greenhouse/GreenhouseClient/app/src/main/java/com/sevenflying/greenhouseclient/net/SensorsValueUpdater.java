@@ -11,6 +11,7 @@ import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity;
 import com.sevenflying.greenhouseclient.domain.AlertManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -98,16 +99,19 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     protected void onPostExecute(List<Sensor> result) {
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
-
+        AlertManager alertManager = AlertManager.getInstance(context);
+        SensorManager sensorManager = SensorManager.getInstance(context);
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
                 buffer.add(s);
                 adapter.add(s);
                 adapter.notifyDataSetChanged();
-                AlertManager.getInstance(context).checkAlertsFrom(s.getPinId(),s.getType(), s.getValue());
+                sensorManager.addSensor(s);
+                alertManager.checkAlertsFrom(s.getPinId(), s.getType(), s.getValue());
             }
         }
         layoutCharge.setVisibility(View.GONE);
+        sensorManager.commit();
     }
 
 }

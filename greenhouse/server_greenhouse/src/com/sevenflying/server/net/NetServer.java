@@ -47,8 +47,10 @@ public class NetServer {
 				while(number > 0) {
 					System.out.println("------");
 					String [] types = {"T", "H", "L"};
+					String [] pinType = {"A", "D"};
 					String chosenType = types[r.nextInt(3)];
-					String s1 = "DHT"+ number +":D04:" + chosenType +":2000:" + number;
+					String chosenPin = pinType[r.nextInt(2)];
+					String s1 = "DHT"+ number +":" + chosenPin + "04:" + chosenType +":2000:" + number;
 					System.out.println("$ Generated : " + s1);
 					oos.writeObject(s1);
 					oos.flush();

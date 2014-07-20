@@ -1,5 +1,7 @@
 package com.sevenflying.greenhouseclient.domain;
 
+import android.util.Base64;
+
 import com.sevenflying.greenhouseclient.app.R;
 
 import java.io.Serializable;
@@ -114,7 +116,6 @@ public class Sensor implements Serializable {
 
         Sensor sensor = (Sensor) o;
 
-        if (name != null ? !name.equals(sensor.name) : sensor.name != null) return false;
         if (pinId != null ? !pinId.equals(sensor.pinId) : sensor.pinId != null) return false;
         if (type != sensor.type) return false;
 
@@ -130,5 +131,14 @@ public class Sensor implements Serializable {
                 ", type=" + type +
                 ", value=" + value +
                 '}';
+    }
+
+    public String toStoreString() {
+        String ret = "";
+        ret += Base64.encodeToString(getPinId().getBytes(), Base64.DEFAULT) + ":";
+        ret += Base64.encodeToString(getName().getBytes(), Base64.DEFAULT) + ":";
+        ret += Base64.encodeToString(Character.toString(getType().getIdentifier()).getBytes(),
+                Base64.DEFAULT);
+        return ret;
     }
 }

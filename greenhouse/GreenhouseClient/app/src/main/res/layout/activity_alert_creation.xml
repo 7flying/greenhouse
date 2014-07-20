@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <!-- Row select sensor -->
+    <TableRow  android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp"
+        android:paddingLeft="6dp">
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="19sp"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:text="@string/select_sensor_spinner"
+        android:clickable="false" />
+        <Spinner
+            android:id="@+id/sensor_list_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"/>
+    </TableRow>
+    <!-- Row alert type-->
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp"
+        android:paddingLeft="6dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="19sp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="@string/alert_type_spinner"
+            android:clickable="false" />
+        <Spinner
+            android:id="@+id/alert_type_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"/>
+    </TableRow>
+    <!-- Row value -->
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp"
+        android:paddingLeft="6dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="19sp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="@string/alert_fired_on_value"
+            android:clickable="false"/>
+        <EditText
+            android:id="@+id/edit_alert_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:hint=""/>
+    </TableRow>
+    <!--TODO MOVE TO ACTION BAR -->
+    <Button android:id="@+id/button_create_alert"
+        android:text="Create alarm"/>
+
+</TableLayout>

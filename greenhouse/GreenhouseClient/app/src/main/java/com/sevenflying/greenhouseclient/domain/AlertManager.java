@@ -2,7 +2,6 @@ package com.sevenflying.greenhouseclient.domain;
 
 import android.content.Context;
 import android.util.Base64;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -21,7 +20,7 @@ public class AlertManager {
 
     private static AlertManager manager = null;
     private static final String FILE_NAME = "greenhouse_alert_manager";
-    private Map <String, List <Alert>> mapSensorAlerts;
+    private Map <String, List <Alert>> mapSensorAlerts; // key: concatenation of pinId+sensorType
     private Context context;
 
     public static AlertManager getInstance(Context context){
@@ -47,31 +46,36 @@ public class AlertManager {
      * @return list of fired alerts. Empty list if no alerts were fired.*/
     public List<Alert> checkAlertsFrom(String pinId, SensorType type, double value) {
         ArrayList<Alert> ret = new ArrayList<Alert>();
-        if(mapSensorAlerts.containsKey(pinId)) {
-            for(Alert alert : mapSensorAlerts.get(pinId)) {
-                if(alert.getSensorType() == type) {
-                    if (alert.isFired(value)) {
-                        ret.add(alert);
-                        // TODO TESTING
-                        Toast.makeText(context, "Alert fired", Toast.LENGTH_SHORT).show();
-                    }
+        if(mapSensorAlerts.containsKey(pinId + type.getIdentifier())) {
+            for(Alert alert : mapSensorAlerts.get(pinId + type.getIdentifier())) {
+                if (alert.isFired(value)) {
+                    ret.add(alert);
                 }
             }
         }
         return ret;
     }
 
+    /** Checks whether the manager has alerts created concerning a sensor
+     * @param pinId
+     * @return true if it has
+     */
+    public boolean hasAlertsCreatedFrom(String pinId, SensorType type) {
+        return mapSensorAlerts.containsKey(pinId + type.getIdentifier());
+    }
+
     /** Adds an alert to the Manager. Alerts cannot be repeated.
      * @param a - Alert to add
      */
     public void addAlert(Alert a) {
-        if(!mapSensorAlerts.containsKey(a.getSensorPinId())){
-            mapSensorAlerts.put(a.getSensorPinId(), new ArrayList<Alert>());
-            mapSensorAlerts.get(a.getSensorPinId()).add(a);
+        if(!mapSensorAlerts.containsKey(a.getSensorPinId() + a.getSensorType().getIdentifier())){
+            mapSensorAlerts.put(a.getSensorPinId() + a.getSensorType().getIdentifier(),
+                    new ArrayList<Alert>());
+            mapSensorAlerts.get(a.getSensorPinId() + a.getSensorType().getIdentifier()).add(a);
         } else {
             // Check if the alert is repeated
-            if(!mapSensorAlerts.get(a.getSensorPinId()).contains(a))
-                mapSensorAlerts.get(a.getSensorPinId()).add(a);
+            if(!mapSensorAlerts.get(a.getSensorPinId() + a.getSensorType().getIdentifier()).contains(a))
+                mapSensorAlerts.get(a.getSensorPinId() + a.getSensorType().getIdentifier()).add(a);
         }
     }
 
@@ -86,7 +90,7 @@ public class AlertManager {
     }
 
     /** Loads the stored alerts.   */
-    private void loadAlerts() throws Exception{
+    private void loadAlerts() throws Exception {
         try {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(context.openFileInput(FILE_NAME)));
@@ -96,9 +100,8 @@ public class AlertManager {
                 Alert temp = new Alert();
                 List<String> list = new ArrayList<String>(6);
                 while(tokenizer.hasMoreTokens()) {
-                    String res = new String(Base64.decode(tokenizer.nextToken().getBytes(),
-                            Base64.DEFAULT));
-                    list.add(res);
+                    list.add(new String(Base64.decode(tokenizer.nextToken().getBytes(),
+                            Base64.DEFAULT)));
                 }
                 temp.setAlertType(list.get(0));
                 temp.setCompareValue(Double.parseDouble(list.get(1)));
@@ -120,7 +123,7 @@ public class AlertManager {
             String toWrite = "";
             for(String key : mapSensorAlerts.keySet()) {
                 for(Alert a : mapSensorAlerts.get(key)) {
-                    toWrite += a.toStoreString();
+                    toWrite += a.toStoreString() + "\n";
                 }
             }
             fos.write(toWrite.getBytes());

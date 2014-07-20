@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alert_type_array">
+        <item>Greater</item>
+        <item>Greater or equal</item>
+        <item>Equal</item>
+        <item>Less</item>
+        <item>Less or equal</item>
+    </string-array>
+</resources>

@@ -25,7 +25,12 @@
     <string name="xml_sensor_seconds_word">secs</string>
     <!-- fragment_sensor_list-->
     <string name="no_connection">No connection</string>
+    <!-- activity_alert_creation-->
+    <string name="select_sensor_spinner">Sensor</string>
+    <string name="alert_type_spinner">Alert type</string>
+    <string name="alert_fired_on_value">Value</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>
+
 </resources>

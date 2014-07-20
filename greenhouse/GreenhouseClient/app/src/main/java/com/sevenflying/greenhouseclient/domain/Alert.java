@@ -132,7 +132,6 @@ public class Alert {
 
     public boolean equals(Object al) {
 		if(this.type == ((Alert) al).getAlertType() &&
-		   this.compareValue == ((Alert) al).compareValue &&
            this.sensorPinId.equals(((Alert) al ).getSensorPinId()) &&
            this.sensorType == ((Alert) al).getSensorType())
 			return true;
@@ -152,7 +151,6 @@ public class Alert {
         toWrite += Base64.encodeToString(getSensorName().getBytes(), Base64.DEFAULT) + ":";
         toWrite += Base64.encodeToString(Character.toString(getSensorType().getIdentifier()).getBytes(),
                 Base64.DEFAULT);
-        toWrite += "\n";
         return toWrite;
     }
 	
