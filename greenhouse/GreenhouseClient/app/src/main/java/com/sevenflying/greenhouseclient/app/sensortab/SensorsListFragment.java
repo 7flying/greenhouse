@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.domain.SensorManager;
 import com.sevenflying.greenhouseclient.net.SensorsValueUpdater;
 
 import java.util.ArrayList;
@@ -41,10 +42,10 @@ public class SensorsListFragment extends Fragment {
 			listView = (ListView) view.findViewById(R.id.sensorsListView);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             layoutNoConnection = (LinearLayout) view.findViewById(R.id.linear_layout_connection);
-            sensorList = new ArrayList<Sensor>();
+            sensorList = (ArrayList<Sensor>) SensorManager.getInstance(getActivity().getApplicationContext()).getSensors();
         	adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
             listView.setAdapter(adapter);
-
+            adapter.notifyDataSetChanged();
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 // display further sensor data
                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
@@ -77,7 +78,7 @@ public class SensorsListFragment extends Fragment {
 
     public void updateSensors(){
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
-                layoutNoConnection, getActivity().getApplicationContext());
+                layoutNoConnection, getActivity().getApplicationContext(), sensorList);
         updater.execute();
     }
 }

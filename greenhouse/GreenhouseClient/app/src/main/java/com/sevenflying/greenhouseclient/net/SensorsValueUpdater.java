@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
-import com.sevenflying.greenhouseclient.domain.AlertManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorManager;
 
@@ -33,13 +32,13 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     private Context context;
 
     public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layoutCharge,
-           LinearLayout layoutNoConnection, Context context)
+           LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
     {
         this.adapter = adapter;
         this.layoutCharge = layoutCharge;
         this.layoutNoConnection = layoutNoConnection;
         exception = null;
-        buffer = new ArrayList<Sensor>();
+        this.buffer = buffer;
         this.context = context;
     }
 
@@ -101,15 +100,14 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     protected void onPostExecute(List<Sensor> result) {
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
-        AlertManager alertManager = AlertManager.getInstance(context);
+        //AlertManager alertManager = AlertManager.getInstance(context);
         SensorManager sensorManager = SensorManager.getInstance(context);
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
                 buffer.add(s);
-                adapter.add(s);
                 adapter.notifyDataSetChanged();
                 sensorManager.addSensor(s);
-                alertManager.checkAlertsFrom(s.getPinId(), s.getType(), s.getValue()); // TODO don't like it here
+                //alertManager.checkAlertsFrom(s.getPinId(), s.getType(), s.getValue()); // TODO don't like it here
             }
         }
         layoutCharge.setVisibility(View.GONE);
