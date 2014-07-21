@@ -2,6 +2,8 @@ package com.sevenflying.greenhouseclient.app.sensortab;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.sevenflying.greenhouseclient.app.R;
 
@@ -14,6 +16,7 @@ public class SensorsListActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_sensors_list);
+        openOptionsMenu();
     }
 
     @Override
@@ -24,4 +27,6 @@ public class SensorsListActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
     }
+
+
 }

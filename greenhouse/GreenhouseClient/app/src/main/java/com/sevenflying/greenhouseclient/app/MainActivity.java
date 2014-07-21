@@ -40,7 +40,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             @Override
             public void onPageSelected(int i) {
-                actionBar.setSelectedNavigationItem(i);
+                actionBar.getTabAt(i).select();
             }
 
             @Override
@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu.clear();
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }

@@ -33,5 +33,7 @@
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>
+    <string name="edit_alert_context_menu">Edit</string>
+    <string name="delete_alert_context_menu">Delete</string>
 
 </resources>

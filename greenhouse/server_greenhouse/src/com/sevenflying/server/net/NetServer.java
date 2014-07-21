@@ -13,7 +13,7 @@ public class NetServer {
 		
 	}
 
-	public void launch() throws IOException {
+	public void launch() throws Exception {
 		Socket s = null;
 		@SuppressWarnings("resource")
 		ServerSocket ss = new ServerSocket(5432);
@@ -25,6 +25,7 @@ public class NetServer {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+			Thread.sleep(100);
 		}
 	}
 
@@ -40,7 +41,7 @@ public class NetServer {
 				System.out.println("$ GETSENSORS received");
 				// first tell to the client how many we are sending
 				Random r = new Random();
-				int number = r.nextInt(10) + 10;
+				int number = r.nextInt(5) + 1;
 				System.out.println(" $ Generating " + number + " sensors");
 				oos.writeObject(Integer.valueOf(number).toString());
 				oos.flush();
@@ -48,19 +49,20 @@ public class NetServer {
 					System.out.println("------");
 					String [] types = {"T", "H", "L"};
 					String [] pinType = {"A", "D"};
-					String chosenType = types[r.nextInt(3)];
-					String chosenPin = pinType[r.nextInt(2)];
-					String s1 = "DHT"+ number +":" + chosenPin + "04:" + chosenType +":2000:" + number;
-					System.out.println("$ Generated : " + s1);
+					String chosenSensorType = types[r.nextInt(3)];
+					String chosenPinType = pinType[r.nextInt(2)];
+					String chosenPinNumber = Integer.toString(r.nextInt(10));
+					String s1 = "DHT"+ number +":" + chosenPinType + "0" + chosenPinNumber + ":" + chosenSensorType +":2000:" + number;
+					System.out.print("$ Generated : " + s1);
 					oos.writeObject(s1);
 					oos.flush();
-					System.out.println("\t$ SENSOR sent");
+					System.out.print(", SENT");
 					String control = (String) ois.readObject();
 					if(control.equals("ACK")){
-						System.out.println("\t ACK");
+						System.out.println(": ACK");
 						number--;
 					} else {
-						System.out.println("\t NACK");
+						System.out.println(": NACK");
 					}
 					System.out.println("------");
 				}
@@ -98,7 +100,7 @@ public class NetServer {
 		}
 	}
 	*/
-	public static void main(String [] args) throws IOException {
+	public static void main(String [] args) throws Exception {
 		NetServer ns = new NetServer();
 		ns.launch();
 	}

@@ -5,10 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
-import com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity;
 import com.sevenflying.greenhouseclient.domain.AlertManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorManager;
@@ -71,16 +69,21 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                     ArrayList<String> temp = new ArrayList<String>();
                     while(tokenizer.hasMoreTokens())
                         temp.add(tokenizer.nextToken());
-                    sensor.setName(temp.get(0));
-                    sensor.setPinId(temp.get(1));
-                    sensor.setType(temp.get(2).charAt(0));
-                    sensor.setRefreshRate(Long.parseLong(temp.get(3)));
-                    sensor.setValue(Double.parseDouble(temp.get(4)));
-                    sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(new GregorianCalendar().getTime()));
-                    ret.add(sensor);
-                    oos.writeObject("ACK");
-                    oos.flush();
-                    numSensors--;
+                    if(temp.size() == 5) {
+                        sensor.setName(temp.get(0));
+                        sensor.setPinId(temp.get(1));
+                        sensor.setType(temp.get(2).charAt(0));
+                        sensor.setRefreshRate(Long.parseLong(temp.get(3)));
+                        sensor.setValue(Double.parseDouble(temp.get(4)));
+                        sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(new GregorianCalendar().getTime()));
+                        ret.add(sensor);
+                        oos.writeObject("ACK");
+                        oos.flush();
+                        numSensors--;
+                    } else {
+                        oos.writeObject("NACK");
+                        oos.flush();
+                    }
                 } else {
                     oos.writeObject("NACK");
                     oos.flush();
@@ -93,7 +96,6 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
             exception = e;
         }
         return ret;
-
     }
 
     protected void onPostExecute(List<Sensor> result) {
@@ -107,7 +109,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                 adapter.add(s);
                 adapter.notifyDataSetChanged();
                 sensorManager.addSensor(s);
-                alertManager.checkAlertsFrom(s.getPinId(), s.getType(), s.getValue());
+                alertManager.checkAlertsFrom(s.getPinId(), s.getType(), s.getValue()); // TODO don't like it here
             }
         }
         layoutCharge.setVisibility(View.GONE);

@@ -1,7 +1,10 @@
 package com.sevenflying.greenhouseclient.app.alertstab;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,7 +14,6 @@ import android.widget.Spinner;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Alert;
-import com.sevenflying.greenhouseclient.domain.AlertManager;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorManager;
@@ -23,7 +25,7 @@ import java.util.Map;
  * Created by 7flying on 20/07/2014.
  */
 public class AlertCreationActivity extends FragmentActivity {
-
+    private Button buttonCreate;
     private EditText editTextValue;
     private String selectedSensor = null;
     private int selectedAlert = -1;
@@ -37,7 +39,7 @@ public class AlertCreationActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alert_creation);
-        formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormatedSensors();
+        formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormattedSensors();
 
         // Sensor list spinner
         Spinner sensorListSpinner = (Spinner) findViewById(R.id.sensor_list_spinner);
@@ -76,9 +78,27 @@ public class AlertCreationActivity extends FragmentActivity {
 
         // Edit Text Value
         editTextValue = (EditText) findViewById(R.id.edit_alert_value);
+        // Data validator
+        editTextValue.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Exception exception = null;
+                try {
+                    new Double(editable.toString());
+                }catch (Exception e) {
+                    exception = e;
+                }
+                buttonCreate.setEnabled((exception == null));
+            }
 
-        // TODO MOVE TO ACTION BAR ?¿?
-        Button buttonCreate = (Button) findViewById(R.id.button_create_alert);
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        });
+        buttonCreate = (Button) findViewById(R.id.button_create_alert);
+        buttonCreate.setEnabled(false); // We have to validate data
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,11 +109,11 @@ public class AlertCreationActivity extends FragmentActivity {
                 a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
                 a.setCompareValue(Double.parseDouble(editTextValue.getText().toString()));
                 a.setAlertType(alertTypes[selectedAlert]);
-                // Make alert persistent
-                AlertManager.getInstance(getApplicationContext()).addAlert(a);
-                AlertManager.getInstance(getApplicationContext()).commit();
-
-                AlertCreationActivity.this.finish();
+                // Return alert to previous activity
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("alert", a);
+                setResult(RESULT_OK, returnIntent);
+                finish();
             }
         });
     }

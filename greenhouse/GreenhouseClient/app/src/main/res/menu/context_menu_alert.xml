@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/edit_alert_context_menu"
+           android:title="@string/edit_alert_context_menu"/>
+    <item android:id="@+id/delete_alert_context_menu"
+        android:title="@string/delete_alert_context_menu"/>
+</menu>

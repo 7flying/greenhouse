@@ -60,6 +60,7 @@ public class SensorsListFragment extends Fragment {
             return view;
 		}
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.sensor_list_menu, menu);

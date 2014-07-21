@@ -5,7 +5,8 @@ import android.support.v4.app.FragmentActivity;
 
 import com.sevenflying.greenhouseclient.app.R;
 
-/**
+
+/** Manages the alert list
  * Created by 7flying on 15/07/2014.
  */
 public class AlertListActivity extends FragmentActivity {
