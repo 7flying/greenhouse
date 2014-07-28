@@ -23,6 +23,10 @@ public class Sensor extends BlossomSensor {
 		this.refreshRate = refreshRate;
 		this.ensureRefresh = ensureRefresh;
 	}
+	
+	public Sensor() {
+		super();
+	}
 
 	/** Updates the db with the sensor's last reading
 	 * @param value - last read value
@@ -91,6 +95,23 @@ public class Sensor extends BlossomSensor {
 				+ powerSavingMode + ", lastRefresh=" + lastRefresh + ", type="
 				+ type + ", ensureRefresh=" + ensureRefresh + "]";
 	}
+	
+	public void setType(char type) {
+        switch (type){
+            case 'H':
+                this.type = SensorType.HUMIDITY;
+                break;
+            case 'T':
+                this.type = SensorType.TEMPERATURE;
+                break;
+            case 'L':
+                this.type = SensorType.LIGHT;
+                break;
+            default:
+                this.type = SensorType.UNKNOWN;
+                break;
+        }
+    }
 
 }
 

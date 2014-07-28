@@ -11,6 +11,8 @@ public abstract class BlossomSensor {
 		this.name = name;
 		this.pinId = pinId;
 	}
+	
+	public BlossomSensor() {}
 
 	public String getName() {
 		return name;
@@ -24,6 +26,10 @@ public abstract class BlossomSensor {
 		return pinId;
 	}
 
+	public void setPinId(String pinId) {
+		this.pinId = pinId;
+	}
+	
 	public String toString() {
 		return "BlossomSensor [name=" + name + ", pinId=" + pinId;
 	}

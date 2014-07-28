@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
@@ -169,6 +172,26 @@ public class DBManager {
 			return ret;
 		else 
 			throw new GreenhouseDatabaseException();
+	}
+	
+	/** Returns all the sensors from the database with their last values
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Sensor> getSensors() throws SQLException {
+		List<Sensor> ret = new ArrayList<Sensor>();
+		Statement sta = conn.createStatement();
+		ResultSet result = sta.executeQuery("SELECT * FROM Sensors;");
+		while(result.next()){
+			Sensor s = new Sensor();
+			s.setName(result.getString(1));
+			s.setPinId(result.getString(2));
+			s.setType(result.getString(3).charAt(0));
+			s.setRefreshRate(result.getLong(4));
+			ret.add(s);			
+		}
+		result.close();
+		return ret;
 	}
 	
 }
