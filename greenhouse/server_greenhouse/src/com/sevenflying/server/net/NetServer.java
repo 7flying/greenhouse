@@ -7,14 +7,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import utils.Utils;
 
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 
 public class NetServer {
 
-	private static String pathToDB = "somepath"; //TODOs
+	private static String pathToDB = "F:\\dump\\greenhouse\\db.sqlite"; //TODO
 	
 	public NetServer() {
 		
@@ -36,41 +36,20 @@ public class NetServer {
 		}
 	}
 
-	public void processConnection(Socket s) {
+	public void processConnection(Socket s) throws Exception {
 		System.out.println(" $ Incoming connection:" +  s.getInetAddress().toString());
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 			String command = (String) ois.readObject();
 			System.out.println("$ Received '" + command + "'");
-			if(command.contains(Constants.GETSENSORS)) {
-				// TODO call getSensorValues(ois, oos);
-				Random r = new Random();
-				int number = r.nextInt(5) + 1;
-				System.out.println(" $ Generating " + number + " sensors");
-				oos.writeObject(Integer.valueOf(number).toString());
-				oos.flush();
-				while(number > 0) {
-					System.out.println("------");
-					String [] types = {"T", "H", "L"};
-					String [] pinType = {"A", "D"};
-					String chosenSensorType = types[r.nextInt(3)];
-					String chosenPinType = pinType[r.nextInt(2)];
-					String chosenPinNumber = Integer.toString(r.nextInt(10));
-					String s1 = "DHT"+ number +":" + chosenPinType + "0" + chosenPinNumber + ":" + chosenSensorType +":2000:" + number;
-					System.out.print("$ Generated : " + s1);
-					oos.writeObject(s1);
-					oos.flush();
-					System.out.print(", SENT");
-					String control = (String) ois.readObject();
-					if(control.equals("ACK")){
-						System.out.println(": ACK");
-						number--;
-					} else {
-						System.out.println(": NACK");
-					}
-					System.out.println("------");
-				}
+			switch (command) {
+			case Constants.GETSENSORS:
+				getSensorValues(ois, oos);
+				break;
+
+			default:
+				break;
 			}
 			s.close();
 			oos.close();
@@ -91,11 +70,16 @@ public class NetServer {
 		List<Sensor> sensorList = manager.getSensors();
 		List<String> ret = new ArrayList<String>();
 		for(Sensor s : sensorList)
-			ret.add(s.getName() + ":" + s.getPinId() + ":" + s.getType().getIdentifier() + ":" + s.getRefreshRate() + ":" + s.getLastValue());
+			ret.add(Utils.encode64(s.getName()) + ":" +
+					Utils.encode64(s.getPinId()) + ":" + 
+					Utils.encode64(s.getType().getIdentifier()) + ":" + 
+					Utils.encode64(s.getRefreshRate()) + ":" + 
+					Utils.encode64(s.getLastValue()));
 		manager.disconnect();
 		
 		int index = 0, error = 0;
 		int number = ret.size();
+		
 		// Tell to the client how many sensors it has to expect
 		oos.writeObject(Integer.valueOf(number).toString());
 		oos.flush();

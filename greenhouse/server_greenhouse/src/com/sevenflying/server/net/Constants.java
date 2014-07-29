@@ -1,7 +1,11 @@
 package com.sevenflying.server.net;
 
+/** Defines project's constants
+ * @author 7flying
+ */
 public class Constants {
 
-	public static String GETSENSORS = "GETSENSORS";
+	/* Expected commands */
+	public static final String GETSENSORS = "GETSENSORS";
 	
 }

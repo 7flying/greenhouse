@@ -3,6 +3,7 @@ package com.sevenflying.greenhouseclient.net;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -67,7 +68,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                     StringTokenizer tokenizer = new StringTokenizer(ss, ":");
                     ArrayList<String> temp = new ArrayList<String>();
                     while(tokenizer.hasMoreTokens())
-                        temp.add(tokenizer.nextToken());
+                        temp.add(new String(Base64.decode(tokenizer.nextToken().getBytes(), Base64.DEFAULT)));
                     if(temp.size() == 5) {
                         sensor.setName(temp.get(0));
                         sensor.setPinId(temp.get(1));
