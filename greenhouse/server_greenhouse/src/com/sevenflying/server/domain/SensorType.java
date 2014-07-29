@@ -7,7 +7,7 @@ public enum SensorType {
 	HUMIDITY, LIGHT, TEMPERATURE, UNKNOWN;
 	
 	/** Gets the measuring unit of the sensor.
-	 * @return meassuring unit
+	 * @return measuring unit
 	 */
 	public String getUnit() {
 		switch (this) {

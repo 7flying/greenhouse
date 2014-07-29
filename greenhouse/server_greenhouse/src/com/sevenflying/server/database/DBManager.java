@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
@@ -20,7 +21,8 @@ public class DBManager {
 	public static String DBPath = "F:\\dump\\greenhouse\\db.sqlite";
 	private static DBManager manager = null;
 	private Connection conn = null;
-	private static String TIME_DATE_FORMAT = "dd/MM/yy - HH:mm:ss";
+	private static String TIME_FORMAT = "HH:mm:ss";
+	private static String DATE_FORMAT = "dd/MM/yy";
 	private static final String READINGS_TABLE_NAME = "Readings";
 	
 	public synchronized static DBManager getInstance() {
@@ -48,7 +50,8 @@ public class DBManager {
 					+ "id INTEGER NOT NULL,"
 					+ "idsensor INTEGER NOT NULL references Sensors(id) ON DELETE CASCADE,"
 					+ "value REAL NOT NULL,"
-					+ "datetime TEXT NOT NULL,"
+					+ "time TEXT NOT NULL,"
+					+ "date TEXT NOT NULL,"
 					+ "PRIMARY KEY (id, idsensor)"
 					+ ");");
 			
@@ -91,9 +94,14 @@ public class DBManager {
 	
 	/** Gets the db id of a sensor */
 	private int getSensorDBid(Sensor sensor) throws SQLException {
-		PreparedStatement pre = conn.prepareStatement("SELECT id FROM Sensors WHERE pinid = ? AND type = ?;");
-		pre.setString(1, sensor.getPinId());
-		pre.setString(2, Character.toString(sensor.getType().getIdentifier()));
+		return getSensorBDid(sensor.getPinId(), Character.toString(sensor.getType().getIdentifier()));
+	}
+	
+	/** Gets the db id of a sensor */
+	private int getSensorBDid(String pinId, String type) throws SQLException {
+		PreparedStatement pre = conn.prepareStatement("SELECT id FROM Sensors WHERE pinid = ? AND type = ?");
+		pre.setString(1, pinId);
+		pre.setString(2, type);
 		ResultSet result = pre.executeQuery();
 		int ret = -1;
 		if (result.next()) {
@@ -101,7 +109,6 @@ public class DBManager {
 		}
 		result.close();
 		pre.close();
-				
 		return ret;
 	}
 	
@@ -119,13 +126,8 @@ public class DBManager {
 	}
 	
 	/** Returns current time-date */
-	private String getTimeDate() {
-		return new SimpleDateFormat(TIME_DATE_FORMAT).format(new GregorianCalendar().getTime());
-	}
-	
-	/** Sets the db's time-date format for storing time-dates, default: 'dd/MM/yy - HH:mm:ss' */
-	public synchronized void setTimeDateFormat(String format) {
-		TIME_DATE_FORMAT = format;
+	private String[] getTimeDate() {
+		return new String [] { new SimpleDateFormat(TIME_FORMAT).format(new GregorianCalendar().getTime()), new SimpleDateFormat(DATE_FORMAT).format(new GregorianCalendar().getTime()) };
 	}
 	
 	/** Inserts a new reading from a sensor into the db
@@ -136,15 +138,16 @@ public class DBManager {
 		int idSensor = getSensorDBid(sensor);
 		int maxId = getMaxId(READINGS_TABLE_NAME);
 		if(idSensor != -1 && maxId != -1) {
-			PreparedStatement pre = conn.prepareStatement("INSERT into Readings values (?, ?, ?, ?);");
+			PreparedStatement pre = conn.prepareStatement("INSERT into Readings values (?, ?, ?, ?, ?);");
 			pre.setInt(1, maxId + 1);
 			pre.setInt(2, idSensor);
 			pre.setDouble(3, value);
-			String timedate = getTimeDate();
-			pre.setString(4, timedate);
+			String[] timedate = getTimeDate();
+			pre.setString(4, timedate[0] );
+			pre.setString(5, timedate[1]);
 			pre.executeUpdate();
 			pre.close();
-			sensor.setLastRefresh(timedate);
+			sensor.setLastRefresh(timedate[0] + " - " +timedate[1]);
 		}
 	}
 	
@@ -192,6 +195,26 @@ public class DBManager {
 		}
 		result.close();
 		return ret;
+	}
+	
+	/** Retrieves the last X values from a given sensor.
+	 * @param lastX - number of maximum values to retrieve
+	 * @param sensor - sensor to check
+	 * @return map with date-value
+	 * @throws SQLException 
+	 */
+	public Map<String, Double> getLastXFromSensor(int lastX, String pinId, String type) throws SQLException {
+		Map<String, Double> map = new HashMap<String, Double>();
+		int id = getSensorBDid(pinId, type);
+		PreparedStatement pre = conn.prepareStatement("SELECT time, date, value FROM Readings WHERE idsensor = ? ORDER BY id DESC LIMIT ?;");
+		pre.setInt(1, id);
+		pre.setInt(2, lastX);
+		ResultSet result = pre.executeQuery();
+		while(result.next())
+			map.put(result.getString(1) + " - " + result.getString(2), result.getDouble(3));
+		result.close();
+		pre.close();
+		return map;
 	}
 	
 }

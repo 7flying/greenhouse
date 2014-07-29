@@ -5,7 +5,10 @@ package com.sevenflying.server.net;
  */
 public class Constants {
 
-	/* Expected commands */
+	/* ****************** *
+	 *  Expected commands * 
+	 * ****************** */
 	public static final String GETSENSORS = "GETSENSORS";
+	public static final String HISTORY = "HISTORY";
 	
 }

@@ -1,12 +1,12 @@
 package com.sevenflying.server.net;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
 import utils.Utils;
 
 import com.sevenflying.server.database.DBManager;
@@ -36,29 +36,35 @@ public class NetServer {
 		}
 	}
 
-	public void processConnection(Socket s) throws Exception {
+	public void processConnection(final Socket s) {
 		System.out.println(" $ Incoming connection:" +  s.getInetAddress().toString());
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-			String command = (String) ois.readObject();
-			System.out.println("$ Received '" + command + "'");
-			switch (command) {
-			case Constants.GETSENSORS:
-				getSensorValues(ois, oos);
-				break;
-
-			default:
-				break;
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+					ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+					String command = (String) ois.readObject();
+					System.out.println("$ Received '" + command + "'");
+					switch (command) {
+						case Constants.GETSENSORS:
+							getSensorValues(ois, oos);
+							break;
+						case Constants.HISTORY:
+							getSensorHistory(ois, oos);
+							break;
+						default:
+							break;
+					}
+					s.close();
+					oos.close();
+					ois.close();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
-			s.close();
-			oos.close();
-			ois.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		});
+		t.run();
 	}
 	
 	/** Processes GETSENSORS command. Get the last values of all sensors 
@@ -105,6 +111,15 @@ public class NetServer {
 		}
 		oos.close();
 		ois.close();
+	}
+	
+	/** Processes HISTORY command. Gets the historical values of a sensor
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	public void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+		//TODO
 	}
 	
 	public static void main(String [] args) throws Exception {
