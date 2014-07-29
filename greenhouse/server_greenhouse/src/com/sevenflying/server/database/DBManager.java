@@ -174,8 +174,8 @@ public class DBManager {
 			throw new GreenhouseDatabaseException();
 	}
 	
-	/** Returns all the sensors from the database with their last values
-	 * @return
+	/** Returns all the sensors from the database.
+	 * @return list of sensors
 	 * @throws SQLException
 	 */
 	public List<Sensor> getSensors() throws SQLException {
@@ -184,10 +184,10 @@ public class DBManager {
 		ResultSet result = sta.executeQuery("SELECT * FROM Sensors;");
 		while(result.next()){
 			Sensor s = new Sensor();
-			s.setName(result.getString(1));
-			s.setPinId(result.getString(2));
-			s.setType(result.getString(3).charAt(0));
-			s.setRefreshRate(result.getLong(4));
+			s.setName(result.getString(2));
+			s.setPinId(result.getString(3));
+			s.setType(result.getString(4).charAt(0));
+			s.setRefreshRate(result.getLong(5));
 			ret.add(s);			
 		}
 		result.close();
