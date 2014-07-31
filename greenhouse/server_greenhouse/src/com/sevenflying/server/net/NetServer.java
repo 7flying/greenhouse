@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import utils.Utils;
 
@@ -119,7 +120,42 @@ public class NetServer {
 	 * @throws Exception
 	 */
 	public void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
-		//TODO
+		// Read sensor pinid and type
+		String pinidType = (String) ois.readObject();
+		DBManager manager = DBManager.getInstance();
+		manager.connect(pathToDB);
+		Map<String, Double> history = manager.getLastXFromSensor(100, pinidType.substring(0, pinidType.indexOf(':')), pinidType.substring(pinidType.indexOf(':') + 1));
+		manager.disconnect();
+		// Tell to the client how many values it has to expect
+		int number = history.keySet().size();
+		oos.writeObject(Integer.valueOf(number).toString());
+		oos.flush();
+		// Send data
+		int index = 0, error = 0;
+		@SuppressWarnings("unchecked")
+		List<String> keys = (List<String>) history.keySet();
+		while(number > 0) {
+			oos.writeObject(Utils.encode64(keys.get(index)) + ":" + Utils.encode64(history.get(keys.get(index))));
+			oos.flush();
+			String control = (String) ois.readObject();
+			if(control.equals("ACK")){
+				number--;
+				index++;
+				error = 0;
+			} else {
+				if(error < 3)
+					error++;
+				else {
+					// tell error to client
+					// continue
+					error = 0;
+					number--;
+					index++;
+				}
+			}
+		}
+		oos.close();
+		ois.close();
 	}
 	
 	public static void main(String [] args) throws Exception {
