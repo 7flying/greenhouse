@@ -38,7 +38,7 @@ public class NetServer {
 	}
 
 	public void processConnection(final Socket s) {
-		System.out.println(" $ Incoming connection:" +  s.getInetAddress().toString());
+		System.out.println(" $ Incoming connection:" +  s.getInetAddress().toString() + " " + s.getLocalAddress());
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -46,7 +46,7 @@ public class NetServer {
 					ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
 					ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 					String command = (String) ois.readObject();
-					System.out.println("$ Received '" + command + "'");
+					System.out.println(" $ Received '" + command + "'");
 					switch (command) {
 						case Constants.GETSENSORS:
 							getSensorValues(ois, oos);

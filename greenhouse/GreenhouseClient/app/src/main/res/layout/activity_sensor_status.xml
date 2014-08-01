@@ -161,5 +161,7 @@
         android:layout_toRightOf="@id/static_text_sensor_pin"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"/>
+    <!-- chart-->
+
 
 </RelativeLayout>

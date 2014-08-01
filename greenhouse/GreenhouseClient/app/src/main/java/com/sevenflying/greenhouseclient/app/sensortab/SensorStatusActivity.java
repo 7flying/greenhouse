@@ -10,6 +10,7 @@ import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
 
+
 /** Activity to show further info about a sensor.
  * Created by 7flying on 13/07/2014.
  */
@@ -48,5 +49,7 @@ public class SensorStatusActivity extends FragmentActivity {
             textSensorRefresh.setText( Double.toString(s.getRefreshRate() / 1000d) );
             textSensorPin.setText(s.getPinId());
         }
+
+
     }
 }

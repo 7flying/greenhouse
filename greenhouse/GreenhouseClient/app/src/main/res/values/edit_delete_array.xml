@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="edit_delete_array">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+</resources>

@@ -81,6 +81,15 @@ public class AlertManager {
         }
     }
 
+    /** Removes and alert from the Manager.
+     * @param a - Alert to remove
+     */
+    public synchronized  void removeAlert(Alert a) {
+        if(mapSensorAlerts.containsKey(a.getSensorPinId() + a.getSensorType().getIdentifier())) {
+            mapSensorAlerts.get(a.getSensorPinId() + a.getSensorType().getIdentifier()).remove(a);
+        }
+    }
+
     /** Returns a list of the stored alerts.
      * @return list containing the alerts
      */
