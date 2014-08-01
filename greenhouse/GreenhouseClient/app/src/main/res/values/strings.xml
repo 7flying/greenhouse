@@ -30,6 +30,7 @@
     <string name="alert_type_spinner">Alert type</string>
     <string name="alert_fired_on_value">Value</string>
     <string name="no_alerts">There aren\'t any alerts, try to add one!</string>
+    <string name="button_save_alarm_creation_delete">Save</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

@@ -19,6 +19,7 @@ import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /** Activity for the creation of Alerts.
@@ -32,7 +33,7 @@ public class AlertCreationActivity extends FragmentActivity {
     private final AlertType [] alertTypes = {   AlertType.GREATER, AlertType.GREATER_EQUAL,
                                                 AlertType.EQUAL, AlertType.LESS,
                                                 AlertType.LESS_EQUAL
-    };
+    };  // Do not change the order
     private Map<String, Sensor> formattedSensorMap;
 
     @Override
@@ -116,5 +117,16 @@ public class AlertCreationActivity extends FragmentActivity {
                 finish();
             }
         });
+
+        if(getIntent().hasExtra("alert-to-edit")) {
+            Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
+            // the equals of sensor takes pinId + type
+            String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " + a.getSensorType().toString();
+            List<String> list = new ArrayList<String>(formattedSensorMap.keySet());
+            sensorListSpinner.setSelection(list.indexOf(key));
+            sensorListSpinner.setEnabled(false);
+            alertTypeSpinner.setSelection(a.getAlertType().getIndex());
+            alertTypeSpinner.setEnabled(false);
+        }
     }
 }

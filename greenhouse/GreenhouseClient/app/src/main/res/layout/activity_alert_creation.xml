@@ -70,8 +70,7 @@
             android:inputType="numberDecimal"
             android:hint=""/>
     </TableRow>
-    <!--TODO MOVE TO ACTION BAR -->
     <Button android:id="@+id/button_create_alert"
-        android:text="Create alarm"/>
+        android:text="@string/button_save_alarm_creation_delete"/>
 
 </TableLayout>

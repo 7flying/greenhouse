@@ -35,6 +35,7 @@ public class AlertListFragment extends Fragment {
     private ListView listView;
     private AlertManager manager;
     private static final int CODE_CREATE_NEW_ALERT = 1;
+    private static final int CODE_EDIT_ALERT = 2;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
         if(container == null)
@@ -61,10 +62,13 @@ public class AlertListFragment extends Fragment {
                             .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogInterface, int position) {
                                     switch (position) {
-                                        case 0: // Edit TODO
+                                        case 0: // Edit
+                                            Intent intent = new Intent(AlertListFragment.this
+                                                    .getActivity(), AlertCreationActivity.class);
+                                            intent.putExtra("alert-to-edit", alertList.get(listPosition));
+                                            startActivityForResult(intent, CODE_EDIT_ALERT);
                                             break;
                                         case 1: // Delete
-                                            Toast.makeText(getActivity().getApplicationContext(), "Click on " + position, Toast.LENGTH_LONG).show();
                                             manager.removeAlert(alertList.get(listPosition));
                                             alertList.remove(alertList.get(listPosition));
                                             adapter.notifyDataSetChanged();
@@ -126,6 +130,19 @@ public class AlertListFragment extends Fragment {
                 checkLayoutVisibility();
                 manager.addAlert(a);
                 manager.commit();
+            }
+        } else {
+            if(requestCode == CODE_EDIT_ALERT) {
+                // Callback from AlertCreationActivity on Edit mode
+                if(resultCode == Activity.RESULT_OK) {
+                    Alert a = (Alert) data.getSerializableExtra("alert");
+                    manager.removeAlert(a);
+                    alertList.remove(a);
+                    manager.addAlert(a);
+                    alertList.add(a);
+                    manager.commit();
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }

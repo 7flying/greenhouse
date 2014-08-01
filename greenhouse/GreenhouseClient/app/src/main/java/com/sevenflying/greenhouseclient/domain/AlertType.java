@@ -2,7 +2,7 @@ package com.sevenflying.greenhouseclient.domain;
 
 public enum AlertType {
 
-	GREATER, LESS, EQUAL, GREATER_EQUAL, LESS_EQUAL;
+	GREATER,GREATER_EQUAL, EQUAL, LESS, LESS_EQUAL; // Do not change the order
 
 
     public String getSymbol() {
@@ -19,6 +19,23 @@ public enum AlertType {
                 return "<=";
             default:
                 return "?";
+        }
+    }
+
+    public int getIndex() {
+        switch (this) {
+            case GREATER:
+                return 0;
+            case GREATER_EQUAL:
+                return 1;
+            case EQUAL:
+                return 2;
+            case LESS:
+                return 3;
+            case LESS_EQUAL:
+                return 4;
+            default:
+                return -1;
         }
     }
 
