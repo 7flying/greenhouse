@@ -24,8 +24,8 @@ import java.util.StringTokenizer;
 /** Task that requests sensor values.
  * Created by 7flying on 10/07/2014.
  */
-public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
-
+public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> { // Params, progress, result
+    // AsyncTask<Void, Sensor, List<Sensor>> -> means Params, Progress and Result
     private SensorAdapter adapter;
     private List<Sensor> buffer;
     private LinearLayout layoutCharge, layoutNoConnection;
@@ -50,12 +50,11 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
     @Override
     protected List<Sensor> doInBackground(Void... voids) {
-        String serverIP = "192.168.1.12"; // TODO
-        int serverPort = 5432; // TODO
+
         List<Sensor> ret = new ArrayList<Sensor>();
         try {
-            InetAddress add = InetAddress.getByName(serverIP);
-            Socket s = new Socket(add, serverPort);
+            InetAddress add = InetAddress.getByName(Constants.serverIP);
+            Socket s = new Socket(add, Constants.serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             oos.writeObject(Commands.GETSENSORS);

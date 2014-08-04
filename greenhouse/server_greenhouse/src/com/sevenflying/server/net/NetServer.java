@@ -132,8 +132,8 @@ public class NetServer {
 		oos.flush();
 		// Send data
 		int index = 0, error = 0;
-		@SuppressWarnings("unchecked")
-		List<String> keys = (List<String>) history.keySet();
+		
+		List<String> keys = new ArrayList<String>(history.keySet());
 		while(number > 0) {
 			oos.writeObject(Utils.encode64(keys.get(index)) + ":" + Utils.encode64(history.get(keys.get(index))));
 			oos.flush();
