@@ -8,16 +8,11 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.HistoricalRecordObtainer;
-
-import java.util.ArrayList;
 
 
 /** Activity to show further info about a sensor.
@@ -94,7 +89,6 @@ public class SensorStatusActivity extends FragmentActivity {
 
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(false);
-
     }
 
 }

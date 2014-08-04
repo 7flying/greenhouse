@@ -122,27 +122,31 @@ public class NetServer {
 	public void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
 		// Read sensor pinid and type
 		String pinidType = (String) ois.readObject();
+		System.out.println("\t -Params: " + pinidType);
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
-		Map<String, Double> history = manager.getLastXFromSensor(100, pinidType.substring(0, pinidType.indexOf(':')), pinidType.substring(pinidType.indexOf(':') + 1));
+		List<Map<String, Double>> history = manager.getLastXFromSensor(5, pinidType.substring(0, pinidType.indexOf(':')), pinidType.substring(pinidType.indexOf(':') + 1));
 		manager.disconnect();
 		// Tell to the client how many values it has to expect
-		int number = history.keySet().size();
+		int number = history.size();
 		oos.writeObject(Integer.valueOf(number).toString());
 		oos.flush();
 		// Send data
 		int index = 0, error = 0;
 		
-		List<String> keys = new ArrayList<String>(history.keySet());
 		while(number > 0) {
-			oos.writeObject(Utils.encode64(keys.get(index)) + ":" + Utils.encode64(history.get(keys.get(index))));
+			Map<String, Double> map = history.get(index);
+			String toWrite = Utils.encode64((String) map.keySet().toArray()[0]) + ":" + Utils.encode64(map.get((String) map.keySet().toArray()[0]));
+			oos.writeObject(toWrite);
 			oos.flush();
 			String control = (String) ois.readObject();
 			if(control.equals("ACK")){
+				System.out.println("\t ACK " + (String) map.keySet().toArray()[0] + ":" + map.get((String) map.keySet().toArray()[0]));
 				number--;
 				index++;
 				error = 0;
 			} else {
+				System.out.println("\t NACK " + (String) map.keySet().toArray()[0] + ":" + map.get((String) map.keySet().toArray()[0]));
 				if(error < 3)
 					error++;
 				else {

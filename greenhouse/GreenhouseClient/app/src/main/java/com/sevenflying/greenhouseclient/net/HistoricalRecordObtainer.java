@@ -3,6 +3,7 @@ package com.sevenflying.greenhouseclient.net;
 import android.os.AsyncTask;
 import android.text.Layout;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -17,13 +18,14 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 /** Obtains the historical records of a sensor from the server.
  * Created by 7flying on 04/08/2014.
  */
-public class HistoricalRecordObtainer extends AsyncTask<Void, Void, Map<String, Float>> {
+public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<String, Float>>> {
 
     // Sensor's pin id
     private String pinId;
@@ -50,8 +52,8 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, Map<String, 
     }
 
     @Override
-    protected Map<String, Float> doInBackground(Void... voids) {
-        Map<String, Float> ret = new HashMap<String, Float>();
+    protected List<Map<String, Float>> doInBackground(Void... voids) {
+        List<Map<String, Float>> ret = new ArrayList<Map<String, Float>>();
         try {
             InetAddress add = InetAddress.getByName(Constants.serverIP);
             Socket s = new Socket(add, Constants.serverPort);
@@ -77,7 +79,9 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, Map<String, 
                     if(tempIndex == 2) {
                         // Remove date from timedate
                         temp[0] = temp[0].substring(0, temp[0].indexOf('-') - 1);
-                        ret.put(temp[0], Float.valueOf(temp[1]));
+                        Map<String, Float> map = new HashMap<String, Float>();
+                        map.put(temp[0], Float.valueOf(temp[1]));
+                        ret.add(map);
                         oos.writeObject("ACK");
                         oos.flush();
                         numPairs--;
@@ -97,23 +101,27 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, Map<String, 
     }
 
     @Override
-    protected void onPostExecute(Map<String, Float> stringFloatMap) {
+    protected void onPostExecute(List<Map<String, Float>> stringFloatMapList) {
         ArrayList<Entry> chartData = new ArrayList<Entry>();
-        int i = 0;
-        for(String key : stringFloatMap.keySet()) {
-            chartData.add(new Entry( stringFloatMap.get(key), i));
-            i++;
+        ArrayList<String> xValues = new ArrayList<String>();
+        // The data has to be ordered in reverse order, from past to present and it's received
+        // the other way around
+        int i = stringFloatMapList.size() - 1;
+        for(Map<String, Float> stringFloatMap : stringFloatMapList) {
+            for(String key : stringFloatMap.keySet()) {
+                xValues.add((String) stringFloatMapList.get(i).keySet().toArray()[0]);
+                chartData.add(new Entry( stringFloatMap.get(key), i));
+                i--;
+            }
         }
-
         DataSet set = new DataSet(chartData, "Sensor");
         ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
         dataSets.add(set);
 
-        ChartData data = new ChartData(new ArrayList<String>(stringFloatMap.keySet()), dataSets);
+        ChartData data = new ChartData(xValues, dataSets);
         chart.setData(data);
 
         layoutProgress.setVisibility(View.GONE);
         layoutChart.setVisibility(View.VISIBLE);
-        chart.requestFocus();
     }
 }

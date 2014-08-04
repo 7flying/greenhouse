@@ -200,21 +200,24 @@ public class DBManager {
 	/** Retrieves the last X values from a given sensor.
 	 * @param lastX - number of maximum values to retrieve
 	 * @param sensor - sensor to check
-	 * @return map with date-value
+	 * @return list with maps with date-value
 	 * @throws SQLException 
 	 */
-	public Map<String, Double> getLastXFromSensor(int lastX, String pinId, String type) throws SQLException {
-		Map<String, Double> map = new HashMap<String, Double>();
+	public List<Map<String, Double>> getLastXFromSensor(int lastX, String pinId, String type) throws SQLException {
+		List<Map<String, Double>> ret = new ArrayList<Map<String, Double>>();
 		int id = getSensorBDid(pinId, type);
 		PreparedStatement pre = conn.prepareStatement("SELECT time, date, value FROM Readings WHERE idsensor = ? ORDER BY id DESC LIMIT ?;");
 		pre.setInt(1, id);
 		pre.setInt(2, lastX);
 		ResultSet result = pre.executeQuery();
-		while(result.next())
+		while(result.next()) {
+			Map<String, Double> map = new HashMap<String, Double>();
 			map.put(result.getString(1) + " - " + result.getString(2), result.getDouble(3));
+			ret.add(map);
+		}
 		result.close();
 		pre.close();
-		return map;
+		return ret;
 	}
 	
 }
