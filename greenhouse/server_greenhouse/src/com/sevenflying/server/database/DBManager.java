@@ -159,9 +159,36 @@ public class DBManager {
 	 */
 	public double getLastReading(Sensor sensor) throws SQLException, GreenhouseDatabaseException {
 		int idSensor = getSensorDBid(sensor);
-		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings where idsensor = ? and id = (SELECT max(id) from Readings where idsensor = ?);");
+		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings WHERE idsensor = ? and id = (SELECT max(id) FROM Readings WHERE idsensor = ?);");
 		pre.setInt(1, idSensor);
 		pre.setInt(2, idSensor);
+		ResultSet result = pre.executeQuery();
+		double ret = -2323;
+		boolean reading = false;
+		if(result.next()) {
+			ret = result.getDouble(1);
+			reading = true;
+		}
+		result.close();
+		pre.close();
+		if(reading)
+			return ret;
+		else 
+			throw new GreenhouseDatabaseException();
+	}
+	
+	/** Returns the last reading of a sensor
+	 * @param pinId - sensor's pin id
+	 * @param type - sensor's type
+	 * @return last reading
+	 * @throws SQLException
+	 * @throws GreenhouseDatabaseException - when there aren't readings from a sensor
+	 */
+	public double getLastReading(String pinId, String type) throws SQLException, GreenhouseDatabaseException {
+		int id = getSensorBDid(pinId, type);
+		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings WHERE idsensor = ? and id = (SELECT max(id) FROM Readings WHERE idsensor = ?);");
+		pre.setInt(1, id);
+		pre.setInt(2, id);
 		ResultSet result = pre.executeQuery();
 		double ret = -2323;
 		boolean reading = false;

@@ -10,5 +10,6 @@ public class Constants {
 	 * ****************** */
 	public static final String GETSENSORS = "GETSENSORS";
 	public static final String HISTORY = "HISTORY";
+	public static final String CHECK = "CHECK";
 	
 }

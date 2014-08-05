@@ -31,7 +31,7 @@ public class Alert implements Serializable {
 
 	/** Checks if the Alert has to be fired */
 	public boolean isFired(double lastValue) {
-        if(active) {
+	    if(active) {
             switch(type) {
                 case GREATER:
                     return (lastValue > compareValue);

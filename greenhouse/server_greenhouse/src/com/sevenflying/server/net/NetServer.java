@@ -12,13 +12,14 @@ import utils.Utils;
 
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
+import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 
 public class NetServer {
 
 	private static String pathToDB = "F:\\dump\\greenhouse\\db.sqlite"; //TODO
-	
+
 	public NetServer() {
-		
+
 	}
 
 	public void launch() throws Exception {
@@ -48,18 +49,21 @@ public class NetServer {
 					String command = (String) ois.readObject();
 					System.out.println(" $ Received '" + command + "'");
 					switch (command) {
-						case Constants.GETSENSORS:
-							getSensorValues(ois, oos);
-							break;
-						case Constants.HISTORY:
-							getSensorHistory(ois, oos);
-							break;
-						default:
-							break;
+					case Constants.GETSENSORS:
+						getSensorValues(ois, oos);
+						break;
+					case Constants.HISTORY:
+						getSensorHistory(ois, oos);
+						break;
+					case Constants.CHECK:	
+						getSensorLastValue(ois, oos);
+						break;
+					default:
+						oos.close();
+						ois.close();
+						break;
 					}
 					s.close();
-					oos.close();
-					ois.close();
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -67,7 +71,7 @@ public class NetServer {
 		});
 		t.run();
 	}
-	
+
 	/** Processes GETSENSORS command. Get the last values of all sensors 
 	 * @return a list with the last values
 	 */
@@ -83,10 +87,10 @@ public class NetServer {
 					Utils.encode64(s.getRefreshRate()) + ":" + 
 					Utils.encode64(s.getLastValue()));
 		manager.disconnect();
-		
+
 		int index = 0, error = 0;
 		int number = ret.size();
-		
+
 		// Tell to the client how many sensors it has to expect
 		oos.writeObject(Integer.valueOf(number).toString());
 		oos.flush();
@@ -113,7 +117,7 @@ public class NetServer {
 		oos.close();
 		ois.close();
 	}
-	
+
 	/** Processes HISTORY command. Gets the historical values of a sensor
 	 * @param ois
 	 * @param oos
@@ -133,7 +137,7 @@ public class NetServer {
 		oos.flush();
 		// Send data
 		int index = 0, error = 0;
-		
+
 		while(number > 0) {
 			Map<String, Double> map = history.get(index);
 			String toWrite = Utils.encode64((String) map.keySet().toArray()[0]) + ":" + Utils.encode64(map.get((String) map.keySet().toArray()[0]));
@@ -161,7 +165,31 @@ public class NetServer {
 		oos.close();
 		ois.close();
 	}
-	
+
+	/** Processes CHECK command. Gets the last value of a sensor.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	public void getSensorLastValue(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+		// Read sensor pinid and type
+		String pinidType = (String) ois.readObject();
+		DBManager manager = DBManager.getInstance();
+		manager.connect(pathToDB);
+		try{
+			double reading = manager.getLastReading(pinidType.substring(0, pinidType.indexOf(':')), pinidType.substring(pinidType.indexOf(':') + 1));
+			oos.writeObject(Utils.encode64(Double.valueOf(reading).toString()));
+			oos.flush();
+			System.out.println(reading);
+		}catch(GreenhouseDatabaseException e) {
+			oos.writeObject("X");
+			oos.flush();
+		}
+		manager.disconnect();
+		oos.close();
+		ois.close();
+	}
+
 	public static void main(String [] args) throws Exception {
 		NetServer ns = new NetServer();
 		ns.launch();
