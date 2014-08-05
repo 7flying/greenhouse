@@ -2,11 +2,16 @@ package com.sevenflying.greenhouseclient.app;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.AlarmManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+
+import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -46,6 +51,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public void onPageScrollStateChanged(int i) {}
         });
+
+        // Alarm manager setup
+        Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, myIntent,0 );
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 120000,120000,
+                pendingIntent);
     }
 
 

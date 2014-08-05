@@ -3,6 +3,8 @@
     package="com.sevenflying.greenhouseclient.app" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/blossom"
@@ -18,6 +20,9 @@
         </activity>
         <activity android:name="com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity"/>
         <activity android:name="com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity"/>
+        <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
+            android:enabled="true"/>
+        <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>
     </application>
 
 </manifest>
