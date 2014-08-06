@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 
@@ -19,7 +20,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
+
 
 /** AlertService checks whether the alerts defined by the user are fired.
  *  If so sends a notification.
@@ -41,6 +44,7 @@ public class AlertService extends IntentService {
     private void checkAlerts() {
         AlertManager manager = AlertManager.getInstance(getApplicationContext());
         List<Alert> alerts = manager.getAlerts();
+        int alertCount = alerts.size() - 1;
         for(Alert alert : alerts) {
             if(alert.isActive()) {
                 int errors = 0;
@@ -56,9 +60,10 @@ public class AlertService extends IntentService {
                     }
                 } while(e != null && errors < 3);
                 if(alert.isFired(lastValue)) {
-                    sendNotification(alert, lastValue);
+                    sendNotification(alert, lastValue, alertCount);
                 }
             }
+            alertCount--;
         }
     }
 
@@ -70,7 +75,7 @@ public class AlertService extends IntentService {
      * @throws ClassNotFoundException
      */
     private double getLastValue(String sensorPinId, String sensorType)
-
+        throws ClassNotFoundException, IOException
     {
         double lastValue = -3;
         try {
@@ -86,7 +91,7 @@ public class AlertService extends IntentService {
             s.close();
             oos.close();
             ois.close();
-        }catch (Exception e) {
+        }catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return lastValue;
@@ -95,25 +100,33 @@ public class AlertService extends IntentService {
     /**Sends an "alert is fired" notification
      * @param alert - alert that is fired
      * @param lastValue - last value of the sensor that fired the alert
+     * @param notifyId - notification id, different values trigger different notifications, the same
+     *                 value updates the notification.
      */
-    private void sendNotification(Alert alert, double lastValue) {
+    private void sendNotification(Alert alert, double lastValue, int notifyId) {
         NotificationManager notificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
-
+        // Create notification
+        String contentText = alert.getSensorName() + " " + alert.getSensorType().toString()
+                + " " + alert.getAlertType().getSymbol() + " " + alert.getCompareValue()
+                + " " + alert.getSensorType().getUnit();
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.notification)
+                        .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                                Sensor.getDrawableIdClearFromType(alert.getSensorType())))
+                        .setSmallIcon(R.drawable.ic_action_read)
                         .setContentTitle(getResources().getString(R.string.logic_alert_on_sensor))
+                        .setContentText(contentText)
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(getResources().getString(R.string.logic_alert_on_sensor) +
-                                        " : " + alert.getSensorName()))
-                        .setContentText(alert.getSensorName() + " " + alert.getSensorType().getUnit()
-                                + " " + alert.getAlertType().getSymbol() + " " + lastValue);
-
+                                .setBigContentTitle(alert.getSensorName()
+                                        + " " + alert.getSensorType().toString() + ": " + lastValue
+                                        + " " + alert.getSensorType().getUnit())
+                                .setSummaryText(contentText)
+                             );
         mBuilder.setContentIntent(contentIntent);
-        notificationManager.notify(0, mBuilder.build());
+        notificationManager.notify(notifyId, mBuilder.build());
     }
 }

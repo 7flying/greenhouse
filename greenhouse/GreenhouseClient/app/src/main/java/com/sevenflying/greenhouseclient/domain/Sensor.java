@@ -101,6 +101,19 @@ public class Sensor implements Serializable {
         }
     }
 
+    public static int getDrawableIdClearFromType(SensorType type) {
+        switch (type){
+            case HUMIDITY:
+                return R.drawable.humidity_sensor;
+            case TEMPERATURE:
+                return R.drawable.temperature_sensor;
+            case LIGHT:
+                return R.drawable.light_sensor;
+            default:
+                return R.drawable.sensor;
+        }
+    }
+
     public String getUpdatedAt() {
         return updatedAt;
     }
