@@ -72,6 +72,9 @@ public class AlertListFragment extends Fragment {
                                             manager.removeAlert(alertList.get(listPosition));
                                             alertList.remove(alertList.get(listPosition));
                                             adapter.notifyDataSetChanged();
+                                            Toast.makeText(getActivity().getApplicationContext(),
+                                                    getResources().getString(R.string.alert_deleted),
+                                                    Toast.LENGTH_SHORT).show();
                                             break;
                                     }
                                     manager.commit();

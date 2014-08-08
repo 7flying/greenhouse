@@ -57,13 +57,29 @@ public class AlertManager {
         return ret;
     }
 
-    /** Checks whether the manager has alerts created concerning a sensor
-     * @param pinId - pin id from the Sensor to check
-     * @param type - type of the Sensor to check
+    /** Checks whether the manager has alerts created concerning a sensor of a certain alert type
+     * @param pinId - pin id from the Sensor
+     * @param sensorType - sensor type
+     * @param alertType - alert type
      * @return true if it has
      */
-    public synchronized boolean hasAlertsCreatedFrom(String pinId, SensorType type) {
-        return mapSensorAlerts.containsKey(pinId + type.getIdentifier());
+    public synchronized boolean hasAlertsCreatedFrom(String pinId, SensorType sensorType,
+          AlertType alertType)
+    {
+        if(mapSensorAlerts.containsKey(pinId + sensorType.getIdentifier())) {
+            boolean found = false;
+            int index = 0;
+            List<Alert> alertList = mapSensorAlerts.get(pinId + sensorType.getIdentifier());
+            while(!found && index < alertList.size()) {
+                if(alertList.get(index).getAlertType() == alertType)
+                    found = true;
+                else
+                    index++;
+            }
+            return found;
+        } else {
+            return false;
+        }
     }
 
     /** Adds an alert to the Manager. Alerts cannot be repeated.

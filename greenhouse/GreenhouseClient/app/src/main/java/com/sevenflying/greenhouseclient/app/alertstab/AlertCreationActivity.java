@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Alert;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class AlertCreationActivity extends FragmentActivity {
     private Button buttonCreate;
     private EditText editTextValue;
+    private TextView tvSensorUnit;
     private String selectedSensor = null;
     private int selectedAlert = -1;
     private final AlertType [] alertTypes = {   AlertType.GREATER, AlertType.GREATER_EQUAL,
@@ -42,8 +45,11 @@ public class AlertCreationActivity extends FragmentActivity {
         setContentView(R.layout.activity_alert_creation);
         formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormattedSensors();
 
+        // Text View sensor's unit
+        tvSensorUnit = (TextView) findViewById(R.id.next_to_edit_alert_value_shows_unit);
+
         // Sensor list spinner
-        Spinner sensorListSpinner = (Spinner) findViewById(R.id.sensor_list_spinner);
+        final Spinner sensorListSpinner = (Spinner) findViewById(R.id.sensor_list_spinner);
 
         ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
@@ -56,6 +62,7 @@ public class AlertCreationActivity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 AlertCreationActivity.this.selectedSensor = adapterView.getItemAtPosition(i)
                         .toString();
+                tvSensorUnit.setText(formattedSensorMap.get(selectedSensor).getType().getUnit());
             }
 
             public void onNothingSelected(AdapterView<?> adapterView) {  }
@@ -79,6 +86,7 @@ public class AlertCreationActivity extends FragmentActivity {
 
         // Edit Text Value
         editTextValue = (EditText) findViewById(R.id.edit_alert_value);
+
         // Data validator
         editTextValue.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,6 +122,15 @@ public class AlertCreationActivity extends FragmentActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("alert", a);
                 setResult(RESULT_OK, returnIntent);
+                if(sensorListSpinner.isEnabled()) {
+                    Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.alert_created),
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.alert_edited),
+                            Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
         });
@@ -128,5 +145,13 @@ public class AlertCreationActivity extends FragmentActivity {
             alertTypeSpinner.setSelection(a.getAlertType().getIndex());
             alertTypeSpinner.setEnabled(false);
         }
+
+        Button buttonCancel = (Button) findViewById(R.id.button_cancel_alert);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }

@@ -31,12 +31,17 @@
     <string name="alert_fired_on_value">Value</string>
     <string name="no_alerts">There aren\'t any alerts, try to add one!</string>
     <string name="button_save_alarm_creation_delete">Save</string>
+    <string name="button_cancel_alarm_creation_delete">Cancel</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>
     <string name="edit_alert_context_menu">Edit</string>
     <string name="delete_alert_context_menu">Delete</string>
 
-    <!-- -->
+    <!-- Notifications -->
     <string name="logic_alert_on_sensor">Alert on sensor</string>
+    <!-- Toasts -->
+    <string name="alert_created">Alert created.</string>
+    <string name="alert_edited">Alert edited.</string>
+    <string name="alert_deleted">Alert deleted.</string>
 </resources>

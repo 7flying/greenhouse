@@ -53,12 +53,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="6dp"
-        android:paddingLeft="6dp">
+        android:paddingLeft="6dp"
+        android:weightSum="2">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="19sp"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:layout_gravity="center_vertical"
             android:text="@string/alert_fired_on_value"
             android:clickable="false"/>
@@ -66,11 +67,28 @@
             android:id="@+id/edit_alert_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:inputType="numberDecimal"
             android:hint=""/>
+        <TextView
+            android:id="@+id/next_to_edit_alert_value_shows_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="19sp"
+            android:layout_weight="0.3"/>
     </TableRow>
-    <Button android:id="@+id/button_create_alert"
-        android:text="@string/button_save_alarm_creation_delete"/>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp"
+        android:paddingLeft="6dp">
+        <Button android:id="@+id/button_create_alert"
+            android:text="@string/button_save_alarm_creation_delete"
+            android:layout_weight="1"/>
+        <Button android:id="@+id/button_cancel_alert"
+            android:text="@string/button_cancel_alarm_creation_delete"
+            android:layout_weight="1"/>
+    </TableRow>
 
 </TableLayout>
