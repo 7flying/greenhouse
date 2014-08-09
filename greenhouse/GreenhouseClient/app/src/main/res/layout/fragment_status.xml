@@ -3,17 +3,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff8499" >
-
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/grid_view"
+    android:background="#000000">
+    <Button
+        android:id="@+id/button_add_item"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/add_item"
+        android:text="@string/add_item"
+        android:textColor="#FFFFFF"
+        android:drawableLeft="@drawable/ic_action_new"/>
+    <TextView
+        android:id="@+id/tv_monitoring_items"
+        android:text="@string/general_status"
+        android:layout_below="@id/button_add_item"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"/>
+    <View
+        android:id="@+id/line_monitoring_items"
+        android:layout_below="@id/tv_monitoring_items"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="#333333"/>
+
+    <GridView
+        android:id="@+id/grid_view"
+        android:layout_below="@id/line_monitoring_items"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
         android:columnWidth="90dp"
         android:numColumns="auto_fit"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
-        android:gravity="center"
-        />
+        android:gravity="center"/>
+
 </RelativeLayout>
