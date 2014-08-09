@@ -122,11 +122,7 @@ public class AlertCreationActivity extends FragmentActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("alert", a);
                 setResult(RESULT_OK, returnIntent);
-                if(sensorListSpinner.isEnabled()) {
-                    Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.alert_created),
-                            Toast.LENGTH_SHORT).show();
-                }else{
+                if(!sensorListSpinner.isEnabled()) {
                     Toast.makeText(getApplicationContext(),
                             getResources().getString(R.string.alert_edited),
                             Toast.LENGTH_SHORT).show();

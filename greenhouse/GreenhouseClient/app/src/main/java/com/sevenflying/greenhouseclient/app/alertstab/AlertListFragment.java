@@ -58,7 +58,7 @@ public class AlertListFragment extends Fragment {
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int listPosition, long l) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(adapter.getItem(listPosition).getSensorPinId())
+                    builder.setTitle(getResources().getString(R.string.string_alert))
                             .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogInterface, int position) {
                                     switch (position) {
@@ -128,11 +128,27 @@ public class AlertListFragment extends Fragment {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {
                 Alert a = (Alert) data.getSerializableExtra("alert");
-                alertList.add(a);
-                adapter.notifyDataSetChanged();
-                checkLayoutVisibility();
-                manager.addAlert(a);
-                manager.commit();
+                // Check if an alert of the same type on the sensor is created
+                if(manager.hasAlertsCreatedFrom(a.getSensorPinId(), a.getSensorType(), a.getAlertType())) {
+                    // Display message telling to the user that he/she cannot create two alerts
+                    // of the same type on the same sensor
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(getResources().getString(R.string.alert_repeated_notification));
+                    builder.setPositiveButton(R.string.ok,new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {}
+                    });
+                    builder.show();
+                } else {
+                    // Commit the alert
+                    alertList.add(a);
+                    adapter.notifyDataSetChanged();
+                    checkLayoutVisibility();
+                    manager.addAlert(a);
+                    manager.commit();
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            getResources().getString(R.string.alert_created),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             if(requestCode == CODE_EDIT_ALERT) {
