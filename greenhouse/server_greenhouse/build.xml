@@ -1,0 +1,58 @@
+<project name="Greenhouse" default="jars" basedir=".">
+	
+	<property environment="env" />
+	<property name="bin.dir" location="bin" />
+	<property name="src.dir" location="src" />
+	<property name="lib.dir" location="lib" />
+	<property name="jar.dir" location="jar" />
+	<property name="javaversion" value="1.7" />
+	<property name="version" value="0.1" />
+	<property name="main.jar" value="Greenhouse-Server-${version}"/>
+	<property name="main-class" value="com.sevenflying.server.net.NetServer"/>
+	
+	<!-- Reference libs-->
+	<path id="libraries">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<!-- Clean previous stuff on bin/ and jars/ -->
+	<target name="clean">
+		<delete dir="${bin.dir}" />
+		<delete file="${bin.dir}/${main.jar}.jar" />
+	</target>
+	
+	<!-- Prepare folfers for bin/ and jars/ -->
+	<target name="prepare" depends="clean">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${jar.dir}" />
+	</target>
+	
+	<!-- Compile-->
+	<target name="compile" depends="prepare">
+		<javac destdir="${bin.dir}" srcdir="${src.dir}"
+			deprecation="true" fork="true" source="${javaversion}"
+			target="${javaversion}">
+		<classpath refid="libraries" />
+		</javac>
+	</target>
+	
+	<!-- Make jar-->
+	<target name="jars" depends="compile">
+		<!-- Set destfile. Important: put basedir where .class are (bin) -->
+		<jar destfile="${jar.dir}/${main.jar}.jar" basedir="${bin.dir}"> 
+			<zipgroupfileset dir="${lib.dir}" includes="*.jar"/> 
+			<!-- Set main class on jar -->
+			<manifest> 
+				<attribute name="Main-Class" value="${main-class}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Run -->
+	<target name="run" depends="jars">
+		<java jar="${jar.dir}/${main.jar}.jar" fork="true" maxmemory="3G">
+		</java>
+	</target>
+</project>
