@@ -56,4 +56,5 @@
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>
+    <string name="content_description_image">Image</string>
 </resources>

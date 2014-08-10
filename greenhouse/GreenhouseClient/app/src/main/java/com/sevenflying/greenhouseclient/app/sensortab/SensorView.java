@@ -24,9 +24,8 @@ public class SensorView extends RelativeLayout {
     private ImageView sensorDefaultImage;
 
     public static SensorView inflate(ViewGroup parent) {
-        SensorView sensorView = (SensorView) LayoutInflater.from(parent.getContext())
+        return (SensorView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.sensor_view, parent, false);
-        return sensorView;
     }
 
     public SensorView(Context context) {

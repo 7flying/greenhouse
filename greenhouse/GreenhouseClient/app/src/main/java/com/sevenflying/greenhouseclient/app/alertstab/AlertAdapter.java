@@ -11,7 +11,7 @@ import com.sevenflying.greenhouseclient.domain.Alert;
 import java.io.Serializable;
 import java.util.List;
 
-/**
+/** Adapter for Alert class.
  * Created by 7flying on 15/07/2014.
  */
 public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {

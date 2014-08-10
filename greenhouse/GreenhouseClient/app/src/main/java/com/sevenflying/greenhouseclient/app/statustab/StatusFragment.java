@@ -5,16 +5,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -36,7 +31,6 @@ public class StatusFragment extends Fragment {
             lv2 = (ListView) view.findViewById(R.id.list_items);
 
             ArrayList<String> listOne = new ArrayList<String>();
-            //listOne.add("Water pump");
             listOne.addAll(Arrays.asList(s1));
             ArrayAdapter<String> listAdapterOne = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listOne);
             lv1.setAdapter(listAdapterOne);
@@ -45,16 +39,7 @@ public class StatusFragment extends Fragment {
             listTwo.addAll(Arrays.asList(s1));
             ArrayAdapter<String> listAdapterTwo = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listTwo);
             lv2.setAdapter(listAdapterTwo);
-            /*
-            GridView gridView = (GridView) view.findViewById(R.id.grid_view);
-            gridView.setAdapter(new ImageAdapter(getActivity().getApplicationContext()));
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            */
+
             return view;
         }
     }
