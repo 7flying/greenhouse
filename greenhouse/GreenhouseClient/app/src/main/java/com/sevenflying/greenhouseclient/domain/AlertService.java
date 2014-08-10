@@ -117,13 +117,13 @@ public class AlertService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                 Sensor.getDrawableIdClearFromType(alert.getSensorType())))
-                        .setSmallIcon(R.drawable.ic_action_read)
+                        .setSmallIcon(R.drawable.ic_leaf)
                         .setContentTitle(getResources().getString(R.string.logic_alert_on_sensor))
                         .setContentText(contentText)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .setBigContentTitle(alert.getSensorName()
                                         + " " + alert.getSensorType().toString() + ": " + lastValue
-                                        + " " + alert.getSensorType().getUnit())
+                                        + "" + alert.getSensorType().getUnit())
                                 .setSummaryText(contentText)
                              );
         mBuilder.setContentIntent(contentIntent);

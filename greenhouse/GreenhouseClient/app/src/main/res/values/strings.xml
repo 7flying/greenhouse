@@ -38,6 +38,7 @@
     <!-- fragment_status-->
     <string name="general_status">GENERAL STATUS</string>
     <string name="add_item">Add item</string>
+    <string name="actuators">ACTUATORS</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

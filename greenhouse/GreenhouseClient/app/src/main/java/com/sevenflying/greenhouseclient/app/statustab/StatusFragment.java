@@ -6,21 +6,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 
-/**
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+/** This fragment shows the status of the items that are monitored
+ *  and the actuators that can be applied.
  * Created by 7flying on 25/06/2014.
  */
 public class StatusFragment extends Fragment {
+    private ListView lv1 = null;
+    private ListView lv2 = null;
+    private String s1[] = {"a", "b", "c", "a", "b", "c", "a", "b", "c"};
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
             return null;
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
+            lv1 = (ListView) view.findViewById(R.id.list_actuators);
+            lv2 = (ListView) view.findViewById(R.id.list_items);
+
+            ArrayList<String> listOne = new ArrayList<String>();
+            //listOne.add("Water pump");
+            listOne.addAll(Arrays.asList(s1));
+            ArrayAdapter<String> listAdapterOne = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listOne);
+            lv1.setAdapter(listAdapterOne);
+
+            ArrayList<String> listTwo = new ArrayList<String>();
+            listTwo.addAll(Arrays.asList(s1));
+            ArrayAdapter<String> listAdapterTwo = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listTwo);
+            lv2.setAdapter(listAdapterTwo);
+            /*
             GridView gridView = (GridView) view.findViewById(R.id.grid_view);
             gridView.setAdapter(new ImageAdapter(getActivity().getApplicationContext()));
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -29,6 +54,7 @@ public class StatusFragment extends Fragment {
                     Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
                 }
             });
+            */
             return view;
         }
     }
