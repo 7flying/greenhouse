@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/text_progress_bar"
-            android:textSize="19sp"
+            android:textSize="16sp"
             android:text="@string/no_connection"/>
     </LinearLayout>
     <ListView

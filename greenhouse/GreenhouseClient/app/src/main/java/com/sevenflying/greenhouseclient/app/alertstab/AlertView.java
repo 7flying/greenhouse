@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -18,7 +19,7 @@ import com.sevenflying.greenhouseclient.domain.SensorType;
 /**
  * Created by 7flying on 15/07/2014.
  */
-public class AlertView extends RelativeLayout {
+public class AlertView extends LinearLayout {
 
     private ToggleButton toggle;
     private TextView textSensorName;
@@ -43,6 +44,7 @@ public class AlertView extends RelativeLayout {
 
     public AlertView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.setOrientation(HORIZONTAL);
         LayoutInflater.from(context).inflate(R.layout.alert_list_row, this, true);
         toggle = (ToggleButton) findViewById(R.id.button_on_off);
         textSensorName = (TextView) findViewById(R.id.alert_sensor_name);

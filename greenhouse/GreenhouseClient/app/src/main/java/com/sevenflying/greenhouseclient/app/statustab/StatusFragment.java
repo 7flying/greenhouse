@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,28 +19,35 @@ import java.util.Arrays;
  * Created by 7flying on 25/06/2014.
  */
 public class StatusFragment extends Fragment {
-    private ListView lv1 = null;
-    private ListView lv2 = null;
-    private String s1[] = {"a", "b", "c", "a", "b", "c", "a", "b", "c"};
+    private ListView moniList;
+    private ListView actuatorList = null;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
             return null;
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
-            lv1 = (ListView) view.findViewById(R.id.list_actuators);
-            lv2 = (ListView) view.findViewById(R.id.list_items);
+            actuatorList = (ListView) view.findViewById(R.id.list_actuators);
+            moniList = (ListView) view.findViewById(R.id.list_items);
 
+            String s[] = {"a", "b", "c", "a", "b", "c", "a", "b", "c"};
             ArrayList<String> listOne = new ArrayList<String>();
-            listOne.addAll(Arrays.asList(s1));
+            listOne.addAll(Arrays.asList(s));
             ArrayAdapter<String> listAdapterOne = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listOne);
-            lv1.setAdapter(listAdapterOne);
+            actuatorList.setAdapter(listAdapterOne);
 
-            ArrayList<String> listTwo = new ArrayList<String>();
-            listTwo.addAll(Arrays.asList(s1));
-            ArrayAdapter<String> listAdapterTwo = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listTwo);
-            lv2.setAdapter(listAdapterTwo);
-
+            ArrayList<MonitoringItem> tempList = new ArrayList<MonitoringItem>();
+            boolean enabled = true;
+            for(int i = 0; i < 20; i++) {
+                MonitoringItem item = new MonitoringItem("Greenhouse " + i );
+                item.setWarningEnabled(enabled);
+                tempList.add(item);
+                enabled = !enabled;
+            }
+            MonitoringItemAdapter adapter = new MonitoringItemAdapter(getActivity(),
+                    R.layout.monitoring_item_row, tempList);
+            moniList.setAdapter(adapter);
             return view;
         }
     }

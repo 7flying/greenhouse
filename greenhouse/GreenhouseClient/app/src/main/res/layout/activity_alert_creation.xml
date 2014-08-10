@@ -35,7 +35,7 @@
         <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="19sp"
+        android:textSize="16sp"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:text="@string/select_sensor_spinner"
@@ -57,7 +57,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="19sp"
+            android:textSize="16sp"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:text="@string/alert_type_spinner"
@@ -80,7 +80,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="19sp"
+            android:textSize="16sp"
             android:layout_weight="1.2"
             android:layout_gravity="center_vertical"
             android:text="@string/alert_fired_on_value"
@@ -96,7 +96,7 @@
             android:id="@+id/next_to_edit_alert_value_shows_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="19sp"
+            android:textSize="16sp"
             android:layout_weight="0.3"/>
     </TableRow>
     <TableRow
@@ -112,6 +112,5 @@
             android:text="@string/button_cancel_alarm_creation_delete"
             android:layout_weight="1"/>
     </TableRow>
-
     </TableLayout>
 </RelativeLayout>
