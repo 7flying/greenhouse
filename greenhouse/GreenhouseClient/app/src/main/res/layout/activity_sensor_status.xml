@@ -8,7 +8,7 @@
         android:layout_width="105dp"
         android:layout_height="105dp"
         android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="16dp"
         android:contentDescription="@string/content_image_sensor_desc"
         />
     
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/image_sensor"
         android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="16dp"
         android:text="35.5"
         />
     <TextView
@@ -56,6 +56,16 @@
         android:text="13/7/2014 18:25"/>
 
     <!-- Data part-->
+    <View
+        android:id="@+id/separator_data"
+        android:layout_below="@id/image_sensor"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@id/image_sensor"
+        android:layout_alignStart="@id/image_sensor"
+        android:layout_marginRight="16dp"
+        android:background="#333333"/>
     <!-- Sensor name -->
     <TextView
         android:id="@+id/static_text_sensor_name"
@@ -63,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/xml_sensor_name"
-        android:layout_below="@id/image_sensor"
+        android:layout_below="@id/separator_data"
         android:layout_alignLeft="@id/image_sensor"
         android:layout_alignStart="@id/image_sensor"
         android:layout_marginTop="20dp" />
@@ -73,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DHT-22"
-        android:layout_below="@id/image_sensor"
+        android:layout_below="@id/separator_data"
         android:layout_toRightOf="@id/static_text_sensor_name"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"/>
@@ -162,9 +172,19 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"/>
     <!-- chart-->
+    <View
+        android:id="@+id/separator_chart"
+        android:layout_below="@id/static_text_sensor_pin"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@id/image_sensor"
+        android:layout_alignStart="@id/image_sensor"
+        android:layout_marginRight="16dp"
+        android:background="#333333"/>
     <LinearLayout
         android:id="@+id/layout_progress"
-        android:layout_below="@id/static_text_sensor_pin"
+        android:layout_below="@id/separator_chart"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
@@ -178,16 +198,15 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_chart"
-        android:layout_below="@id/static_text_sensor_pin"
+        android:layout_below="@id/separator_chart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </RelativeLayout>

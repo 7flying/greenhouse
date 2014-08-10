@@ -10,7 +10,7 @@ import com.sevenflying.greenhouseclient.domain.Sensor;
 import java.util.List;
 
 
-/**
+/** Adapter used at the SensorsListActivity
  * Created by 7flying on 28/06/2014.
  */
 public class SensorAdapter extends ArrayAdapter<Sensor> {

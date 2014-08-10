@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.sevenflying.greenhouseclient.app.R;
 
-/**
+/** Activity to link StatusFragment & fragment_status.xml
  * Created by 7flying on 06/08/2014.
  */
 public class StatusActivity extends FragmentActivity {

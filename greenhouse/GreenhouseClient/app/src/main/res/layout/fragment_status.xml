@@ -13,10 +13,10 @@
         android:layout_weight="0.5">
         <TextView
             android:id="@+id/tv_monitoring_items"
-            android:text="@string/general_status"
+            android:text="@string/monitoring_items"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:paddingLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="4dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:background="#333333"/>
         <LinearLayout
             android:id="@+id/layout_items"
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp">
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
             <ListView
                 android:id="@+id/list_items"
                 android:layout_height="fill_parent"
@@ -53,8 +53,8 @@
             android:id="@+id/tv_actuators"
             android:text="@string/actuators"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:paddingLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,8 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="4dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:background="#333333"/>
         <LinearLayout
             android:id="@+id/layout_actuators"
@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp">
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
             <ListView
                 android:id="@+id/list_actuators"
                 android:layout_height="fill_parent"
@@ -86,8 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:contentDescription="@string/add_item"
         android:text="@string/add_item"
         android:drawableLeft="@drawable/ic_action_new_b"/>

@@ -12,7 +12,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
-/**
+/** SensorView
  * Created by 7flying on 28/06/2014.
  */
 public class SensorView extends RelativeLayout {

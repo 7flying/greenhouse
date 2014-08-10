@@ -7,7 +7,7 @@ import android.view.MenuInflater;
 
 import com.sevenflying.greenhouseclient.app.R;
 
-/**
+/** Activity to link SensorsListFragment & fragment_sensors_list.xml
  * Created by 7flying on 28/06/2014.
  */
 public class SensorsListActivity extends FragmentActivity {

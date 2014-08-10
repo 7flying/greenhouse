@@ -131,6 +131,7 @@ public class AlertCreationActivity extends FragmentActivity {
             }
         });
 
+        TextView tvDescription = (TextView) findViewById(R.id.alert_creation_editing);
         if(getIntent().hasExtra("alert-to-edit")) {
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
             // the equals of sensor takes pinId + type
@@ -140,6 +141,11 @@ public class AlertCreationActivity extends FragmentActivity {
             sensorListSpinner.setEnabled(false);
             alertTypeSpinner.setSelection(a.getAlertType().getIndex());
             alertTypeSpinner.setEnabled(false);
+            // set description text as "editing"
+            tvDescription.setText(getResources().getString(R.string.edit_alert));
+        } else {
+            // set description text as "creation"
+            tvDescription.setText(getResources().getString(R.string.add_alert));
         }
 
         Button buttonCancel = (Button) findViewById(R.id.button_cancel_alert);

@@ -33,10 +33,12 @@
     <string name="button_cancel_alarm_creation_delete">Cancel</string>
     <string name="alert_repeated_notification">You cannot create two alerts of the same type on the
     same sensor.\nPlease edit or delete the alert.</string>
+    <string name="add_alert">ADD ALERT</string>
+    <string name="edit_alert">EDIT ALERT</string>
     <!-- fragment_alert_list -->
     <string name="no_alerts">There aren\'t any alerts, try to add one!</string>
     <!-- fragment_status-->
-    <string name="general_status">GENERAL STATUS</string>
+    <string name="monitoring_items">MONITORING ITEMS</string>
     <string name="add_item">Add item</string>
     <string name="actuators">ACTUATORS</string>
     <!-- xmls menu-->
