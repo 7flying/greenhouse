@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
@@ -25,8 +26,7 @@ import java.util.List;
  * Created by 7flying on 25/06/2014.
  */
 public class StatusFragment extends Fragment {
-    private ListView moniList;
-    private ListView actuatorList;
+
     private List<MonitoringItem> monitoringItems;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -34,8 +34,8 @@ public class StatusFragment extends Fragment {
             return null;
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
-            actuatorList = (ListView) view.findViewById(R.id.list_actuators);
-            moniList = (ListView) view.findViewById(R.id.list_items);
+            ListView actuatorList = (ListView) view.findViewById(R.id.list_actuators);
+            ListView moniList = (ListView) view.findViewById(R.id.list_items);
 
             ArrayList<Actuator> tempActuator = new ArrayList<Actuator>();
             for(int i = 0 ; i < 3; i++){
@@ -48,7 +48,7 @@ public class StatusFragment extends Fragment {
 
             monitoringItems = new ArrayList<MonitoringItem>();
             boolean enabled = true;
-            for(int i = 0; i < 2; i++) {
+            for(int i = 0; i < 5; i++) {
                 MonitoringItem item = new MonitoringItem("Greenhouse " + i );
                 item.setWarningEnabled(enabled);
                 item.addSensor(new Sensor("Sensor " + i,"A" + i, SensorType.LIGHT, 555, 45.5, "blabla"));
@@ -59,6 +59,7 @@ public class StatusFragment extends Fragment {
             MonitoringItemAdapter adapter = new MonitoringItemAdapter(getActivity(),
                     R.layout.monitoring_item_row, monitoringItems);
             moniList.setAdapter(adapter);
+            // Listener on Monitoring Items' list
             moniList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 // Open MonItemStatusActivity
                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
@@ -68,6 +69,15 @@ public class StatusFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+            // Listener on "add item" button
+            Button buttonAdd = (Button) view.findViewById(R.id.button_add_item);
+            buttonAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
             return view;
         }
     }

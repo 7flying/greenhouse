@@ -45,12 +45,17 @@
     <string name="launch">Launch</string>
     <!-- activity_mon_item_status -->
     <string name="attached_sensors">ATTACHED SENSORS</string>
+    <!-- activity_mon_item_creation -->
+    <string name="add_monitoring_item">ADD MONITORING ITEM</string>
+    <string name="add_image">ADD IMAGE</string>
+    <string name="from_camera">Take photo</string>
+    <string name="from_gallery">Choose from gallery</string>
+    <string name="add_sensors">ADD RELATED SENSORS</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>
     <string name="edit_alert_context_menu">Edit</string>
     <string name="delete_alert_context_menu">Delete</string>
-
     <!-- Notifications -->
     <string name="logic_alert_on_sensor">Alert on sensor</string>
     <!-- Toasts -->
@@ -61,4 +66,5 @@
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>
     <string name="content_description_image">Image</string>
+    <string name="name">Name</string>
 </resources>
