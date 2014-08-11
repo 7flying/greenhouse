@@ -100,14 +100,12 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     protected void onPostExecute(List<Sensor> result) {
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
-        //AlertManager alertManager = AlertManager.getInstance(context);
         SensorManager sensorManager = SensorManager.getInstance(context);
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
                 buffer.add(s);
                 adapter.notifyDataSetChanged();
                 sensorManager.addSensor(s);
-                //alertManager.checkAlertsFrom(s.getPinId(), s.getType(), s.getValue()); // TODO don't like it here
             }
         }
         layoutCharge.setVisibility(View.GONE);

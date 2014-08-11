@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.Arrays;
  */
 public class StatusFragment extends Fragment {
     private ListView moniList;
-    private ListView actuatorList = null;
+    private ListView actuatorList;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -31,11 +32,14 @@ public class StatusFragment extends Fragment {
             actuatorList = (ListView) view.findViewById(R.id.list_actuators);
             moniList = (ListView) view.findViewById(R.id.list_items);
 
-            String s[] = {"a", "b", "c", "a", "b", "c", "a", "b", "c"};
-            ArrayList<String> listOne = new ArrayList<String>();
-            listOne.addAll(Arrays.asList(s));
-            ArrayAdapter<String> listAdapterOne = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, listOne);
-            actuatorList.setAdapter(listAdapterOne);
+            ArrayList<Actuator> tempActuator = new ArrayList<Actuator>();
+            for(int i = 0 ; i < 3; i++){
+                Actuator a = new Actuator("Water pump " + i, "D0" + i);
+                tempActuator.add(a);
+            }
+            ActuatorAdapter actuatorAdapter = new ActuatorAdapter(getActivity(),
+                    R.layout.actuator_row, tempActuator);
+            actuatorList.setAdapter(actuatorAdapter);
 
             ArrayList<MonitoringItem> tempList = new ArrayList<MonitoringItem>();
             boolean enabled = true;

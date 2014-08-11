@@ -37,10 +37,12 @@
     <string name="edit_alert">EDIT ALERT</string>
     <!-- fragment_alert_list -->
     <string name="no_alerts">There aren\'t any alerts, try to add one!</string>
-    <!-- fragment_status-->
+    <!-- fragment_status -->
     <string name="monitoring_items">MONITORING ITEMS</string>
     <string name="add_item">Add item</string>
     <string name="actuators">ACTUATORS</string>
+    <!-- actuator_row -->
+    <string name="launch">Launch</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

@@ -4,7 +4,7 @@ import android.util.Base64;
 
 import java.io.Serializable;
 
-/**
+/** Alert class.
  * Created by 7flying on 15/07/2014.
  */
 public class Alert implements Serializable {

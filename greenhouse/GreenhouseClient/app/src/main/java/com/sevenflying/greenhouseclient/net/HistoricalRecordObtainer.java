@@ -1,9 +1,7 @@
 package com.sevenflying.greenhouseclient.net;
 
 import android.os.AsyncTask;
-import android.text.Layout;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
