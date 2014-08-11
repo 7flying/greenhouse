@@ -8,19 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
-import android.util.Base64;
 
 import com.sevenflying.greenhouseclient.app.MainActivity;
 import com.sevenflying.greenhouseclient.app.R;
-import com.sevenflying.greenhouseclient.net.Commands;
-import com.sevenflying.greenhouseclient.net.Constants;
+import com.sevenflying.greenhouseclient.net.Communicator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -52,7 +44,8 @@ public class AlertService extends IntentService {
                 double lastValue = -1;
                 do {
                     try {
-                        lastValue = getLastValue(alert.getSensorPinId(), Character.valueOf(alert.getSensorType().getIdentifier()).toString());
+                        lastValue = Communicator.getLastValue(alert.getSensorPinId(),
+                                Character.valueOf(alert.getSensorType().getIdentifier()).toString());
                         e = null;
                     } catch (Exception ex) {
                         e = ex;
@@ -65,36 +58,6 @@ public class AlertService extends IntentService {
             }
             alertCount--;
         }
-    }
-
-    /** Gets the sensor's last value from the server.
-     * @param sensorPinId - sensor's pin id
-     * @param sensorType - sensor's type
-     * @return sensor's last value
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private double getLastValue(String sensorPinId, String sensorType)
-        throws ClassNotFoundException, IOException
-    {
-        double lastValue = -3;
-        try {
-            InetAddress add = InetAddress.getByName(Constants.serverIP);
-            Socket s = new Socket(add, Constants.serverPort);
-            ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-            ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(Commands.CHECK);
-            oos.flush();
-            oos.writeObject(sensorPinId + ":" + sensorType);
-            oos.flush();
-            lastValue = Double.valueOf(new String(Base64.decode( ((String) ois.readObject()).getBytes(), Base64.DEFAULT)));
-            s.close();
-            oos.close();
-            ois.close();
-        }catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        return lastValue;
     }
 
     /**Sends an "alert is fired" notification
