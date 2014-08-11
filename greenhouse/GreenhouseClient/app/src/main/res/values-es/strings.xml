@@ -1,0 +1,52 @@
+<resources>
+
+    <string name="action_bar_sensor_info">Sensor</string>
+    <string name="action_new">Añadir</string>
+    <string name="action_refresh">Actualizar</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="actuators">ACTUADORES</string>
+    <string name="add_alert">AÑADIR ALERTA</string>
+    <string name="add_image">AÑADIR IMAGEN</string>
+    <string name="add_item">Añadir item</string>
+    <string name="add_monitoring_item">AÑADIR ITEM A MONITORIZAR</string>
+    <string name="add_sensors">AÑADIR SENSORES ASOCIADOS</string>
+    <string name="alert_created">Alerta añadida.</string>
+    <string name="alert_deleted">Alerta borrada.</string>
+    <string name="alert_edited">Alerta modificada.</string>
+    <string name="alert_fired_on_value">Valor</string>
+    <string name="alert_repeated_notification">No se pueden crear dos alertas del mismo tipo en el mismo sensor. Por favor, modifique o borre la alerta.</string>
+    <string name="alert_type_spinner">Tipo de alerta</string>
+    <string name="app_name">Greenhouse</string>
+    <string name="attached_sensors">SENSORES ASOCIADOS</string>
+    <string name="button_cancel_alarm_creation_delete">Cancelar</string>
+    <string name="button_save_alarm_creation_delete">Guardar</string>
+    <string name="content_description_image">Imagen</string>
+    <string name="content_image_sensor_desc">Imagen de sensor</string>
+    <string name="delete_alert_context_menu">Borrar</string>
+    <string name="edit_alert">EDITAR ALERTA</string>
+    <string name="edit_alert_context_menu">Editar</string>
+    <string name="from_camera">Sacar foto</string>
+    <string name="from_gallery">Elegir de la galería</string>
+    <string name="launch">Lanzar</string>
+    <string name="logic_alert_on_sensor">Alerta en el sensor</string>
+    <string name="monitoring_items">ITEMS MONITORIZADOS</string>
+    <string name="name">Nombre</string>
+    <string name="no_alerts">No hay ninguna alerta, ¡intenta añadir una!</string>
+    <string name="no_connection">Sin conexión</string>
+    <string name="ok">Ok</string>
+    <string name="select_sensor_spinner">Sensor</string>
+    <string name="sensor_icon_descp">Icono de sensor</string>
+    <string name="string_alert">Alerta</string>
+    <string name="tab_actuators">Actuadores</string>
+    <string name="tab_alerts">Alertas</string>
+    <string name="tab_sensors">Sensores</string>
+    <string name="tab_status">Estado</string>
+    <string name="xml_sensor_name">Nombre:</string>
+    <string name="xml_sensor_pin">PIN:</string>
+    <string name="xml_sensor_refresh_rate">Frecuencia de actualización:</string>
+    <string name="xml_sensor_seconds_word">secs</string>
+    <string name="xml_sensor_sensor_word">sensor</string>
+    <string name="xml_sensor_type">Tipo:</string>
+    <string name="xml_sensor_updated_word">Actualziado:</string>
+
+</resources>
