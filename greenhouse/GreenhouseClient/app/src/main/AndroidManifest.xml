@@ -21,7 +21,7 @@
         <activity android:name="com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity"/>
         <activity android:name="com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity"/>
         <activity android:name="com.sevenflying.greenhouseclient.app.statustab.MonItemStatusActivity"/>
-        <activity android:name="com.sevenflying.greenhouseclient.app.statustab.statustab.MoniItemCreationActivity"/>
+        <activity android:name="com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity"/>
         <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
             android:enabled="true"/>
         <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>
