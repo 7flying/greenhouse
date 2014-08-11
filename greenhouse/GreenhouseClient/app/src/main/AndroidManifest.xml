@@ -20,6 +20,7 @@
         </activity>
         <activity android:name="com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity"/>
         <activity android:name="com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity"/>
+        <activity android:name="com.sevenflying.greenhouseclient.app.statustab.MonItemStatusActivity"/>
         <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
             android:enabled="true"/>
         <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>

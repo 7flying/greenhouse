@@ -43,6 +43,8 @@
     <string name="actuators">ACTUATORS</string>
     <!-- actuator_row -->
     <string name="launch">Launch</string>
+    <!-- activity_mon_item_status -->
+    <string name="attached_sensors">ATTACHED SENSORS</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

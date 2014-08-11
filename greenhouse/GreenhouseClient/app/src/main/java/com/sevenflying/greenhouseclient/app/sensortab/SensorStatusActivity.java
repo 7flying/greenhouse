@@ -20,28 +20,22 @@ import com.sevenflying.greenhouseclient.net.HistoricalRecordObtainer;
  */
 public class SensorStatusActivity extends FragmentActivity {
 
-    private ImageView imageView;
-    private TextView textSensorValue, textSensorUnit, textSensorUpdatedAt, textSensorName,
-            textSensorType, textSensorRefresh, textSensorPin;
-    private LineChart chart;
-    private LinearLayout layoutProgress, layoutChart;
-
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_sensor_status);
         // Views
-        imageView = (ImageView) findViewById(R.id.image_sensor);
-        textSensorValue = (TextView) findViewById(R.id.text_sensor_value);
-        textSensorUnit = (TextView) findViewById(R.id.text_sensor_value_unit);
-        textSensorUpdatedAt = (TextView) findViewById(R.id.text_sensor_updated_at);
-        textSensorName = (TextView) findViewById(R.id.text_sensor_name);
-        textSensorType = (TextView) findViewById(R.id.text_sensor_type);
-        textSensorRefresh = (TextView) findViewById(R.id.text_sensor_refresh);
-        textSensorPin = (TextView) findViewById(R.id.text_sensor_pin);
-        layoutProgress = (LinearLayout) findViewById(R.id.layout_progress);
-        layoutChart = (LinearLayout) findViewById(R.id.layout_chart);
+        ImageView imageView = (ImageView) findViewById(R.id.image_sensor);
+        TextView textSensorValue = (TextView) findViewById(R.id.text_sensor_value);
+        TextView textSensorUnit = (TextView) findViewById(R.id.text_sensor_value_unit);
+        TextView textSensorUpdatedAt = (TextView) findViewById(R.id.text_sensor_updated_at);
+        TextView textSensorName = (TextView) findViewById(R.id.text_sensor_name);
+        TextView textSensorType = (TextView) findViewById(R.id.text_sensor_type);
+        TextView textSensorRefresh = (TextView) findViewById(R.id.text_sensor_refresh);
+        TextView textSensorPin = (TextView) findViewById(R.id.text_sensor_pin);
+        LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progress);
+        LinearLayout layoutChart = (LinearLayout) findViewById(R.id.layout_chart);
 
-        chart = (LineChart) findViewById(R.id.chart);
+        LineChart chart = (LineChart) findViewById(R.id.chart);
         // Set data
         if(getIntent().hasExtra("sensor")) {
             Sensor s = (Sensor) getIntent().getSerializableExtra("sensor");

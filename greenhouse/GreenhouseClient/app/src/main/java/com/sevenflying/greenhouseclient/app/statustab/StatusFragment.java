@@ -1,19 +1,24 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
+import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.domain.SensorType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /** This fragment shows the status of the items that are monitored
  *  and the actuators that can be applied.
@@ -22,7 +27,7 @@ import java.util.Arrays;
 public class StatusFragment extends Fragment {
     private ListView moniList;
     private ListView actuatorList;
-
+    private List<MonitoringItem> monitoringItems;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
@@ -41,17 +46,28 @@ public class StatusFragment extends Fragment {
                     R.layout.actuator_row, tempActuator);
             actuatorList.setAdapter(actuatorAdapter);
 
-            ArrayList<MonitoringItem> tempList = new ArrayList<MonitoringItem>();
+            monitoringItems = new ArrayList<MonitoringItem>();
             boolean enabled = true;
-            for(int i = 0; i < 20; i++) {
+            for(int i = 0; i < 2; i++) {
                 MonitoringItem item = new MonitoringItem("Greenhouse " + i );
                 item.setWarningEnabled(enabled);
-                tempList.add(item);
+                item.addSensor(new Sensor("Sensor " + i,"A" + i, SensorType.LIGHT, 555, 45.5, "blabla"));
+                item.addSensor(new Sensor("Sensor " + i + "i", "D" + i, SensorType.TEMPERATURE, 555, 45.7, "blabla"));
+                monitoringItems.add(item);
                 enabled = !enabled;
             }
             MonitoringItemAdapter adapter = new MonitoringItemAdapter(getActivity(),
-                    R.layout.monitoring_item_row, tempList);
+                    R.layout.monitoring_item_row, monitoringItems);
             moniList.setAdapter(adapter);
+            moniList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                // Open MonItemStatusActivity
+                public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                    Intent intent = new Intent(StatusFragment.this.getActivity(),
+                            MonItemStatusActivity.class);
+                    intent.putExtra("moni-item", monitoringItems.get(index));
+                    startActivity(intent);
+                }
+            });
             return view;
         }
     }

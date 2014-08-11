@@ -21,7 +21,9 @@ public class Sensor implements Serializable {
     // When the sensor was updated
     private String updatedAt;
 
-	public Sensor(String name, String pinId, SensorType type, long refreshRate, double value, String updatedAt) {
+	public Sensor(String name, String pinId, SensorType type, long refreshRate, double value,
+                  String updatedAt)
+    {
 		this.name = name;
         this.pinId = pinId;
 		this.type = type;
