@@ -17,7 +17,7 @@ import java.util.List;
 
 
 /** AlertService checks whether the alerts defined by the user are fired.
- *  If so sends a notification.
+ *  If so sends a notification and toggles a warning.
  * Created by 7flying on 05/08/2014.
  */
 public class AlertService extends IntentService {
@@ -54,6 +54,8 @@ public class AlertService extends IntentService {
                 } while(e != null && errors < 3);
                 if(alert.isFired(lastValue)) {
                     sendNotification(alert, lastValue, alertCount);
+                    setWarning(alert.getSensorPinId(),
+                            String.valueOf(alert.getSensorType().getIdentifier()));
                 }
             }
             alertCount--;
@@ -91,5 +93,21 @@ public class AlertService extends IntentService {
                              );
         mBuilder.setContentIntent(contentIntent);
         notificationManager.notify(notifyId, mBuilder.build());
+    }
+
+    /** Marks all the monitoring items with an alert
+     * @param sensorPinId - pin id of the sensor that fired the alert
+     * @param sensorType - type of the sensor that fired the alert
+     */
+    private void setWarning(String sensorPinId, String sensorType){
+        List<MonitoringItem> listItems = MoniItemManager.getInstance(getApplicationContext())
+                .getItems();
+        for(MonitoringItem item : listItems) {
+            if(!item.isWarningEnabled()) {
+                if(item.getSensorByKey(sensorPinId + sensorType) != null)
+                    item.setWarningEnabled(true);
+            }
+        }
+        MoniItemManager.getInstance(getApplicationContext()).commit();
     }
 }

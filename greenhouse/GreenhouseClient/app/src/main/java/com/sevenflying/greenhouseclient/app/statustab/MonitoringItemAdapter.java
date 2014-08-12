@@ -27,4 +27,5 @@ public class MonitoringItemAdapter extends ArrayAdapter<MonitoringItem> implemen
         monitoringItemView.setMonitoringItem(getItem(position));
         return monitoringItemView;
     }
+
 }

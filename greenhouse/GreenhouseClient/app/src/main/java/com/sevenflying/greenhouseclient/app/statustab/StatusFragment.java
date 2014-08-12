@@ -14,9 +14,8 @@ import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Actuator;
+import com.sevenflying.greenhouseclient.domain.MoniItemManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
-import com.sevenflying.greenhouseclient.domain.Sensor;
-import com.sevenflying.greenhouseclient.domain.SensorType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,9 @@ public class StatusFragment extends Fragment {
 
     private List<MonitoringItem> monitoringItems;
     private static final int CODE_NEW_MONI_ITEM = 1;
+    private MoniItemManager moniManager;
+    private ActuatorAdapter actuatorAdapter;
+    private MonitoringItemAdapter moniAdapter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
@@ -43,11 +45,14 @@ public class StatusFragment extends Fragment {
                 Actuator a = new Actuator("Water pump " + i, "D0" + i);
                 tempActuator.add(a);
             }
-            ActuatorAdapter actuatorAdapter = new ActuatorAdapter(getActivity(),
+             actuatorAdapter= new ActuatorAdapter(getActivity(),
                     R.layout.actuator_row, tempActuator);
             actuatorList.setAdapter(actuatorAdapter);
 
             monitoringItems = new ArrayList<MonitoringItem>();
+            moniManager = MoniItemManager.getInstance(getActivity().getApplicationContext());
+            monitoringItems = moniManager.getItems();
+            /*
             boolean enabled = true;
             for(int i = 0; i < 5; i++) {
                 MonitoringItem item = new MonitoringItem("Greenhouse " + i );
@@ -57,9 +62,10 @@ public class StatusFragment extends Fragment {
                 monitoringItems.add(item);
                 enabled = !enabled;
             }
-            MonitoringItemAdapter adapter = new MonitoringItemAdapter(getActivity(),
+            */
+            moniAdapter = new MonitoringItemAdapter(getActivity(),
                     R.layout.monitoring_item_row, monitoringItems);
-            moniList.setAdapter(adapter);
+            moniList.setAdapter(moniAdapter);
             // Listener on Monitoring Items' list
             moniList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 // Open MonItemStatusActivity
@@ -88,10 +94,22 @@ public class StatusFragment extends Fragment {
         if(requestCode == CODE_NEW_MONI_ITEM) {
             // Callback from MoniItemCreationActivity
             if(resultCode == Activity.RESULT_OK) {
+                MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable("moni-item");
+                moniManager.addItem(item);
+                moniManager.commit();
+                monitoringItems.remove(item);
+                monitoringItems.add(item);
+                actuatorAdapter.notifyDataSetChanged();
                 Toast.makeText(getActivity().getApplicationContext(),
                         getString(R.string.item_created), Toast.LENGTH_SHORT).show();
-
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        actuatorAdapter.notifyDataSetChanged();
+        moniAdapter.notifyDataSetChanged();
     }
 }

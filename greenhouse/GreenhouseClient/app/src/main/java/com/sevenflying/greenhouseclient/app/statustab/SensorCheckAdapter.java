@@ -24,7 +24,7 @@ public class SensorCheckAdapter extends ArrayAdapter<Sensor> {
         mapSensorChecked = new HashMap<String, Boolean>();
         for(Sensor s : list) {
             mapSensorChecked.put(s.getPinId() + Character.valueOf(s.getType().getIdentifier()),
-                    Boolean.valueOf(false));
+                    false);
         }
     }
 

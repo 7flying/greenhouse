@@ -22,7 +22,7 @@ public class SensorManager {
     private static SensorManager manager = null;
     private static final String FILE_NAME = "greenhouse_sensor_manager";
     private Context context;
-    private Map<String, Sensor> mapSensors;
+    private Map<String, Sensor> mapSensors; // pinid + type
 
     public static SensorManager getInstance(Context context) {
         if(manager == null)
@@ -81,6 +81,15 @@ public class SensorManager {
      * @return list of sensors  */
     public synchronized List<Sensor> getSensors() {
         return  new ArrayList<Sensor>(mapSensors.values());
+    }
+
+    /** Returns a sensor given its pinId and type
+     * @param pinId
+     * @param type
+     * @return
+     */
+    public synchronized Sensor getSensorBy(String pinId, String type) {
+        return mapSensors.get(pinId + type);
     }
 
     /** Returns all the sensors at the manager as formatted strings.
