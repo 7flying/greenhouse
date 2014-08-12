@@ -81,11 +81,19 @@
                 android:layout_width="fill_parent"/>
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:id="@+id/line_above_button_add_item"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#333333"/>
     <Button
         android:id="@+id/button_add_item"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:contentDescription="@string/add_item"

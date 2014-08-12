@@ -107,7 +107,7 @@
         android:layout_margin="10dp"
         android:paddingLeft="6dp">
         <Button android:id="@+id/button_create_alert"
-            android:text="@string/button_save_alarm_creation_delete"
+            android:text="@string/button_save"
             android:layout_weight="1"/>
         <Button android:id="@+id/button_cancel_alert"
             android:text="@string/button_cancel_alarm_creation_delete"

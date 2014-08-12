@@ -20,7 +20,7 @@ public class MonitoringItem implements Serializable {
     public MonitoringItem(String name) {
         this.name = name;
         attachedSensors = new ArrayList<Sensor>();
-        icon = R.drawable.ic_leaf_green;
+        icon = R.drawable.ic_leaf_green; // TODO will crash here when we add camera/gallery stuff
         warningIcon = R.drawable.ic_warning_orange;
         isWarningEnabled = false;
     }

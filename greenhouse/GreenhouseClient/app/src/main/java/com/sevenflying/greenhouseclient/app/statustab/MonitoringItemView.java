@@ -43,7 +43,7 @@ public class MonitoringItemView extends RelativeLayout {
 
     public void setMonitoringItem(MonitoringItem item) {
         name.setText(item.getName());
-        icon.setImageResource(item.getIcon());
+        icon.setImageResource(item.getIcon());// TODO will crash here when we add camera/gallery stuff
         if(item.isWarningEnabled())
             warning.setImageResource(item.getWarningIcon());
         else

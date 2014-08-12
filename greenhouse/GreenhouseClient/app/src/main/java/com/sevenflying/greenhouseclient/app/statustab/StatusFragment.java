@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Actuator;
@@ -18,7 +19,6 @@ import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** This fragment shows the status of the items that are monitored
@@ -28,6 +28,7 @@ import java.util.List;
 public class StatusFragment extends Fragment {
 
     private List<MonitoringItem> monitoringItems;
+    private static final int CODE_NEW_MONI_ITEM = 1;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
@@ -74,11 +75,23 @@ public class StatusFragment extends Fragment {
             buttonAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    startActivityForResult(new Intent(StatusFragment.this.getActivity(),
+                            MoniItemCreationActivity.class), CODE_NEW_MONI_ITEM);
                 }
             });
-
             return view;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == CODE_NEW_MONI_ITEM) {
+            // Callback from MoniItemCreationActivity
+            if(resultCode == Activity.RESULT_OK) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.item_created), Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 }

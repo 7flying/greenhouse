@@ -16,7 +16,7 @@ import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.SensorType;
 
-/**
+/** AlertView class.
  * Created by 7flying on 15/07/2014.
  */
 public class AlertView extends LinearLayout {
@@ -29,9 +29,8 @@ public class AlertView extends LinearLayout {
     private TextView textSensorUnit;
 
     public static  AlertView inflate(ViewGroup parent) {
-        AlertView alertView = (AlertView) LayoutInflater.from(parent.getContext())
+       return (AlertView) LayoutInflater.from(parent.getContext())
             .inflate(R.layout.alert_view, parent, false);
-        return alertView;
     }
 
     public AlertView(Context context) {

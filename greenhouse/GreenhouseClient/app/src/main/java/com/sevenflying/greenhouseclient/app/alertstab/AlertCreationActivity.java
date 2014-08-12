@@ -93,7 +93,7 @@ public class AlertCreationActivity extends FragmentActivity {
             public void afterTextChanged(Editable editable) {
                 Exception exception = null;
                 try {
-                    new Double(editable.toString());
+                    Double.valueOf(editable.toString());
                 }catch (Exception e) {
                     exception = e;
                 }
