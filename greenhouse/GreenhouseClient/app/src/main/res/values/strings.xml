@@ -29,7 +29,7 @@
     <string name="select_sensor_spinner">Sensor</string>
     <string name="alert_type_spinner">Alert type</string>
     <string name="alert_fired_on_value">Value</string>
-    <string name="button_save_alarm_creation_delete">Save</string>
+    <string name="button_save">Save</string>
     <string name="button_cancel_alarm_creation_delete">Cancel</string>
     <string name="alert_repeated_notification">You cannot create two alerts of the same type on the
     same sensor.\nPlease edit or delete the alert.</string>
@@ -50,7 +50,7 @@
     <string name="add_image">ADD IMAGE</string>
     <string name="from_camera">Take photo</string>
     <string name="from_gallery">Choose from gallery</string>
-    <string name="add_sensors">ADD RELATED SENSORS</string>
+    <string name="add_sensors">SELECT RELATED SENSORS</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>
@@ -62,6 +62,7 @@
     <string name="alert_created">Alert created.</string>
     <string name="alert_edited">Alert edited.</string>
     <string name="alert_deleted">Alert deleted.</string>
+    <string name="item_created">Item created.</string>
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>
