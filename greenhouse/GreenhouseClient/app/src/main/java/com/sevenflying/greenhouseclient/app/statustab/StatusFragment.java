@@ -1,6 +1,8 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,7 +40,7 @@ public class StatusFragment extends Fragment {
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
             ListView actuatorList = (ListView) view.findViewById(R.id.list_actuators);
-            ListView moniList = (ListView) view.findViewById(R.id.list_items);
+            final ListView moniList = (ListView) view.findViewById(R.id.list_items);
 
             ArrayList<Actuator> tempActuator = new ArrayList<Actuator>();
             for(int i = 0 ; i < 3; i++){
@@ -52,17 +54,6 @@ public class StatusFragment extends Fragment {
             monitoringItems = new ArrayList<MonitoringItem>();
             moniManager = MoniItemManager.getInstance(getActivity().getApplicationContext());
             monitoringItems = moniManager.getItems();
-            /*
-            boolean enabled = true;
-            for(int i = 0; i < 5; i++) {
-                MonitoringItem item = new MonitoringItem("Greenhouse " + i );
-                item.setWarningEnabled(enabled);
-                item.addSensor(new Sensor("Sensor " + i,"A" + i, SensorType.LIGHT, 555, 45.5, "blabla"));
-                item.addSensor(new Sensor("Sensor " + i + "i", "D" + i, SensorType.TEMPERATURE, 555, 45.7, "blabla"));
-                monitoringItems.add(item);
-                enabled = !enabled;
-            }
-            */
             moniAdapter = new MonitoringItemAdapter(getActivity(),
                     R.layout.monitoring_item_row, monitoringItems);
             moniList.setAdapter(moniAdapter);
@@ -76,6 +67,7 @@ public class StatusFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
             // Listener on "add item" button
             Button buttonAdd = (Button) view.findViewById(R.id.button_add_item);
             buttonAdd.setOnClickListener(new View.OnClickListener() {

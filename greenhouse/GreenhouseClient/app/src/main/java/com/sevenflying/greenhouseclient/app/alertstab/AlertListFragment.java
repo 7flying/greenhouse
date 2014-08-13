@@ -75,6 +75,7 @@ public class AlertListFragment extends Fragment {
                                             Toast.makeText(getActivity().getApplicationContext(),
                                                     getResources().getString(R.string.alert_deleted),
                                                     Toast.LENGTH_SHORT).show();
+                                            manager.commit();
                                             break;
                                     }
                                     manager.commit();

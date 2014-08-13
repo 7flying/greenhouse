@@ -72,7 +72,7 @@ public class MonitoringItem implements Serializable {
     }
 
     public String toStoreString() {
-        String ret = null;
+        String ret = "";
         ret += name;
         ret += ":";
         ret += String.valueOf(isWarningEnabled);

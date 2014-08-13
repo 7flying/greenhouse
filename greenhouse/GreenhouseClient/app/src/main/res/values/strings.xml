@@ -41,6 +41,7 @@
     <string name="monitoring_items">MONITORING ITEMS</string>
     <string name="add_item">Add item</string>
     <string name="actuators">ACTUATORS</string>
+    <string name="item">Item</string>
     <!-- actuator_row -->
     <string name="launch">Launch</string>
     <!-- activity_mon_item_status -->
@@ -63,6 +64,8 @@
     <string name="alert_edited">Alert edited.</string>
     <string name="alert_deleted">Alert deleted.</string>
     <string name="item_created">Item created.</string>
+    <string name="item_deleted">Item deleted.</string>
+    <string name="item_edited">Item edited.</string>
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>

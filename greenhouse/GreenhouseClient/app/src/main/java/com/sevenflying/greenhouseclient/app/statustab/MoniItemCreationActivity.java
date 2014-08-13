@@ -74,5 +74,10 @@ public class MoniItemCreationActivity extends FragmentActivity {
         adapter = new SensorCheckAdapter(getApplicationContext(), R.layout.sensor_check_row,
                 sensorList);
         listViewSensos.setAdapter(adapter);
+        if(getIntent().hasExtra("moni-to-edit")) {
+            MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
+            etName.setText(extra.getName());
+            etName.setEnabled(false);
+        }
     }
 }

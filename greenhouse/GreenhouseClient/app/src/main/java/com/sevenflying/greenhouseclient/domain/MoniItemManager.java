@@ -92,4 +92,12 @@ public class MoniItemManager {
         mapNameItem.put(item.getName(), item);
     }
 
+    public void deleteItem(MonitoringItem item) {
+        mapNameItem.remove(item.getName());
+    }
+
+    public void deleteItem(String name) {
+        mapNameItem.remove(name);
+    }
+
 }
