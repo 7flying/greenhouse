@@ -36,7 +36,8 @@ public class MonitoringItem implements Serializable {
     }
 
     public void addSensor(Sensor s) {
-        attachedSensors.put(s.getPinId() + s.getType(), s);
+        if(s != null)
+            attachedSensors.put(s.getPinId() + s.getType().getIdentifier(), s);
     }
 
     public List<Sensor> getAttachedSensors(){
@@ -82,7 +83,7 @@ public class MonitoringItem implements Serializable {
             ret += key.substring(0, key.length() - 1);
             ret += ":";
             // Type
-            ret += key.substring(key.length() -1);
+            ret += key.charAt(key.length() - 1);
         }
         return  ret;
     }

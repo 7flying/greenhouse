@@ -72,10 +72,10 @@ public class MonItemStatusActivity extends FragmentActivity {
         if(requestCode == CODE_EDIT_MONI_ITEM) {
             // Callback from MoniItemCreation
             if(resultCode == RESULT_OK) {
-                if(data.hasExtra("moni-item")) {
-                    MonitoringItem itemEdited = (MonitoringItem) data.getSerializableExtra("moni-item");
-                    sensorList = new ArrayList<Sensor>();
-                    adapter.notifyDataSetInvalidated();
+                if(data.hasExtra("moni-item-result")) {
+                    MonitoringItem itemEdited = (MonitoringItem) data
+                            .getSerializableExtra("moni-item-result");
+                    sensorList.clear();
                     sensorList.addAll(itemEdited.getAttachedSensors());
                     adapter.notifyDataSetChanged();
                     moniName.setText(itemEdited.getName());
@@ -86,7 +86,6 @@ public class MonItemStatusActivity extends FragmentActivity {
                     Toast.makeText(getApplicationContext(), R.string.item_edited, Toast.LENGTH_SHORT)
                             .show();
                 }
-
             }
         }
     }

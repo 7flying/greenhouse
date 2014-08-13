@@ -52,7 +52,10 @@ public class MoniItemCreationActivity extends FragmentActivity {
                     }
                 }
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("moni-item", monitoringItem);
+                if(etName.isEnabled())
+                    returnIntent.putExtra("moni-item", monitoringItem);
+                else
+                    returnIntent.putExtra("moni-item-result", monitoringItem);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
