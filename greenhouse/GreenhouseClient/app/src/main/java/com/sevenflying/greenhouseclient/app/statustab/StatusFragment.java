@@ -67,6 +67,44 @@ public class StatusFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+            moniList.setLongClickable(true);
+            moniList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view,
+                                               final int listPosition, long l)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.item))
+                            .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogInterface, int position) {
+                                    switch (position) {
+                                        case 0: // Edit
+                                            /*
+                                            Intent intent = new Intent(StatusFragment.this
+                                                    .getActivity(), ** something **.class);
+                                            intent.putExtra("item-to-edit", monitoringItems
+                                                    .get(listPosition));
+                                            startActivityForResult(intent, CODE_EDIT_ITEM);
+                                            */
+                                            break;
+                                        case 1: // Delete
+                                            moniManager.deleteItem(monitoringItems.get(listPosition));
+                                            monitoringItems.remove(monitoringItems.get(listPosition));
+                                            moniAdapter.notifyDataSetChanged();
+                                            Toast.makeText(getActivity().getApplicationContext(),
+                                                    getResources().getString(R.string.item_deleted),
+                                                    Toast.LENGTH_SHORT).show();
+                                            moniManager.commit();
+                                            break;
+                                    }
+                                    moniManager.commit();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    return false;
+                }
+            });
 
             // Listener on "add item" button
             Button buttonAdd = (Button) view.findViewById(R.id.button_add_item);
