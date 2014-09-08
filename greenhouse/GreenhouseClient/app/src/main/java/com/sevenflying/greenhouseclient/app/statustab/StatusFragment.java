@@ -29,7 +29,7 @@ import java.util.List;
 public class StatusFragment extends Fragment {
 
     private List<MonitoringItem> monitoringItems;
-    private static final int CODE_NEW_MONI_ITEM = 1;
+    private static final int CODE_NEW_MONI_ITEM = 1, CODE_EDIT_MONI_ITEM = 2;
     private MoniItemManager moniManager;
     private ActuatorAdapter actuatorAdapter;
     private MonitoringItemAdapter moniAdapter;
@@ -79,6 +79,12 @@ public class StatusFragment extends Fragment {
                                 public void onClick(DialogInterface dialogInterface, int position) {
                                     switch (position) {
                                         case 0: // Edit
+                                            Intent intent = new Intent(StatusFragment.this.getActivity(),
+                                                    MoniItemCreationActivity.class);
+                                            MonitoringItem extraInput = monitoringItems
+                                                    .get(listPosition);
+                                            intent.putExtra("moni-to-edit", extraInput);
+                                            startActivityForResult(intent, CODE_EDIT_MONI_ITEM);
                                             /*
                                             Intent intent = new Intent(StatusFragment.this
                                                     .getActivity(), ** something **.class);
@@ -132,6 +138,12 @@ public class StatusFragment extends Fragment {
                 actuatorAdapter.notifyDataSetChanged();
                 Toast.makeText(getActivity().getApplicationContext(),
                         getString(R.string.item_created), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if(requestCode == CODE_EDIT_MONI_ITEM) {
+                if(resultCode == Activity.RESULT_OK) {
+                    // TODO
+                }
             }
         }
     }
