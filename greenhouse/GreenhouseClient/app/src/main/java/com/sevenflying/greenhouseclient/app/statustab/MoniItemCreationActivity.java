@@ -1,7 +1,10 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
@@ -31,8 +34,8 @@ public class MoniItemCreationActivity extends FragmentActivity {
     private Button buttonCreate;
     private List<Sensor> sensorList;
     private SensorCheckAdapter adapter;
-    private ImageButton buttonTakePhoto;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageButton buttonTakePhoto, buttonFromGallery;
+    private static final int REQUEST_IMAGE_CAPTURE = 1, PICK_IMAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,13 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 dispatchTakePictureIntent();
             }
         });
+        buttonFromGallery = (ImageButton) findViewById(R.id.button_from_gallery);
+        buttonFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchSelectFromGalleryIntent();
+            }
+        });
         ListView listViewSensos = (ListView) findViewById(R.id.list_check_sensors);
         sensorList =  SensorManager.getInstance(getApplicationContext())
                 .getSensors();
@@ -103,11 +113,35 @@ public class MoniItemCreationActivity extends FragmentActivity {
         }
     }
 
+    private void dispatchSelectFromGalleryIntent() {
+        Intent pickImageIntent = new Intent();
+        pickImageIntent.setType("image/*");
+        pickImageIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(pickImageIntent, ""), PICK_IMAGE);
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imagePreview.setImageBitmap(imageBitmap);
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if(resultCode == RESULT_OK) {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                imagePreview.setImageBitmap(imageBitmap);
+            }
+        } else {
+            if(requestCode == PICK_IMAGE) {
+                if(resultCode == RESULT_OK) {
+                    Uri _uri = data.getData();
+                    // Picked image
+                    Cursor cursor = getContentResolver().query(_uri, new String[] {
+                            MediaStore.Images.ImageColumns.DATA }, null, null, null);
+                    cursor.moveToFirst();
+                    // Get link from image
+                    String imageFilePath = cursor.getString(0);
+                    cursor.close();
+
+                    imagePreview.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
+                }
+            }
         }
     }
 
