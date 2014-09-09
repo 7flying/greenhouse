@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -22,6 +23,10 @@ import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /** This activity is in charge of the creation of MonitoringItems.
@@ -109,7 +114,16 @@ public class MoniItemCreationActivity extends FragmentActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            File photo = null;
+            try {
+                photo = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(photo != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
 
@@ -121,6 +135,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // The user has taken a photo
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if(resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
@@ -128,6 +143,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 imagePreview.setImageBitmap(imageBitmap);
             }
         } else {
+            // Image comes from gallery
             if(requestCode == PICK_IMAGE) {
                 if(resultCode == RESULT_OK) {
                     Uri _uri = data.getData();
@@ -143,6 +159,30 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 }
             }
         }
+    }
+
+    /** Generates a unique file name.
+     * @return file     */
+    private File createImageFile() throws IOException {
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File ret = File.createTempFile(
+                "JPEG_" + new SimpleDateFormat("yyyyMMdd_HHmmss")
+                .format(new Date()) + "_",
+                ".jpg",
+                storageDir);
+        addPhotoToGallery("file:" + ret.getAbsolutePath());
+        return ret;
+    }
+
+    /** Given a photo path adds it to the gallery
+     * @param photoPath - path of the photo to add
+     */
+    private void addPhotoToGallery(String photoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentUri = Uri.fromFile(new File(photoPath));
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     // TODO: coninue on: http://developer.android.com/training/camera/photobasics.html
