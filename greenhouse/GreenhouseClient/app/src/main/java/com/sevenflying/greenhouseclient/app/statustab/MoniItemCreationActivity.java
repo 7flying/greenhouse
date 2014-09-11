@@ -121,8 +121,9 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 e.printStackTrace();
             }
             if(photo != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                addPhotoToGallery("file:" + photo.getAbsolutePath());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
             }
         }
     }
@@ -171,7 +172,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 .format(new Date()) + "_",
                 ".jpg",
                 storageDir);
-        addPhotoToGallery("file:" + ret.getAbsolutePath());
+        //addPhotoToGallery("file:" + ret.getAbsolutePath());
         return ret;
     }
 
@@ -184,6 +185,4 @@ public class MoniItemCreationActivity extends FragmentActivity {
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
-
-    // TODO: coninue on: http://developer.android.com/training/camera/photobasics.html
 }
