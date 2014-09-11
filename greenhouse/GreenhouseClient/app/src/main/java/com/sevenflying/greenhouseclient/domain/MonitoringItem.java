@@ -17,14 +17,16 @@ public class MonitoringItem implements Serializable {
     private String name;
     private Map<String, Sensor> attachedSensors; // key: pinId + type
     private int icon, warningIcon;
+    private String photoPath;
     private boolean isWarningEnabled;
 
     public MonitoringItem(String name) {
         this.name = name;
         attachedSensors = new HashMap<String, Sensor>();
-        icon = R.drawable.ic_leaf_green; // TODO will crash here when we add camera/gallery stuff
+        icon = R.drawable.ic_leaf_green;
         warningIcon = R.drawable.ic_warning_orange;
         isWarningEnabled = false;
+        photoPath = null;
     }
 
     public void setName(String name) {
@@ -72,11 +74,17 @@ public class MonitoringItem implements Serializable {
         return warningIcon;
     }
 
+    public String getPhotoPath() { return photoPath; }
+
+    public void setPhotoPath(String path) { this.photoPath = path; }
+
     public String toStoreString() {
         String ret = "";
         ret += name;
         ret += ":";
         ret += String.valueOf(isWarningEnabled);
+        ret += ":";
+        ret += photoPath;
         for(String key : attachedSensors.keySet()) {
             ret += ":";
             // Pin

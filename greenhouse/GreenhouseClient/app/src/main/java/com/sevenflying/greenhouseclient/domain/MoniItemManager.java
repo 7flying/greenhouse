@@ -49,7 +49,8 @@ public class MoniItemManager {
                 if (list.size() > 0) {
                     MonitoringItem item = new MonitoringItem(list.get(0));
                     item.setWarningEnabled(Boolean.valueOf(list.get(1)));
-                    int i = 2;
+                    item.setPhotoPath(list.get(2));
+                    int i = 3;
                     SensorManager sensorManager = SensorManager.getInstance(context);
                     while(i < list.size()) {
                         item.addSensor(sensorManager.getSensorBy(list.get(i), list.get(i + 1)));

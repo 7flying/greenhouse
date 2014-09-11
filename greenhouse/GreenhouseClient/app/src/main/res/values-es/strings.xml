@@ -26,6 +26,7 @@
     <string name="edit_alert">EDITAR ALERTA</string>
     <string name="edit_alert_context_menu">Editar</string>
     <string name="from_camera">Sacar foto</string>
+    <string name="from_default">Icono por defecto</string>
     <string name="from_gallery">Elegir de la galería</string>
     <string name="launch">Lanzar</string>
     <string name="logic_alert_on_sensor">Alerta en el sensor</string>

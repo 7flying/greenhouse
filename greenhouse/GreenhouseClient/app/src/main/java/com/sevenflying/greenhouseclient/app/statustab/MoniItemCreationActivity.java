@@ -36,10 +36,11 @@ public class MoniItemCreationActivity extends FragmentActivity {
 
     private EditText etName;
     private ImageView imagePreview;
+    private String photoPath = null;
     private Button buttonCreate;
     private List<Sensor> sensorList;
     private SensorCheckAdapter adapter;
-    private ImageButton buttonTakePhoto, buttonFromGallery;
+    private ImageButton buttonTakePhoto, buttonFromGallery, buttonDefault;
     private static final int REQUEST_IMAGE_CAPTURE = 1, PICK_IMAGE = 2;
 
     @Override
@@ -52,13 +53,9 @@ public class MoniItemCreationActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 MonitoringItem monitoringItem = new MonitoringItem(etName.getText().toString());
-               /*  Drawables are not serializable
-                    monitoringItem.setIcon(imagePreview.getDrawable() == null ?
-                        getResources().getDrawable(R.drawable.ic_leaf_green) :
-                        imagePreview.getDrawable());
-                */
-                // TODO set icon from image
-                monitoringItem.setIcon(R.drawable.ic_leaf_green);
+                // Set image
+                monitoringItem.setPhotoPath(photoPath);
+                // Sensors
                 for (int i = 0; i < adapter.getCount(); i++) {
                     if (adapter.isChecked(adapter.getItem(i))) {
                         monitoringItem.addSensor(adapter.getItem(i));
@@ -98,6 +95,14 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 dispatchSelectFromGalleryIntent();
             }
         });
+        buttonDefault = (ImageButton) findViewById(R.id.button_leave_default);
+        buttonDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+                photoPath = null;
+            }
+        });
         ListView listViewSensos = (ListView) findViewById(R.id.list_check_sensors);
         sensorList =  SensorManager.getInstance(getApplicationContext())
                 .getSensors();
@@ -108,6 +113,10 @@ public class MoniItemCreationActivity extends FragmentActivity {
             MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
             etName.setText(extra.getName());
             etName.setEnabled(false);
+            if(extra.getPhotoPath() != null)
+                imagePreview.setImageBitmap(BitmapFactory.decodeFile(extra.getPhotoPath()));
+            else
+                imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
         }
     }
 
@@ -124,6 +133,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 addPhotoToGallery("file:" + photo.getAbsolutePath());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                photoPath = photo.getPath();
             }
         }
     }
@@ -155,7 +165,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
                     // Get link from image
                     String imageFilePath = cursor.getString(0);
                     cursor.close();
-
+                    photoPath = imageFilePath;
                     imagePreview.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
                 }
             }

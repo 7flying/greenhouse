@@ -85,13 +85,6 @@ public class StatusFragment extends Fragment {
                                                     .get(listPosition);
                                             intent.putExtra("moni-to-edit", extraInput);
                                             startActivityForResult(intent, CODE_EDIT_MONI_ITEM);
-                                            /*
-                                            Intent intent = new Intent(StatusFragment.this
-                                                    .getActivity(), ** something **.class);
-                                            intent.putExtra("item-to-edit", monitoringItems
-                                                    .get(listPosition));
-                                            startActivityForResult(intent, CODE_EDIT_ITEM);
-                                            */
                                             break;
                                         case 1: // Delete
                                             moniManager.deleteItem(monitoringItems.get(listPosition));

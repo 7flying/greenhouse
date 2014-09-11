@@ -12,7 +12,6 @@
             android:id="@+id/image_monitoring"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_leaf_green"
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/content_description_image"/>
         <TextView

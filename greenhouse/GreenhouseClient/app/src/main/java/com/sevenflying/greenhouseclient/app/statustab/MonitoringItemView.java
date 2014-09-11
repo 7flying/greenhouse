@@ -1,6 +1,7 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -43,7 +44,11 @@ public class MonitoringItemView extends RelativeLayout {
 
     public void setMonitoringItem(MonitoringItem item) {
         name.setText(item.getName());
-        icon.setImageResource(item.getIcon());// TODO will crash here when we add camera/gallery stuff
+        // Set image icon or photo
+        if(item.getPhotoPath() == null)
+            icon.setImageResource(item.getIcon());
+        else
+            icon.setImageBitmap(BitmapFactory.decodeFile(item.getPhotoPath()));
         if(item.isWarningEnabled())
             warning.setImageResource(item.getWarningIcon());
         else

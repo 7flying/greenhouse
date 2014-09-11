@@ -51,6 +51,7 @@
     <string name="add_image">ADD IMAGE</string>
     <string name="from_camera">Take photo</string>
     <string name="from_gallery">Choose from gallery</string>
+    <string name="from_default">Default icon</string>
     <string name="add_sensors">SELECT RELATED SENSORS</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
