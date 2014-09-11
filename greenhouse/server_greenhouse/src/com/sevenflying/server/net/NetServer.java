@@ -58,6 +58,17 @@ public class NetServer {
 					case Constants.CHECK:	
 						getSensorLastValue(ois, oos);
 						break;
+					case Constants.NEW:
+						// TODO
+					case Constants.DELETE:
+						// TODO
+						break;
+					case Constants.UPDATE:
+						// TODO
+						break;
+					case Constants.POWSAV:
+						// TODO
+						break;
 					default:
 						oos.close();
 						ois.close();
@@ -75,7 +86,7 @@ public class NetServer {
 	/** Processes GETSENSORS command. Get the last values of all sensors 
 	 * @return a list with the last values
 	 */
-	public void getSensorValues(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void getSensorValues(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
 		List<Sensor> sensorList = manager.getSensors();
@@ -123,7 +134,7 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	public void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
 		// Read sensor pinid and type
 		String pinidType = (String) ois.readObject();
 		System.out.println("\t -Params: " + pinidType);
@@ -171,7 +182,7 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	public void getSensorLastValue(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void getSensorLastValue(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
 		// Read sensor pinid and type
 		String pinidType = (String) ois.readObject();
 		DBManager manager = DBManager.getInstance();
@@ -188,6 +199,33 @@ public class NetServer {
 		manager.disconnect();
 		oos.close();
 		ois.close();
+	}
+	
+	/** Processes NEW command. Creates a new sensor.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void createSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+		// TODO
+	}
+	
+	/** Processes UPDATE command. Updates the given sensor
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void updateSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+		// TODO
+	}
+	
+	/** Processes POWSAV command. Activates/deactivates power saving mode on a sensor.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void setPowerSaving(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+		// TODO
 	}
 
 	public static void main(String [] args) throws Exception {

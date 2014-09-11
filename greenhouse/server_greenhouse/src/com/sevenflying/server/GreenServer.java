@@ -16,6 +16,7 @@ public class GreenServer extends Thread {
 
 	public void run() {
 		controller.connect();
+		// TODO: delete testing stuff
 		long testRun = 60000, timeOn = 0;
 		HashMap<String, Long> timeMap = new HashMap<String, Long>();
 		Set<String> sensorKeys = controller.getSensorMap().keySet();

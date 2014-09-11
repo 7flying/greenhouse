@@ -54,7 +54,7 @@ public class Sensor extends BlossomSensor {
 		return ret;
 	}
 
-	public void setPowerSavingMode(boolean activate) {
+	public synchronized void setPowerSavingMode(boolean activate) {
 		powerSavingMode = activate;
 	}
 

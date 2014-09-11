@@ -70,6 +70,11 @@ public class DBManager {
 	public void connect(String pathToDB) throws ClassNotFoundException, SQLException {
 		Class.forName("org.sqlite.JDBC");
 		conn = DriverManager.getConnection("jdbc:sqlite:" + pathToDB);
+		// General settings
+		Statement sta= conn.createStatement();
+		sta.execute("PRAGMA foreign_keys = ON"); // to enable ON DELETE CASCADE
+		sta.close();
+		
 	}
 	
 	/** Disconnects from the db
@@ -92,6 +97,22 @@ public class DBManager {
 		pre.close();
 	}
 	
+	/** Deletes the given sensor from the db.
+	 * @param sensor - to delete
+	 * @throws SQLException
+	 */
+	public synchronized void deleteSensor(Sensor sensor) throws SQLException {
+		// TODO
+	}
+	
+	/** Updates the sensor.
+	 * @param sensor - to update
+	 * @throws SQLException
+	 */
+	public synchronized void updateSensor(Sensor sensor) throws SQLException {
+		// TODO
+	}
+	
 	/** Gets the db id of a sensor */
 	private int getSensorDBid(Sensor sensor) throws SQLException {
 		return getSensorBDid(sensor.getPinId(), Character.toString(sensor.getType().getIdentifier()));
@@ -112,7 +133,7 @@ public class DBManager {
 		return ret;
 	}
 	
-	/** Gets the maximun id of a table */
+	/** Gets the maximum id of a table */
 	private int getMaxId(String tableName) throws SQLException {
 		Statement sta = conn.createStatement();
 		String query = "SELECT max(id) from " + tableName + ";";
