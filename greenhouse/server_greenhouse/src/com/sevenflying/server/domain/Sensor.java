@@ -14,7 +14,7 @@ public class Sensor extends BlossomSensor {
 	// Hour-date of the last refresh, format: 'dd/MM/yy - HH:mm:ss'
 	private String lastRefresh;	
 	private SensorType type;
-	// If this flag is enabled it must be waited the refresh rate to avoid halting the sensor
+	// If this flag is enabled it the refresh rate must be waited to avoid halting the sensor
 	private boolean ensureRefresh = false;
 
 	public Sensor(String name, String pinId, SensorType type, long refreshRate, boolean ensureRefresh) {

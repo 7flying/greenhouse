@@ -102,7 +102,17 @@ public class DBManager {
 	 * @throws SQLException
 	 */
 	public synchronized void deleteSensor(Sensor sensor) throws SQLException {
-		// TODO
+		deleteSensor(sensor.getPinId(), Character.toString(sensor.getType().getIdentifier()));
+	}
+	
+	public synchronized void deleteSensor(String pinId, String type) throws SQLException {
+		PreparedStatement pre = conn.prepareStatement("DELETE FROM Sensors WHERE id = ?;");
+		int id = getSensorBDid(pinId, type);
+		if (id != -1) {
+			pre.setInt(1, id);
+			pre.executeUpdate();
+			pre.close();
+		}
 	}
 	
 	/** Updates the sensor.
@@ -110,7 +120,15 @@ public class DBManager {
 	 * @throws SQLException
 	 */
 	public synchronized void updateSensor(Sensor sensor) throws SQLException {
-		// TODO
+		PreparedStatement pre = conn.prepareStatement("UPDATE Sensors SET name = ?, refresh = ? WHERE id = ?;");
+		int id = getSensorDBid(sensor);
+		if(id != -1) {
+			pre.setString(1, sensor.getName());
+			pre.setDouble(2, sensor.getRefreshRate());
+			pre.setInt(3, id);
+			pre.executeUpdate();
+			pre.close();
+		}
 	}
 	
 	/** Gets the db id of a sensor */

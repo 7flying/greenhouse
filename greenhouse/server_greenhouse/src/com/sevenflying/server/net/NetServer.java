@@ -4,22 +4,31 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import utils.Utils;
 
+import com.sevenflying.server.GreenServer;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
+import com.sevenflying.server.domain.SensorType;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class NetServer {
 
 	private static String pathToDB = "F:\\dump\\greenhouse\\db.sqlite"; //TODO
 
-	public NetServer() {
-
+	private static GreenServer greenDaemon = null;
+	
+	public NetServer(GreenServer greenDaemon) {
+		if(NetServer.greenDaemon == null)
+			NetServer.greenDaemon = greenDaemon; 
 	}
 
 	public void launch() throws Exception {
@@ -59,15 +68,16 @@ public class NetServer {
 						getSensorLastValue(ois, oos);
 						break;
 					case Constants.NEW:
-						// TODO
+						createSensor(ois, oos);
+						break;
 					case Constants.DELETE:
-						// TODO
+						deleteSensor(ois, oos);
 						break;
 					case Constants.UPDATE:
-						// TODO
+						updateSensor(ois, oos);
 						break;
 					case Constants.POWSAV:
-						// TODO
+						setPowerSaving(ois, oos);
 						break;
 					default:
 						oos.close();
@@ -207,7 +217,38 @@ public class NetServer {
 	 * @throws Exception
 	 */
 	private void createSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
-		// TODO
+		String raw = (String) ois.readObject();
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[5];
+		int index = 0;
+		while(tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken();
+			index++;
+		}
+		String errorCode = null;
+		if(index == 5) {
+			DBManager manager = DBManager.getInstance();
+			try {
+				manager.connect(pathToDB);				
+				manager.insertSensor(new Sensor(new String(Base64.decode(temp[0])), temp[1],
+						SensorType.valueOf(temp[2]), Long.valueOf(temp[3]), Boolean.valueOf(temp[4])));
+				manager.disconnect();
+			} catch (NumberFormatException | Base64DecodingException
+					| SQLException | ClassNotFoundException e) {
+				e.printStackTrace(); 
+				errorCode = "Internal Server Error";
+			}
+		} else {
+			errorCode = "Error with the number of params.";
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject("OK\n");
+		oos.flush();	
+
+		oos.close();
+		ois.close();
 	}
 	
 	/** Processes UPDATE command. Updates the given sensor
@@ -216,7 +257,38 @@ public class NetServer {
 	 * @throws Exception
 	 */
 	private void updateSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
-		// TODO
+		String raw = (String) ois.readObject();
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[5];
+		int index = 0;
+		while(tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken();
+			index++;
+		}
+		String errorCode = null;
+		if(index == 5) {
+			DBManager manager = DBManager.getInstance();
+			try {
+				manager.connect(pathToDB);				
+				manager.updateSensor(new Sensor(new String(Base64.decode(temp[0])), temp[1],
+						SensorType.valueOf(temp[2]), Long.valueOf(temp[3]), Boolean.valueOf(temp[4])));
+				manager.disconnect();
+			} catch (NumberFormatException | Base64DecodingException
+					| SQLException | ClassNotFoundException e) {
+				e.printStackTrace(); 
+				errorCode = "Internal Server Error";
+			}
+		} else {
+			errorCode = "Error with the number of params.";
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject("OK\n");
+		oos.flush();	
+
+		oos.close();
+		ois.close();
 	}
 	
 	/** Processes POWSAV command. Activates/deactivates power saving mode on a sensor.
@@ -225,11 +297,70 @@ public class NetServer {
 	 * @throws Exception
 	 */
 	private void setPowerSaving(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
-		// TODO
+		String raw = (String) ois.readObject();
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[3];
+		int index = 0;
+		while(tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken();
+			index++;
+		}
+		String errorCode = null;
+		if(index == 4) {
+			greenDaemon.setPowerSaving(temp[0], temp[1], Boolean.valueOf(temp[2])); // TODO handle error codes here
+		} else {
+			errorCode = "Error with the number of params.";
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject("OK\n");
+		oos.flush();	
+
+		oos.close();
+		ois.close();
+	}
+	
+	/** Processes DELETE command. Deletes the given sensor and its readings.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void deleteSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+		String raw = (String) ois.readObject();
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[2];
+		int index = 0;
+		while(tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken();
+			index++;
+		}
+		String errorCode = null;
+		if(index == 3) {
+			DBManager manager = DBManager.getInstance();
+			try {
+				manager.connect(pathToDB);				
+				manager.deleteSensor(temp[0], temp[1]);
+				manager.disconnect();
+			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+				e.printStackTrace(); 
+				errorCode = "Internal Server Error";
+			}
+		} else {
+			errorCode = "Error with the number of params.";
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject("OK\n");
+		oos.flush();	
+
+		oos.close();
+		ois.close();
 	}
 
 	public static void main(String [] args) throws Exception {
-		NetServer ns = new NetServer();
+		NetServer ns = new NetServer(null);
 		ns.launch();
 	}
 

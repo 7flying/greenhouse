@@ -13,7 +13,7 @@ public class BlossomController implements PortEvent {
 	private Communicator communicator;
 	private String portName;
 	private static final char TERMINATION_CHAR = 'X';
-	// Map containing the sensors
+	// Map containing the sensors. Key: Type + pinId
 	private HashMap<String, Sensor> sensorMap;
 	// Map containing the actuators
 	private HashMap<String, Actuator> actuatorMap;
@@ -49,8 +49,8 @@ public class BlossomController implements PortEvent {
 			actuatorMap.put(actuator.getType().getIdentifier() + actuator.getPinId(), actuator);
 	}
 
-	public Sensor getSensor(String name) {
-		return sensorMap.get(name);
+	public Sensor getSensor(String key) {
+		return sensorMap.get(key);
 	}
 
 	public Actuator getActuator(String name) {

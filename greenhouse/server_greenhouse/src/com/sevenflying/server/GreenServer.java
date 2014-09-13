@@ -50,4 +50,13 @@ public class GreenServer extends Thread {
 		}
 		controller.close();
 	}
+	
+	/** Changes the power saving status of a sensor.
+	 * @param sensorType
+	 * @param pinId
+	 * @param isPowerSaving
+	 */
+	public void setPowerSaving(String sensorType, String pinId, boolean isPowerSaving) {
+		controller.getSensor(sensorType + pinId).setPowerSavingMode(isPowerSaving); // TODO return -1 or 0 to warn client
+	}
 }
