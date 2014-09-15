@@ -42,6 +42,8 @@
     <string name="tab_alerts">Alertas</string>
     <string name="tab_sensors">Sensores</string>
     <string name="tab_status">Estado</string>
+    <string name="title_add_item">Añadir item</string>
+    <string name="title_add_alert">Añadir alerta</string>
     <string name="xml_sensor_name">Nombre:</string>
     <string name="xml_sensor_pin">PIN:</string>
     <string name="xml_sensor_refresh_rate">Frecuencia de actualización:</string>

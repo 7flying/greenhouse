@@ -12,6 +12,9 @@
     <string name="tab_actuators">Actuators</string>
     <!-- Sensor info -->
     <string name="action_bar_sensor_info">Sensor</string>
+    <!-- Display title names -->
+    <string name="title_add_item">Add item</string>
+    <string name="title_add_alert">Add alert</string>
 
     <!-- xmls layout-->
     <!-- activity_sensor_status-->

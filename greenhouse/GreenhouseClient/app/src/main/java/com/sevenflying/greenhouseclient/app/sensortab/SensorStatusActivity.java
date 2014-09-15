@@ -22,6 +22,8 @@ public class SensorStatusActivity extends FragmentActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
         setContentView(R.layout.activity_sensor_status);
         // Views
         ImageView imageView = (ImageView) findViewById(R.id.image_sensor);

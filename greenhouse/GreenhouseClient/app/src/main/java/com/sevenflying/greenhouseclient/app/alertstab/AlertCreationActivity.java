@@ -42,6 +42,8 @@ public class AlertCreationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
         setContentView(R.layout.activity_alert_creation);
         formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormattedSensors();
 
