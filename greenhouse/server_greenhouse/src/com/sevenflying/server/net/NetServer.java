@@ -10,16 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import utils.Utils;
+import org.apache.commons.codec.binary.Base64;
 
 import com.sevenflying.server.GreenServer;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import com.sevenflying.utils.Utils;
 
+
+/** Manages the communications. */
 public class NetServer {
 
 	private static String pathToDB = "F:\\dump\\greenhouse\\db.sqlite"; //TODO
@@ -230,11 +231,10 @@ public class NetServer {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);				
-				manager.insertSensor(new Sensor(new String(Base64.decode(temp[0])), temp[1],
+				manager.insertSensor(new Sensor(new String(Base64.decodeBase64(temp[0])), temp[1],
 						SensorType.valueOf(temp[2]), Long.valueOf(temp[3]), Boolean.valueOf(temp[4])));
 				manager.disconnect();
-			} catch (NumberFormatException | Base64DecodingException
-					| SQLException | ClassNotFoundException e) {
+			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
 				e.printStackTrace(); 
 				errorCode = "Internal Server Error";
 			}
@@ -270,11 +270,10 @@ public class NetServer {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);				
-				manager.updateSensor(new Sensor(new String(Base64.decode(temp[0])), temp[1],
+				manager.updateSensor(new Sensor(new String(Base64.decodeBase64(temp[0])), temp[1],
 						SensorType.valueOf(temp[2]), Long.valueOf(temp[3]), Boolean.valueOf(temp[4])));
 				manager.disconnect();
-			} catch (NumberFormatException | Base64DecodingException
-					| SQLException | ClassNotFoundException e) {
+			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
 				e.printStackTrace(); 
 				errorCode = "Internal Server Error";
 			}
