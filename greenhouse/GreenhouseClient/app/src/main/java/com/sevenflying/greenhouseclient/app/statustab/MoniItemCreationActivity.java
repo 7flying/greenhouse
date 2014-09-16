@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -46,7 +47,11 @@ public class MoniItemCreationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar tempBar = getActionBar();
+        if( tempBar != null) {
+            tempBar.setDisplayHomeAsUpEnabled(true);
+            tempBar.setDisplayShowTitleEnabled(true);
+        }
         setContentView(R.layout.activity_mon_item_creation);
         buttonCreate = (Button) findViewById(R.id.button_create);
         buttonCreate.setEnabled(false);

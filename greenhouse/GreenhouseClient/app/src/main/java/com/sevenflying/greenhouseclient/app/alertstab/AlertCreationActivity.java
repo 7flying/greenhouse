@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.alertstab;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -42,8 +43,11 @@ public class AlertCreationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar tempBar = getActionBar();
+        if( tempBar != null) {
+            tempBar.setDisplayHomeAsUpEnabled(true);
+            tempBar.setDisplayShowTitleEnabled(true);
+        }
         setContentView(R.layout.activity_alert_creation);
         formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormattedSensors();
 

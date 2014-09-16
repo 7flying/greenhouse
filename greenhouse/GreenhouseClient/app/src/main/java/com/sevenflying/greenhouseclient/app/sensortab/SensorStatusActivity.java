@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
@@ -22,8 +23,12 @@ public class SensorStatusActivity extends FragmentActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar tempBar = getActionBar();
+        if( tempBar != null) {
+           tempBar.setDisplayHomeAsUpEnabled(true);
+           tempBar.setDisplayShowTitleEnabled(true);
+        }
+
         setContentView(R.layout.activity_sensor_status);
         // Views
         ImageView imageView = (ImageView) findViewById(R.id.image_sensor);
