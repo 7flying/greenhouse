@@ -92,13 +92,15 @@ public class AlertListFragment extends Fragment {
         }
     }
 
+    /*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         setMenuVisibility(true);
         inflater.inflate(R.menu.alert_list_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
+    */
+    /*
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_new) {
             // Start new Activity, AlertCreationActivity
@@ -108,6 +110,7 @@ public class AlertListFragment extends Fragment {
         } else
             return super.onOptionsItemSelected(item);
     }
+    */
 
     public void checkLayoutVisibility() {
         if(alertList.size() > 0)

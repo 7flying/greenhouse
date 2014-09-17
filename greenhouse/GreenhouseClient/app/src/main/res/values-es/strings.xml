@@ -1,5 +1,5 @@
 <resources>
-
+    <string name="action_about">Acerca de</string>
     <string name="action_bar_sensor_info">Sensor</string>
     <string name="action_new">Añadir</string>
     <string name="action_refresh">Actualizar</string>

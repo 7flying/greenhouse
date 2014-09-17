@@ -61,7 +61,7 @@ public class SensorsListFragment extends Fragment {
             return view;
 		}
     }
-
+    /*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.sensor_list_menu, menu);
@@ -75,7 +75,7 @@ public class SensorsListFragment extends Fragment {
         } else
             return  super.onOptionsItemSelected(item);
     }
-
+    */
     public void updateSensors(){
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);

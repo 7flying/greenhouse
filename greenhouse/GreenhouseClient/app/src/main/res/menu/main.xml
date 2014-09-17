@@ -1,5 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+</menu-->
+
 <menu  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.sevenflying.greenhouseclient.app.MainActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+   xmlns:app="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        app:showAsAction="always"/>
+    <item android:id="@+id/action_add_item"
+        android:title="@string/action_add_item"
+        app:showAsAction="never"/>
+    <item android:id="@+id/action_new_alert"
+        android:title="@string/action_new_alert"
+        android:showAsAction="never"/>
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+    <item android:id="@+id/action_about"
+        android:title="@string/action_about"
+        app:showAsAction="never"/>
 </menu>
+
+<!--menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:greenhouse="http://schemas.android.com/apk/res-auto" >
+        <item android:id="@+id/action_refresh"
+            android:icon="@drawable/ic_action_refresh"
+            android:title="@string/action_refresh"
+            greenhouse:showAsAction="always|withText"/>
+</menu-->
