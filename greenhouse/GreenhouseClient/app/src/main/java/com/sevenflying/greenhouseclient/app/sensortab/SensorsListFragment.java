@@ -61,21 +61,31 @@ public class SensorsListFragment extends Fragment {
             return view;
 		}
     }
-    /*
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.sensor_list_menu, menu);
+        menu.clear();
+        inflater.inflate(R.menu.menu_sensor_fragment, menu);
+        setMenuVisibility(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_refresh){
-           updateSensors();
-           return true;
-        } else
-            return  super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // TODO
+                return true;
+            case R.id.action_settings:
+                // TODO
+                return true;
+            case R.id.action_refresh:
+                updateSensors();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
-    */
+
     public void updateSensors(){
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);

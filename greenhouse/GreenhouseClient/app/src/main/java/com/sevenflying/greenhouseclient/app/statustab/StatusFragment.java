@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.MoniItemManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
@@ -29,7 +33,6 @@ import java.util.List;
 public class StatusFragment extends Fragment {
 
     private List<MonitoringItem> monitoringItems;
-    private static final int CODE_NEW_MONI_ITEM = 1, CODE_EDIT_MONI_ITEM = 2;
     private MoniItemManager moniManager;
     private ActuatorAdapter actuatorAdapter;
     private MonitoringItemAdapter moniAdapter;
@@ -84,7 +87,7 @@ public class StatusFragment extends Fragment {
                                             MonitoringItem extraInput = monitoringItems
                                                     .get(listPosition);
                                             intent.putExtra("moni-to-edit", extraInput);
-                                            startActivityForResult(intent, CODE_EDIT_MONI_ITEM);
+                                            startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
                                             break;
                                         case 1: // Delete
                                             moniManager.deleteItem(monitoringItems.get(listPosition));
@@ -111,7 +114,7 @@ public class StatusFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     startActivityForResult(new Intent(StatusFragment.this.getActivity(),
-                            MoniItemCreationActivity.class), CODE_NEW_MONI_ITEM);
+                            MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
                 }
             });
             return view;
@@ -120,7 +123,7 @@ public class StatusFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == CODE_NEW_MONI_ITEM) {
+        if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
             // Callback from MoniItemCreationActivity
             if(resultCode == Activity.RESULT_OK) {
                 MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable("moni-item");
@@ -133,7 +136,7 @@ public class StatusFragment extends Fragment {
                         getString(R.string.item_created), Toast.LENGTH_SHORT).show();
             }
         } else {
-            if(requestCode == CODE_EDIT_MONI_ITEM) {
+            if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
                 if(resultCode == Activity.RESULT_OK) {
                     // TODO
                 }
@@ -146,5 +149,30 @@ public class StatusFragment extends Fragment {
         super.onResume();
         actuatorAdapter.notifyDataSetChanged();
         moniAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_status_fragment, menu);
+        setMenuVisibility(true);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // TODO
+                return true;
+            case R.id.action_settings:
+                // TODO
+                return true;
+            case R.id.action_add_item:
+                startActivityForResult(new Intent(StatusFragment.this.getActivity(),
+                        MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

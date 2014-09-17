@@ -116,6 +116,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 sensorList);
         listViewSensos.setAdapter(adapter);
         if(getIntent().hasExtra("moni-to-edit")) {
+            tempBar.setTitle(getResources().getString(R.string.title_edit_item));
             MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
             etName.setText(extra.getName());
             etName.setEnabled(false);

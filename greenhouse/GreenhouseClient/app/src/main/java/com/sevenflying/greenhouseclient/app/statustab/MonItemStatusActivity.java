@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.MoniItemManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
@@ -32,7 +33,6 @@ public class MonItemStatusActivity extends FragmentActivity {
     private ImageView imageMonitoring;
     private TextView moniName;
     private SensorAdapter adapter;
-    private static final int CODE_EDIT_MONI_ITEM = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class MonItemStatusActivity extends FragmentActivity {
                 Intent intent = new Intent(MonItemStatusActivity.this,
                         MoniItemCreationActivity.class);
                 intent.putExtra("moni-to-edit", extraInput);
-                startActivityForResult(intent, CODE_EDIT_MONI_ITEM);
+                startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
             }
         });
 
@@ -79,7 +79,7 @@ public class MonItemStatusActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == CODE_EDIT_MONI_ITEM) {
+        if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
             // Callback from MoniItemCreation
             if(resultCode == RESULT_OK) {
                 if(data.hasExtra("moni-item-result")) {

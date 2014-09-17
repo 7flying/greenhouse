@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
 
@@ -30,7 +29,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar = getActionBar();
         tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabsPaAdapter);
-        //getActionBar().setHomeButtonEnabled(true); //TODO -> check min API
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 
@@ -60,7 +58,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 pendingIntent);
     }
 
-
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -68,7 +66,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+    */
     @Override
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
     }

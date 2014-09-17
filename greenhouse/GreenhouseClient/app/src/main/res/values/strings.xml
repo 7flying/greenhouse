@@ -13,7 +13,9 @@
     <string name="action_bar_sensor_info">Sensor</string>
     <!-- Display title names -->
     <string name="title_add_item">Add item</string>
+    <string name="title_edit_item">Edit item</string>
     <string name="title_add_alert">Add alert</string>
+    <string name="title_edit_alert">Edit alert</string>
     <string name="title_sensor_status">Sensor\'s info</string>
     <string name="title_item_status">Item\'s info</string>
     <!-- xmls layout-->

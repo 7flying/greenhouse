@@ -139,6 +139,7 @@ public class AlertCreationActivity extends FragmentActivity {
 
         TextView tvDescription = (TextView) findViewById(R.id.alert_creation_editing);
         if(getIntent().hasExtra("alert-to-edit")) {
+            tempBar.setTitle(getResources().getString(R.string.title_edit_alert));
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
             // the equals of sensor takes pinId + type
             String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " + a.getSensorType().toString();

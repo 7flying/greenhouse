@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertManager;
 
@@ -34,8 +35,6 @@ public class AlertListFragment extends Fragment {
     private LinearLayout layoutNoAlerts;
     private ListView listView;
     private AlertManager manager;
-    private static final int CODE_CREATE_NEW_ALERT = 1;
-    private static final int CODE_EDIT_ALERT = 2;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
         if(container == null)
@@ -66,7 +65,7 @@ public class AlertListFragment extends Fragment {
                                             Intent intent = new Intent(AlertListFragment.this
                                                     .getActivity(), AlertCreationActivity.class);
                                             intent.putExtra("alert-to-edit", alertList.get(listPosition));
-                                            startActivityForResult(intent, CODE_EDIT_ALERT);
+                                            startActivityForResult(intent, Codes.CODE_EDIT_ALERT);
                                             break;
                                         case 1: // Delete
                                             manager.removeAlert(alertList.get(listPosition));
@@ -92,25 +91,32 @@ public class AlertListFragment extends Fragment {
         }
     }
 
-    /*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_alert_fragment, menu);
         setMenuVisibility(true);
-        inflater.inflate(R.menu.alert_list_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-    */
-    /*
+
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_new) {
-            // Start new Activity, AlertCreationActivity
-            Intent intent = new Intent(AlertListFragment.this.getActivity(), AlertCreationActivity.class);
-            startActivityForResult(intent, CODE_CREATE_NEW_ALERT);
-            return true;
-        } else
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // TODO
+                return true;
+            case R.id.action_settings:
+                // TODO
+                return true;
+            case R.id.action_new_alert:
+                Intent intent = new Intent(AlertListFragment.this.getActivity(), AlertCreationActivity.class);
+                startActivityForResult(intent, Codes.CODE_CREATE_NEW_ALERT);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
-    */
+
 
     public void checkLayoutVisibility() {
         if(alertList.size() > 0)
@@ -128,7 +134,7 @@ public class AlertListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode ==  CODE_CREATE_NEW_ALERT) {
+        if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {
                 Alert a = (Alert) data.getSerializableExtra("alert");
@@ -155,7 +161,7 @@ public class AlertListFragment extends Fragment {
                 }
             }
         } else {
-            if(requestCode == CODE_EDIT_ALERT) {
+            if(requestCode == Codes.CODE_EDIT_ALERT) {
                 // Callback from AlertCreationActivity on Edit mode
                 if(resultCode == Activity.RESULT_OK) {
                     Alert a = (Alert) data.getSerializableExtra("alert");
