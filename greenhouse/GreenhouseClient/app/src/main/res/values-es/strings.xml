@@ -42,9 +42,11 @@
     <string name="tab_alerts">Alertas</string>
     <string name="tab_sensors">Sensores</string>
     <string name="tab_status">Estado</string>
+    <string name="title_about">Acerca de</string>
     <string name="title_add_item">Añadir item</string>
     <string name="title_add_alert">Añadir alerta</string>
     <string name="title_sensor_status">Información de sensor</string>
+    <string name="title_settings">Ajustes</string>
     <string name="title_item_status">Información de item</string>
     <string name="xml_sensor_name">Nombre:</string>
     <string name="xml_sensor_pin">PIN:</string>

@@ -53,6 +53,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
+        <activity android:name=".settings.SettingsActivity"
+                  android:parentActivityName=".MainActivity"
+                  android:label="@string/title_settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
+        </activity>
+        <activity android:name=".about.AboutActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_about">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
+        </activity>
         <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
             android:enabled="true"/>
         <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>

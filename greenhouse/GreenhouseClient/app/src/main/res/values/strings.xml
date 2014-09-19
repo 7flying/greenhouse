@@ -18,6 +18,8 @@
     <string name="title_edit_alert">Edit alert</string>
     <string name="title_sensor_status">Sensor\'s info</string>
     <string name="title_item_status">Item\'s info</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_about">About</string>
     <!-- xmls layout-->
     <!-- activity_sensor_status-->
     <string name="content_image_sensor_desc">Sensor image</string>
