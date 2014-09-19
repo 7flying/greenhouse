@@ -156,4 +156,5 @@ public class Sensor implements Serializable {
                 Base64.DEFAULT);
         return ret;
     }
+
 }
