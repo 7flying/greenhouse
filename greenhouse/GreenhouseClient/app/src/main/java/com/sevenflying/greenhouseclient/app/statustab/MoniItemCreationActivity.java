@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
@@ -50,7 +51,6 @@ public class MoniItemCreationActivity extends FragmentActivity {
         ActionBar tempBar = getActionBar();
         if( tempBar != null) {
             tempBar.setDisplayHomeAsUpEnabled(true);
-            tempBar.setDisplayShowTitleEnabled(true);
         }
         setContentView(R.layout.activity_mon_item_creation);
         buttonCreate = (Button) findViewById(R.id.button_create);
@@ -115,8 +115,11 @@ public class MoniItemCreationActivity extends FragmentActivity {
         adapter = new SensorCheckAdapter(getApplicationContext(), R.layout.sensor_check_row,
                 sensorList);
         listViewSensos.setAdapter(adapter);
+        TextView textViewTitle = (TextView) findViewById(R.id.title_moni_item_creation);
         if(getIntent().hasExtra("moni-to-edit")) {
-            tempBar.setTitle(getResources().getString(R.string.title_edit_item));
+            if(tempBar != null)
+                tempBar.setTitle(getResources().getString(R.string.title_edit_item));
+            textViewTitle.setText(getResources().getString(R.string.edit_monitoring_item));
             MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
             etName.setText(extra.getName());
             etName.setEnabled(false);
@@ -124,6 +127,10 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 imagePreview.setImageBitmap(BitmapFactory.decodeFile(extra.getPhotoPath()));
             else
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+        } else {
+            if(tempBar != null)
+                tempBar.setDisplayShowTitleEnabled(true);
+            textViewTitle.setText(getResources().getString(R.string.add_monitoring_item));
         }
     }
 

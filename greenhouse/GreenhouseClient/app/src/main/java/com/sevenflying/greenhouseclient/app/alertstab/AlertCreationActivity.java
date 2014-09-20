@@ -46,7 +46,6 @@ public class AlertCreationActivity extends FragmentActivity {
         ActionBar tempBar = getActionBar();
         if( tempBar != null) {
             tempBar.setDisplayHomeAsUpEnabled(true);
-            tempBar.setDisplayShowTitleEnabled(true);
         }
         setContentView(R.layout.activity_alert_creation);
         formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormattedSensors();
@@ -153,6 +152,7 @@ public class AlertCreationActivity extends FragmentActivity {
         } else {
             // set description text as "creation"
             tvDescription.setText(getResources().getString(R.string.add_alert));
+            tempBar.setDisplayShowTitleEnabled(true);
         }
 
         Button buttonCancel = (Button) findViewById(R.id.button_cancel_alert);

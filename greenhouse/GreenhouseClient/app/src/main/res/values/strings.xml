@@ -55,6 +55,7 @@
     <string name="attached_sensors">ATTACHED SENSORS</string>
     <!-- activity_mon_item_creation -->
     <string name="add_monitoring_item">ADD MONITORING ITEM</string>
+    <string name="edit_monitoring_item">EDIT MONITORING ITEM</string>
     <string name="add_image">ADD IMAGE</string>
     <string name="from_camera">Take photo</string>
     <string name="from_gallery">Choose from gallery</string>

@@ -67,14 +67,16 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
                     StringTokenizer tokenizer = new StringTokenizer(ss, ":");
                     ArrayList<String> temp = new ArrayList<String>();
                     while(tokenizer.hasMoreTokens())
-                        temp.add(new String(Base64.decode(tokenizer.nextToken().getBytes(), Base64.DEFAULT)));
+                        temp.add(new String(Base64.decode(tokenizer.nextToken().getBytes(),
+                                Base64.DEFAULT)));
                     if(temp.size() == 5) {
                         sensor.setName(temp.get(0));
                         sensor.setPinId(temp.get(1));
                         sensor.setType(temp.get(2).charAt(0));
                         sensor.setRefreshRate(Long.parseLong(temp.get(3)));
                         sensor.setValue(Double.parseDouble(temp.get(4)));
-                        sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(new GregorianCalendar().getTime()));
+                        sensor.setUpdatedAt(new SimpleDateFormat("dd/MM HH:mm:ss").format(
+                                new GregorianCalendar().getTime()));
                         ret.add(sensor);
                         oos.writeObject("ACK");
                         oos.flush();

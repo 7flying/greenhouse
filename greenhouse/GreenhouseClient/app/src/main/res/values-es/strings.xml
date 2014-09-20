@@ -14,7 +14,8 @@
     <string name="alert_deleted">Alerta borrada.</string>
     <string name="alert_edited">Alerta modificada.</string>
     <string name="alert_fired_on_value">Valor</string>
-    <string name="alert_repeated_notification">No se pueden crear dos alertas del mismo tipo en el mismo sensor. Por favor, modifique o borre la alerta.</string>
+    <string name="alert_repeated_notification">No se pueden crear dos alertas del mismo tipo en
+        el mismo sensor. Por favor, modifique o borre la alerta.</string>
     <string name="alert_type_spinner">Tipo de alerta</string>
     <string name="app_name">Greenhouse</string>
     <string name="attached_sensors">SENSORES ASOCIADOS</string>
@@ -25,6 +26,7 @@
     <string name="delete_alert_context_menu">Borrar</string>
     <string name="edit_alert">EDITAR ALERTA</string>
     <string name="edit_alert_context_menu">Editar</string>
+    <string name="edit_monitoring_item">EDITAR ITEM</string>
     <string name="from_camera">Sacar foto</string>
     <string name="from_default">Icono por defecto</string>
     <string name="from_gallery">Elegir de la galería</string>
