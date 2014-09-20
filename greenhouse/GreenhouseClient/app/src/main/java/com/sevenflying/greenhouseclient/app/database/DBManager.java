@@ -46,12 +46,12 @@ public class DBManager extends SQLiteOpenHelper {
         );
         sqLiteDatabase.execSQL(
                         "CREATE TABLE " + AlertEntry.TABLE_NAME + " ( "
-                        + AlertEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                         + AlertEntry.A_SENSOR_REF + " INTEGER NOT NULL REFERENCES "
                           + SensorEntry.TABLE_NAME + "("+ SensorEntry._ID +") ON DELETE CASCADE,"
                         + AlertEntry.A_TYPE + " TEXT NOT NULL,"
                         + AlertEntry.A_COMPARE_VALUE + " REAL NOT NULL,"
-                        + AlertEntry.A_ACTIVE + " TEXT NOT NULL"
+                        + AlertEntry.A_ACTIVE + " TEXT NOT NULL,"
+                        + "PRIMARY KEY (" + AlertEntry.A_SENSOR_REF + ", " + AlertEntry.A_TYPE + ")"
                         +" )"
         );
         sqLiteDatabase.execSQL(
@@ -211,23 +211,28 @@ public class DBManager extends SQLiteOpenHelper {
      * @param a - Alert to add
      */
     public synchronized void addAlert(Alert a) {
-       
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AlertEntry.A_SENSOR_REF, getSensorID(a.getSensorPinId(),
+                String.valueOf(a.getSensorType().getIdentifier())));
+        values.put(AlertEntry.A_TYPE, a.getAlertType().toString());
+        values.put(AlertEntry.A_COMPARE_VALUE, a.getCompareValue());
+        values.put(AlertEntry.A_ACTIVE, a.isActive());
+        db.insert(AlertEntry.TABLE_NAME, null, values);
     }
 
     /** Removes and alert from the Manager.
      * @param a - Alert to remove
      */
     public synchronized  void removeAlert(Alert a) {
-
-    }
-
-    /** Checks if any of the alerts related to the sensor are fired.
-     *  Returns a list containing the alerts that were fired.
-     * @param pinId - pin id from the Sensor
-     * @param value - value to compare
-     * @return list of fired alerts. Empty list if no alerts were fired.*/
-    public synchronized List<Alert> checkAlertsFrom(String pinId, SensorType type, double value) {
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = AlertEntry.A_SENSOR_REF + " = ? AND " + AlertEntry.A_TYPE + " = ?";
+        String[] selectionArgs = {
+                Integer.valueOf(getSensorID(a.getSensorPinId(),
+                        String.valueOf(a.getSensorType().getIdentifier()))).toString(),
+                a.getAlertType().toString()
+        };
+        db.delete(AlertEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     /** Checks whether the manager has alerts created concerning a sensor of a certain alert type

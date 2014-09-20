@@ -40,23 +40,6 @@ public class AlertManager {
         }
     }
 
-    /** Checks if any of the alerts related to the sensor are fired.
-     *  Returns a list containing the alerts that were fired.
-     * @param pinId - pin id from the Sensor
-     * @param value - value to compare
-     * @return list of fired alerts. Empty list if no alerts were fired.*/
-    public synchronized List<Alert> checkAlertsFrom(String pinId, SensorType type, double value) {
-        ArrayList<Alert> ret = new ArrayList<Alert>();
-        if(mapSensorAlerts.containsKey(pinId + type.getIdentifier())) {
-            for(Alert alert : mapSensorAlerts.get(pinId + type.getIdentifier())) {
-                if (alert.isFired(value)) {
-                    ret.add(alert);
-                }
-            }
-        }
-        return ret;
-    }
-
     /** Checks whether the manager has alerts created concerning a sensor of a certain alert type
      * @param pinId - pin id from the Sensor
      * @param sensorType - sensor type
