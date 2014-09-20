@@ -50,4 +50,17 @@ public enum SensorType {
                 return "Unknown";
         }
     }
+
+    public static SensorType getType(char s) {
+        switch (s) {
+            case 'H':
+                return HUMIDITY;
+            case 'L':
+                return LIGHT;
+            case 'T':
+                return TEMPERATURE;
+            default:
+                return UNKNOWN;
+        }
+    }
 }

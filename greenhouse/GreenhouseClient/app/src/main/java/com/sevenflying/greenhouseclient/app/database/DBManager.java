@@ -1,9 +1,22 @@
 package com.sevenflying.greenhouseclient.app.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+
+import com.sevenflying.greenhouseclient.domain.Alert;
+import com.sevenflying.greenhouseclient.domain.AlertType;
+import com.sevenflying.greenhouseclient.domain.MonitoringItem;
+import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.domain.SensorType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /** Application's database manager.
@@ -22,8 +35,9 @@ public class DBManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(
                         "CREATE TABLE " + SensorEntry.TABLE_NAME + " ( "
-                        + SensorEntry._ID + " INTEGER NOT NULL PRIMARY KEY, "
+                        + SensorEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                         + SensorEntry.S_NAME + " TEXT NOT NULL, "
+                        + SensorEntry.S_PIN_ID + " TEXT NOT NULL, "
                         + SensorEntry.S_TYPE + " TEXT NOT NULL, "
                         + SensorEntry.S_REFRESH + " INTEGER NOT NULL, "
                         + SensorEntry.S_LAST_VALUE + " REAL, "
@@ -32,7 +46,7 @@ public class DBManager extends SQLiteOpenHelper {
         );
         sqLiteDatabase.execSQL(
                         "CREATE TABLE " + AlertEntry.TABLE_NAME + " ( "
-                        + AlertEntry._ID + " INTEGER NOT NULL PRIMARY KEY, "
+                        + AlertEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                         + AlertEntry.A_SENSOR_REF + " INTEGER NOT NULL REFERENCES "
                           + SensorEntry.TABLE_NAME + "("+ SensorEntry._ID +") ON DELETE CASCADE,"
                         + AlertEntry.A_TYPE + " TEXT NOT NULL,"
@@ -42,7 +56,7 @@ public class DBManager extends SQLiteOpenHelper {
         );
         sqLiteDatabase.execSQL(
                 "CREATE TABLE " + MoniItemEntry.TABLE_NAME + " ( "
-                + MoniItemEntry._ID + " INTEGER NOT NULL PRIMARY KEY, "
+                + MoniItemEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + MoniItemEntry.M_NAME + " TEXT NOT NULL,"
                 + MoniItemEntry.M_PHOTO_PATH + " TEXT,"
                 + MoniItemEntry.M_IS_WARNING + " TEXT NOT NULL"
@@ -79,6 +93,7 @@ public class DBManager extends SQLiteOpenHelper {
 
         public static final String TABLE_NAME = "Sensors";
         public static final String S_NAME = "name";
+        public static final String S_PIN_ID = "pinid";
         public static final String S_TYPE = "type";
         public static final String S_REFRESH = "refreshrate";
         public static final String S_LAST_VALUE = "lastvalue";
@@ -111,4 +126,148 @@ public class DBManager extends SQLiteOpenHelper {
         public static final String MS_SENSOR_REF = "sensorid";
         public static final String MS_MONI_REF = "monitemid";
     }
+
+    /** Adds a Sensor to the manager. Discarded if repeated.
+     * @param s - sensor to add    */
+    public synchronized void addSensor(Sensor s) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SensorEntry.S_NAME, s.getName());
+        values.put(SensorEntry.S_PIN_ID, s.getPinId());
+        values.put(SensorEntry.S_TYPE, Character.toString(s.getType().getIdentifier()));
+        values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
+        values.put(SensorEntry.S_LAST_VALUE, s.getValue());
+        values.put(SensorEntry.S_UPDATED_AT, s.getUpdatedAt());
+        db.insert(SensorEntry.TABLE_NAME, null, values);
+    }
+
+    /** Returns all the sensors at the manager.
+     * @return list of sensors  */
+    public synchronized List<Sensor> getSensors() {
+        List<Sensor> ret = new ArrayList<Sensor>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Sensors", new String[]{});
+        if(c.moveToFirst()) {
+            do {
+                Sensor temp = new Sensor();
+                temp.setName(c.getString(c.getColumnIndex(SensorEntry.S_NAME)));
+                temp.setPinId(c.getString(c.getColumnIndex(SensorEntry.S_PIN_ID)));
+                temp.setType(SensorType.getType((c.getString(c.getColumnIndex(SensorEntry.S_TYPE)))
+                        .charAt(0)));
+                temp.setRefreshRate(c.getLong(c.getColumnIndex(SensorEntry.S_REFRESH)));
+                temp.setValue(c.getDouble(c.getColumnIndex(SensorEntry.S_LAST_VALUE)));
+                temp.setUpdatedAt(c.getString(c.getColumnIndex(SensorEntry.S_UPDATED_AT)));
+                ret.add(temp);
+            } while(c.moveToNext());
+        }
+        c.close();
+        return ret;
+    }
+
+    /** Returns a sensor given its pinId and type
+     * @param pinId - pin id from the Sensor
+     * @param type - sensor's type
+     * @return Sensor
+     */
+    public synchronized Sensor getSensorBy(String pinId, String type) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Sensors WHERE pinid = ? AND TYPE = ?",
+                new String [] { pinId, type});
+        Sensor temp = new Sensor();
+        if(c.moveToFirst()) {
+            temp.setName(c.getString(c.getColumnIndex(SensorEntry.S_NAME)));
+            temp.setPinId(c.getString(c.getColumnIndex(SensorEntry.S_PIN_ID)));
+            temp.setType(SensorType.getType((c.getString(c.getColumnIndex(SensorEntry.S_TYPE)))
+                    .charAt(0)));
+            temp.setRefreshRate(c.getLong(c.getColumnIndex(SensorEntry.S_REFRESH)));
+            temp.setValue(c.getDouble(c.getColumnIndex(SensorEntry.S_LAST_VALUE)));
+            temp.setUpdatedAt(c.getString(c.getColumnIndex(SensorEntry.S_UPDATED_AT)));
+        }
+        c.close();
+        return temp;
+    }
+
+    private int getSensorID(String pinId, String type) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT _ID FROM Sensors WHERE pinid = ? AND TYPE = ?",
+                new String [] { pinId, type});
+        int ret = -1;
+        if(c.moveToFirst())
+           ret = c.getInt(c.getColumnIndex(SensorEntry._ID));
+        c.close();
+        return ret;
+    }
+
+    /** Returns all the sensors at the manager as formatted strings.
+     * @return  map holding a sensor with its formatted representation  */
+    public synchronized Map<String, Sensor> getFormattedSensors() {
+        Map<String, Sensor> ret = new HashMap<String, Sensor>();
+        for(Sensor s : getSensors())
+            ret.put(s.getName() + " (" + s.getPinId() + ") " + s.getType().toString(), s);
+        return ret;
+    }
+
+    /** Adds an alert to the Manager. Alerts cannot be repeated.
+     * @param a - Alert to add
+     */
+    public synchronized void addAlert(Alert a) {
+       
+    }
+
+    /** Removes and alert from the Manager.
+     * @param a - Alert to remove
+     */
+    public synchronized  void removeAlert(Alert a) {
+
+    }
+
+    /** Checks if any of the alerts related to the sensor are fired.
+     *  Returns a list containing the alerts that were fired.
+     * @param pinId - pin id from the Sensor
+     * @param value - value to compare
+     * @return list of fired alerts. Empty list if no alerts were fired.*/
+    public synchronized List<Alert> checkAlertsFrom(String pinId, SensorType type, double value) {
+
+    }
+
+    /** Checks whether the manager has alerts created concerning a sensor of a certain alert type
+     * @param pinId - pin id from the Sensor
+     * @param sensorType - sensor type
+     * @param alertType - alert type
+     * @return true if it has
+     */
+    public synchronized boolean hasAlertsCreatedFrom(String pinId, SensorType sensorType,
+                                                     AlertType alertType)
+    {
+
+    }
+
+
+    /** Returns a list of the stored alerts.
+     * @return list containing the alerts
+     */
+    public synchronized List<Alert> getAlerts() {
+
+    }
+
+    /** Retrieves all the items.
+     * @return list with all the monitoring items.     */
+    public synchronized List<MonitoringItem> getItems() {
+
+    }
+
+    /** Adds a MonitoringItem to the manager. Updated if repeated.
+     * @param item - item to add     */
+    public void addItem(MonitoringItem item) {
+
+    }
+
+    public void deleteItem(MonitoringItem item) {
+
+    }
+
+    public void deleteItem(String name) {
+
+    }
+
 }
