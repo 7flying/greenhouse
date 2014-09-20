@@ -57,7 +57,7 @@ public class DBManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(
                 "CREATE TABLE " + MoniItemEntry.TABLE_NAME + " ( "
                 + MoniItemEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
-                + MoniItemEntry.M_NAME + " TEXT NOT NULL,"
+                + MoniItemEntry.M_NAME + " TEXT NOT NULL UNIQUE,"
                 + MoniItemEntry.M_PHOTO_PATH + " TEXT,"
                 + MoniItemEntry.M_IS_WARNING + " TEXT NOT NULL"
                 + " )"
@@ -65,9 +65,9 @@ public class DBManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(
                 "CREATE TABLE " + MoniItemSensorEntry.TABLE_NAME + " ( "
                 + MoniItemSensorEntry.MS_SENSOR_REF + " INTEGER NOT NULL REFERENCES "
-                        + SensorEntry.TABLE_NAME + " (" + SensorEntry._ID + "),"
+                        + SensorEntry.TABLE_NAME + " (" + SensorEntry._ID + ") ON DELETE CASCADE,"
                 + MoniItemSensorEntry.MS_MONI_REF + " INTEGER NOT NULL REFERENCES "
-                        + MoniItemEntry.TABLE_NAME + " (" + MoniItemEntry._ID + "),"
+                        + MoniItemEntry.TABLE_NAME + " (" +MoniItemEntry._ID +") ON DELETE CASCADE,"
                 + "PRIMARY KEY (" + MoniItemSensorEntry.MS_SENSOR_REF + ", "
                         + MoniItemSensorEntry.MS_MONI_REF + ")"
                 + ") "
@@ -141,22 +141,27 @@ public class DBManager extends SQLiteOpenHelper {
         db.insert(SensorEntry.TABLE_NAME, null, values);
     }
 
+    private Sensor handleSensor(Cursor c) {
+        Sensor temp = new Sensor();
+        temp.setName(c.getString(c.getColumnIndex(SensorEntry.S_NAME)));
+        temp.setPinId(c.getString(c.getColumnIndex(SensorEntry.S_PIN_ID)));
+        temp.setType(SensorType.getType((c.getString(c.getColumnIndex(SensorEntry.S_TYPE)))
+                .charAt(0)));
+        temp.setRefreshRate(c.getLong(c.getColumnIndex(SensorEntry.S_REFRESH)));
+        temp.setValue(c.getDouble(c.getColumnIndex(SensorEntry.S_LAST_VALUE)));
+        temp.setUpdatedAt(c.getString(c.getColumnIndex(SensorEntry.S_UPDATED_AT)));
+        return temp;
+    }
+
     /** Returns all the sensors at the manager.
      * @return list of sensors  */
-    public synchronized List<Sensor> getSensors() {
+    public  List<Sensor> getSensors() {
         List<Sensor> ret = new ArrayList<Sensor>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Sensors", new String[]{});
         if(c.moveToFirst()) {
             do {
-                Sensor temp = new Sensor();
-                temp.setName(c.getString(c.getColumnIndex(SensorEntry.S_NAME)));
-                temp.setPinId(c.getString(c.getColumnIndex(SensorEntry.S_PIN_ID)));
-                temp.setType(SensorType.getType((c.getString(c.getColumnIndex(SensorEntry.S_TYPE)))
-                        .charAt(0)));
-                temp.setRefreshRate(c.getLong(c.getColumnIndex(SensorEntry.S_REFRESH)));
-                temp.setValue(c.getDouble(c.getColumnIndex(SensorEntry.S_LAST_VALUE)));
-                temp.setUpdatedAt(c.getString(c.getColumnIndex(SensorEntry.S_UPDATED_AT)));
+                Sensor temp = handleSensor(c);
                 ret.add(temp);
             } while(c.moveToNext());
         }
@@ -169,20 +174,24 @@ public class DBManager extends SQLiteOpenHelper {
      * @param type - sensor's type
      * @return Sensor
      */
-    public synchronized Sensor getSensorBy(String pinId, String type) {
+    public Sensor getSensorBy(String pinId, String type) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Sensors WHERE pinid = ? AND TYPE = ?",
                 new String [] { pinId, type});
+
         Sensor temp = new Sensor();
-        if(c.moveToFirst()) {
-            temp.setName(c.getString(c.getColumnIndex(SensorEntry.S_NAME)));
-            temp.setPinId(c.getString(c.getColumnIndex(SensorEntry.S_PIN_ID)));
-            temp.setType(SensorType.getType((c.getString(c.getColumnIndex(SensorEntry.S_TYPE)))
-                    .charAt(0)));
-            temp.setRefreshRate(c.getLong(c.getColumnIndex(SensorEntry.S_REFRESH)));
-            temp.setValue(c.getDouble(c.getColumnIndex(SensorEntry.S_LAST_VALUE)));
-            temp.setUpdatedAt(c.getString(c.getColumnIndex(SensorEntry.S_UPDATED_AT)));
-        }
+        if(c.moveToFirst())
+            temp = handleSensor(c);
+        c.close();
+        return temp;
+    }
+
+    public Sensor getSensorBy(String bid) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Sensors WHERE _ID = ? ", new String [] {bid});
+        Sensor temp = new Sensor();
+        if(c.moveToFirst())
+            temp = handleSensor(c);
         c.close();
         return temp;
     }
@@ -200,7 +209,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     /** Returns all the sensors at the manager as formatted strings.
      * @return  map holding a sensor with its formatted representation  */
-    public synchronized Map<String, Sensor> getFormattedSensors() {
+    public  Map<String, Sensor> getFormattedSensors() {
         Map<String, Sensor> ret = new HashMap<String, Sensor>();
         for(Sensor s : getSensors())
             ret.put(s.getName() + " (" + s.getPinId() + ") " + s.getType().toString(), s);
@@ -215,7 +224,7 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(AlertEntry.A_SENSOR_REF, getSensorID(a.getSensorPinId(),
                 String.valueOf(a.getSensorType().getIdentifier())));
-        values.put(AlertEntry.A_TYPE, a.getAlertType().toString());
+        values.put(AlertEntry.A_TYPE, a.getAlertType().getSymbol());
         values.put(AlertEntry.A_COMPARE_VALUE, a.getCompareValue());
         values.put(AlertEntry.A_ACTIVE, a.isActive());
         db.insert(AlertEntry.TABLE_NAME, null, values);
@@ -230,7 +239,7 @@ public class DBManager extends SQLiteOpenHelper {
         String[] selectionArgs = {
                 Integer.valueOf(getSensorID(a.getSensorPinId(),
                         String.valueOf(a.getSensorType().getIdentifier()))).toString(),
-                a.getAlertType().toString()
+                a.getAlertType().getSymbol()
         };
         db.delete(AlertEntry.TABLE_NAME, selection, selectionArgs);
     }
@@ -241,38 +250,140 @@ public class DBManager extends SQLiteOpenHelper {
      * @param alertType - alert type
      * @return true if it has
      */
-    public synchronized boolean hasAlertsCreatedFrom(String pinId, SensorType sensorType,
+    public boolean hasAlertsCreatedFrom(String pinId, SensorType sensorType,
                                                      AlertType alertType)
     {
-
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Alerts WHERE sensorid = ? AND type = ? ",
+                new String[]{
+                        Integer.valueOf(
+                                getSensorID(pinId, String.valueOf(sensorType.getIdentifier())))
+                                .toString(),
+                        alertType.getSymbol()});
+        int ret = 0;
+        if(c.moveToFirst())
+            ret = c.getCount();
+        c.close();
+       return ret == 0;
     }
 
 
     /** Returns a list of the stored alerts.
      * @return list containing the alerts
      */
-    public synchronized List<Alert> getAlerts() {
+    public List<Alert> getAlerts() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Alerts", new String [] {});
+        List<Alert> ret = new ArrayList<Alert>();
+        if(c.moveToFirst()) {
+            do {
+                try {
+                    Alert temp = new Alert();
+                    temp.setAlertType(c.getColumnName(c.getColumnIndex(AlertEntry.A_TYPE)));
+                    temp.setCompareValue(Double.valueOf
+                            (c.getColumnName(c.getColumnIndex(AlertEntry.A_COMPARE_VALUE))));
+                    temp.setActive(Boolean.valueOf(c.getColumnName(
+                            c.getColumnIndex(AlertEntry.A_ACTIVE))));
+                    Sensor s = getSensorBy(c.getColumnName(
+                            c.getColumnIndex(AlertEntry.A_SENSOR_REF)));
+                    temp.setSensorPinId(s.getPinId());
+                    temp.setSensorType(s.getType());
+                    ret.add(temp);
+                }catch(Exception e) { e.printStackTrace();}
+            } while(c.moveToNext());
+        }
+        c.close();
+        return ret;
+    }
 
+    private List<Sensor> getSensorsFromMoniItem(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM MoniSensors WHERE monitemid = ?", new String [] {id});
+        List<Sensor> ret = new ArrayList<Sensor>();
+        if(c.moveToFirst()) {
+            do {
+                Sensor temp = getSensorBy(c.getColumnName(
+                        c.getColumnIndex(MoniItemSensorEntry.MS_SENSOR_REF)));
+                ret.add(temp);
+            } while(c.moveToNext());
+        }
+        c.close();
+        return ret;
     }
 
     /** Retrieves all the items.
      * @return list with all the monitoring items.     */
-    public synchronized List<MonitoringItem> getItems() {
-
+    public List<MonitoringItem> getItems() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Monitems", new String [] {});
+        List<MonitoringItem> ret = new ArrayList<MonitoringItem>();
+        if(c.moveToFirst()) {
+            do {
+                MonitoringItem temp = new MonitoringItem(
+                        c.getColumnName(c.getColumnIndex(MoniItemEntry.M_NAME)));
+                temp.setPhotoPath(c.getColumnName(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
+                temp.setWarningEnabled(Boolean.valueOf(c.getColumnName(
+                        c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
+                String moniId = c.getColumnName(c.getColumnIndex(MoniItemEntry._ID));
+                for(Sensor sensor : getSensorsFromMoniItem(moniId))
+                    temp.addSensor(sensor);
+                ret.add(temp);
+            } while(c.moveToNext());
+        }
+        c.close();
+        return ret;
     }
 
-    /** Adds a MonitoringItem to the manager. Updated if repeated.
+    private String getMoniItemId(String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Monitems WHERE name = ?", new String [] {name});
+        String ret = null;
+        if(c.moveToFirst())
+            ret = c.getColumnName(c.getColumnIndex(MoniItemEntry._ID));
+        c.close();
+        return ret;
+    }
+
+    /** Adds a MonitoringItem to the manager.
      * @param item - item to add     */
-    public void addItem(MonitoringItem item) {
-
+    public synchronized void addItem(MonitoringItem item) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MoniItemEntry.M_NAME, item.getName());
+        values.put(MoniItemEntry.M_PHOTO_PATH, item.getPhotoPath());
+        values.put(MoniItemEntry.M_IS_WARNING, item.isWarningEnabled());
+        db.insert(MoniItemEntry.TABLE_NAME, null, values);
+        for(Sensor s : item.getAttachedSensors())
+            addSensorToMoni(item, s);
     }
 
-    public void deleteItem(MonitoringItem item) {
-
+    /** Adds a sensor to the monitoring items
+     * @param item - monitoring item
+     * @param sensor - sensor to add
+     */
+    public synchronized void addSensorToMoni(MonitoringItem item, Sensor sensor) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MoniItemSensorEntry.MS_MONI_REF, getMoniItemId(item.getName()));
+        values.put(MoniItemSensorEntry.MS_SENSOR_REF, getSensorID(sensor.getPinId(),
+                String.valueOf(sensor.getType().getIdentifier())));
+        db.insert(MoniItemSensorEntry.TABLE_NAME, null, values);
     }
 
-    public void deleteItem(String name) {
+    /** Deletes a monitoring item
+     * @param item - to delete
+     */
+    public synchronized void deleteItem(MonitoringItem item) {
+        deleteItem(item.getName());
+    }
 
+    /** Deletes a monitoring item
+     * @param name - name of the monitoring item to delete
+     */
+    public synchronized void deleteItem(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = MoniItemEntry.M_NAME + " = ? ";
+        db.delete(AlertEntry.TABLE_NAME, selection, new String[] { name });
     }
 
 }
