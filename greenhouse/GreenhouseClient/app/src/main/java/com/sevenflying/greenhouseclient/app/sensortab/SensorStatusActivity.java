@@ -73,7 +73,8 @@ public class SensorStatusActivity extends FragmentActivity {
         chart.setLineWidth(2f);
         chart.setCircleSize(4f);
         chart.setDrawBorder(false);
-        chart.setBorderStyles(new BarLineChartBase.BorderStyle[] { BarLineChartBase.BorderStyle.BOTTOM });
+        chart.setBorderStyles(new BarLineChartBase.BorderStyle[] {
+                BarLineChartBase.BorderStyle.BOTTOM });
 
         // no description text
         chart.setDescription("");

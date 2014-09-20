@@ -18,9 +18,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Alert;
-import com.sevenflying.greenhouseclient.domain.AlertManager;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class AlertListFragment extends Fragment {
     private AlertAdapter adapter;
     private LinearLayout layoutNoAlerts;
     private ListView listView;
-    private AlertManager manager;
+    private DBManager manager;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
         if(container == null)
@@ -44,7 +44,7 @@ public class AlertListFragment extends Fragment {
             setMenuVisibility(true);
 
             View view =  inflater.inflate(R.layout.fragment_alert_list, container, false);
-            manager = AlertManager.getInstance(this.getActivity().getApplicationContext());
+            manager = new DBManager(getActivity().getApplicationContext());
             listView = (ListView) view.findViewById(R.id.alertsListView);
             layoutNoAlerts = (LinearLayout) view.findViewById(R.id.layout_no_alerts);
             // Add previously created alerts if any
@@ -74,10 +74,9 @@ public class AlertListFragment extends Fragment {
                                             Toast.makeText(getActivity().getApplicationContext(),
                                                     getResources().getString(R.string.alert_deleted),
                                                     Toast.LENGTH_SHORT).show();
-                                            manager.commit();
                                             break;
                                     }
-                                    manager.commit();
+                                    //manager.commit();
                                     checkLayoutVisibility();
                                 }
                             });
@@ -154,7 +153,6 @@ public class AlertListFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     checkLayoutVisibility();
                     manager.addAlert(a);
-                    manager.commit();
                     Toast.makeText(getActivity().getApplicationContext(),
                             getResources().getString(R.string.alert_created),
                             Toast.LENGTH_SHORT).show();
@@ -169,7 +167,7 @@ public class AlertListFragment extends Fragment {
                     alertList.remove(a);
                     manager.addAlert(a);
                     alertList.add(a);
-                    manager.commit();
+                   // manager.commit();
                     adapter.notifyDataSetChanged();
                 }
             }

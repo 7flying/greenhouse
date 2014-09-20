@@ -155,5 +155,16 @@ public class Alert implements Serializable {
                 Base64.DEFAULT);
         return toWrite;
     }
-	
+
+    @Override
+    public String toString() {
+        return "Alert{" +
+                "type=" + type +
+                ", compareValue=" + compareValue +
+                ", active=" + active +
+                ", sensorPinId='" + sensorPinId + '\'' +
+                ", sensorName='" + sensorName + '\'' +
+                ", sensorType=" + sensorType +
+                '}';
+    }
 }

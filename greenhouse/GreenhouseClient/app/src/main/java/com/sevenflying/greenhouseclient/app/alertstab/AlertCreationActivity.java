@@ -16,10 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
-import com.sevenflying.greenhouseclient.domain.SensorManager;
+// import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class AlertCreationActivity extends FragmentActivity {
             tempBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.activity_alert_creation);
-        formattedSensorMap = SensorManager.getInstance(getApplicationContext()).getFormattedSensors();
+        formattedSensorMap = new DBManager(getApplicationContext()).getFormattedSensors();
 
         // Text View sensor's unit
         tvSensorUnit = (TextView) findViewById(R.id.next_to_edit_alert_value_shows_unit);
@@ -138,7 +139,8 @@ public class AlertCreationActivity extends FragmentActivity {
 
         TextView tvDescription = (TextView) findViewById(R.id.alert_creation_editing);
         if(getIntent().hasExtra("alert-to-edit")) {
-            tempBar.setTitle(getResources().getString(R.string.title_edit_alert));
+            if(tempBar != null)
+                tempBar.setTitle(getResources().getString(R.string.title_edit_alert));
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
             // the equals of sensor takes pinId + type
             String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " + a.getSensorType().toString();
@@ -152,7 +154,8 @@ public class AlertCreationActivity extends FragmentActivity {
         } else {
             // set description text as "creation"
             tvDescription.setText(getResources().getString(R.string.add_alert));
-            tempBar.setDisplayShowTitleEnabled(true);
+            if(tempBar != null)
+                tempBar.setDisplayShowTitleEnabled(true);
         }
 
         Button buttonCancel = (Button) findViewById(R.id.button_cancel_alert);

@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorManager;
@@ -102,16 +103,16 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     protected void onPostExecute(List<Sensor> result) {
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
-        SensorManager sensorManager = SensorManager.getInstance(context);
+        DBManager sensorManager = new DBManager(context);
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
                 buffer.add(s);
                 adapter.notifyDataSetChanged();
+
                 sensorManager.addSensor(s);
             }
         }
         layoutCharge.setVisibility(View.GONE);
-        sensorManager.commit();
     }
 
 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
@@ -26,6 +27,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "devGreenhouse.db";
+    private static final String TAG = "DB";
 
     public  DBManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -130,15 +132,19 @@ public class DBManager extends SQLiteOpenHelper {
     /** Adds a Sensor to the manager. Discarded if repeated.
      * @param s - sensor to add    */
     public synchronized void addSensor(Sensor s) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(SensorEntry.S_NAME, s.getName());
-        values.put(SensorEntry.S_PIN_ID, s.getPinId());
-        values.put(SensorEntry.S_TYPE, Character.toString(s.getType().getIdentifier()));
-        values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
-        values.put(SensorEntry.S_LAST_VALUE, s.getValue());
-        values.put(SensorEntry.S_UPDATED_AT, s.getUpdatedAt());
-        db.insert(SensorEntry.TABLE_NAME, null, values);
+        Log.v(TAG, " $ addSensor " + s.toString());
+        if(getSensorID(s.getPinId(), String.valueOf(s.getType().getIdentifier())) == -1) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(SensorEntry.S_NAME, s.getName());
+            values.put(SensorEntry.S_PIN_ID, s.getPinId());
+            values.put(SensorEntry.S_TYPE, Character.toString(s.getType().getIdentifier()));
+            values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
+            values.put(SensorEntry.S_LAST_VALUE, s.getValue());
+            values.put(SensorEntry.S_UPDATED_AT, s.getUpdatedAt());
+            db.insert(SensorEntry.TABLE_NAME, null, values);
+            getSensors();
+        }
     }
 
     private Sensor handleSensor(Cursor c) {
@@ -156,6 +162,7 @@ public class DBManager extends SQLiteOpenHelper {
     /** Returns all the sensors at the manager.
      * @return list of sensors  */
     public  List<Sensor> getSensors() {
+
         List<Sensor> ret = new ArrayList<Sensor>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Sensors", new String[]{});
@@ -166,6 +173,7 @@ public class DBManager extends SQLiteOpenHelper {
             } while(c.moveToNext());
         }
         c.close();
+        Log.v(TAG, " $ getSensors size:" + ret.size());
         return ret;
     }
 
@@ -198,12 +206,13 @@ public class DBManager extends SQLiteOpenHelper {
 
     private int getSensorID(String pinId, String type) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT _ID FROM Sensors WHERE pinid = ? AND TYPE = ?",
+        Cursor c = db.rawQuery("SELECT _ID FROM Sensors WHERE pinid = ? AND type = ?",
                 new String [] { pinId, type});
         int ret = -1;
         if(c.moveToFirst())
            ret = c.getInt(c.getColumnIndex(SensorEntry._ID));
         c.close();
+        Log.v(TAG, " $ sensorId " + ret);
         return ret;
     }
 
@@ -213,6 +222,7 @@ public class DBManager extends SQLiteOpenHelper {
         Map<String, Sensor> ret = new HashMap<String, Sensor>();
         for(Sensor s : getSensors())
             ret.put(s.getName() + " (" + s.getPinId() + ") " + s.getType().toString(), s);
+        Log.v(TAG, " $ getFormattedSensors map:" + ret.toString());
         return ret;
     }
 
@@ -220,6 +230,7 @@ public class DBManager extends SQLiteOpenHelper {
      * @param a - Alert to add
      */
     public synchronized void addAlert(Alert a) {
+        Log.v(TAG, " $ addAlert " + a.toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(AlertEntry.A_SENSOR_REF, getSensorID(a.getSensorPinId(),
@@ -264,7 +275,8 @@ public class DBManager extends SQLiteOpenHelper {
         if(c.moveToFirst())
             ret = c.getCount();
         c.close();
-       return ret == 0;
+        Log.v(TAG, " $ hasAlertsCreatedFrom  ret:" + ret);
+       return ret != 0;
     }
 
 
@@ -292,6 +304,7 @@ public class DBManager extends SQLiteOpenHelper {
                 }catch(Exception e) { e.printStackTrace();}
             } while(c.moveToNext());
         }
+        Log.v(TAG, " $ getAlerts  size:" + ret.size());
         c.close();
         return ret;
     }
