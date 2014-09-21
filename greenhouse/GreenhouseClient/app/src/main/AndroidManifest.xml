@@ -21,45 +21,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity"
-            android:parentActivityName=
-                "com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity"
+            android:parentActivityName="com.sevenflying.greenhouseclient.app.MainActivity"
             android:label="@string/title_sensor_status">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sevenflying.greenhouseclient.app.sensortab.SensorsListActivity"/>
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
-
         <activity
             android:name="com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity"
-            android:parentActivityName=
-                "com.sevenflying.greenhouseclient.app.alertstab.AlertListActivity"
+            android:parentActivityName="com.sevenflying.greenhouseclient.app.MainActivity"
             android:label="@string/title_add_alert">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sevenflying.greenhouseclient.app.alertstab.AlertListActivity"/>
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
-
         <activity
             android:name="com.sevenflying.greenhouseclient.app.statustab.MonItemStatusActivity"
-            android:parentActivityName=
-                "com.sevenflying.greenhouseclient.app.statustab.StatusActivity"
+            android:parentActivityName="com.sevenflying.greenhouseclient.app.MainActivity"
             android:label="@string/title_item_status">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sevenflying.greenhouseclient.app.statustab.StatusActivity"/>
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
-
         <activity
             android:name="com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity"
-            android:parentActivityName=
-                "com.sevenflying.greenhouseclient.app.statustab.StatusActivity"
+            android:parentActivityName="com.sevenflying.greenhouseclient.app.MainActivity"
             android:label="@string/title_add_item">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sevenflying.greenhouseclient.app.statustab.StatusActivity"/>
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
         <activity android:name=".settings.SettingsActivity"
                   android:parentActivityName=".MainActivity"
@@ -68,7 +60,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
-
         <activity android:name=".about.AboutActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/title_about">
@@ -76,15 +67,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
-
         <activity android:name=".sensortab.SensorCreationActivity"
-            android:parentActivityName=".sensortab.SensorsListActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/title_sensor_creation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sevenflying.greenhouseclient.sensortab.SensorsListActivity"/>
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
-
         <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
             android:enabled="true"/>
         <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>
