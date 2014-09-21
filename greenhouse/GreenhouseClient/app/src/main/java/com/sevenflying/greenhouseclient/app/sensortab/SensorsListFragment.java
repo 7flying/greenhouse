@@ -51,7 +51,8 @@ public class SensorsListFragment extends Fragment {
                 // display further sensor data
                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                     // Arguments
-                    Intent intent = new Intent(SensorsListFragment.this.getActivity(), SensorStatusActivity.class);
+                    Intent intent = new Intent(SensorsListFragment.this.getActivity(),
+                            SensorStatusActivity.class);
                     intent.putExtra("sensor", sensorList.get(index));
                     startActivity(intent);
                 }
@@ -81,6 +82,10 @@ public class SensorsListFragment extends Fragment {
                 return true;
             case R.id.action_refresh:
                 updateSensors();
+                return true;
+            case R.id.action_new_sensor:
+                startActivity(new Intent(SensorsListFragment.this.getActivity(),
+                        SensorCreationActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

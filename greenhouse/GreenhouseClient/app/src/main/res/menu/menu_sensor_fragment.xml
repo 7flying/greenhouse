@@ -6,6 +6,9 @@
         android:title="@string/action_refresh"
         android:icon="@drawable/ic_action_refresh"
         app:showAsAction="never"/>
+    <item android:id="@+id/action_new_sensor"
+        android:title="@string/action_new_sensor"
+        app:showAsAction="never"/>
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never"/>

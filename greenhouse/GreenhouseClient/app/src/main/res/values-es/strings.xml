@@ -2,6 +2,7 @@
     <string name="action_about">Acerca de</string>
     <string name="action_bar_sensor_info">Sensor</string>
     <string name="action_new">Añadir</string>
+    <string name="action_new_sensor">Nuevo sensor</string>
     <string name="action_refresh">Actualizar</string>
     <string name="action_settings">Ajustes</string>
     <string name="actuators">ACTUADORES</string>
@@ -44,6 +45,8 @@
     <string name="radio_digital">Digital</string>
     <string name="refresh_rate">Ratio de refresco (segundos)</string>
     <string name="select_sensor_spinner">Sensor</string>
+    <string name="sensor_creation">CREAR SENSOR</string>
+    <string name="sensor_edition">EDITAR SENSOR</string>
     <string name="sensor_icon_descp">Icono de sensor</string>
     <string name="sensor_type">Tipo de sensor</string>
     <string name="string_alert">Alerta</string>
@@ -54,8 +57,8 @@
     <string name="title_about">Acerca de</string>
     <string name="title_add_item">Añadir item</string>
     <string name="title_add_alert">Añadir alerta</string>
-    <string name="title_sensor_creation">CREAR SENSOR</string>
-    <string name="title_sensor_edition">EDITAR SENSOR</string>
+    <string name="title_sensor_creation">Crear sensor</string>
+    <string name="title_sensor_edition">Editar sensor</string>
     <string name="title_sensor_status">Información de sensor</string>
     <string name="title_settings">Ajustes</string>
     <string name="title_item_status">Información de item</string>

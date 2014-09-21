@@ -9,10 +9,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content">
         <!-- Title-->
         <TextView
             android:id="@+id/title_sensor_add_edit"
@@ -27,7 +24,7 @@
             android:background="#333333"/>
         <!-- Name -->
         <EditText
-            android:id="@+id/et_moni_name"
+            android:id="@+id/et_sensor_name"
             android:hint="@string/name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -37,6 +34,7 @@
             android:layout_gravity="center_vertical" />
         <!-- Type: analog-digital -->
         <RadioGroup
+            android:id="@+id/rgroupAD"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -141,12 +139,12 @@
             android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-            <Button android:id="@+id/button_create_alert"
+            <Button android:id="@+id/button_create_sensor"
                 android:text="@string/button_save"
                 android:layout_weight="1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
-            <Button android:id="@+id/button_cancel_alert"
+            <Button android:id="@+id/button_cancel_sensor"
                 android:text="@string/button_cancel_alarm_creation_delete"
                 android:layout_weight="1"
                 android:layout_width="fill_parent"
