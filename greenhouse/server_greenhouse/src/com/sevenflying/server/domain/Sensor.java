@@ -14,10 +14,13 @@ public class Sensor extends BlossomSensor {
 	// Hour-date of the last refresh, format: 'dd/MM/yy - HH:mm:ss'
 	private String lastRefresh;	
 	private SensorType type;
-	// If this flag is enabled it the refresh rate must be waited to avoid halting the sensor
+	// If this flag is enabled it the refresh rate must be waited to avoid
+	// halting the sensor
 	private boolean ensureRefresh = false;
 
-	public Sensor(String name, String pinId, SensorType type, long refreshRate, boolean ensureRefresh) {
+	public Sensor(String name, String pinId, SensorType type, long refreshRate,
+	 boolean ensureRefresh)
+	{
 		super(name, pinId);
 		this.type = type;
 		this.refreshRate = refreshRate;
@@ -41,7 +44,9 @@ public class Sensor extends BlossomSensor {
 	 * @throws SQLException
 	 * @throws GreenhouseDatabaseException - when there are no values
 	 */
-	public double getLastValue() throws SQLException, GreenhouseDatabaseException {
+	public double getLastValue() throws SQLException,
+	 GreenhouseDatabaseException
+	 {
 		double ret = -2366; 
 		try {
 			DBManager manager = DBManager.getInstance();
@@ -91,7 +96,8 @@ public class Sensor extends BlossomSensor {
 	}
 	
 	public String toString() {	
-		return super.toString() + " refreshRate=" + refreshRate + ", powerSavingMode="
+		return super.toString() + " refreshRate=" + refreshRate
+				+ ", powerSavingMode="
 				+ powerSavingMode + ", lastRefresh=" + lastRefresh + ", type="
 				+ type + ", ensureRefresh=" + ensureRefresh + "]";
 	}

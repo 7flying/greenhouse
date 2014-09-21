@@ -49,13 +49,16 @@ public class NetServer {
 	}
 
 	public void processConnection(final Socket s) {
-		System.out.println(" $ Incoming connection:" +  s.getInetAddress().toString() + " " + s.getLocalAddress());
+		System.out.println(" $ Incoming connection:" +
+		 s.getInetAddress().toString() + " " + s.getLocalAddress());
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-					ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+					ObjectOutputStream oos = new ObjectOutputStream(
+						s.getOutputStream());
+					ObjectInputStream ois = new ObjectInputStream(
+						s.getInputStream());
 					String command = (String) ois.readObject();
 					System.out.println(" $ Received '" + command + "'");
 					switch (command) {
@@ -97,7 +100,9 @@ public class NetServer {
 	/** Processes GETSENSORS command. Get the last values of all sensors 
 	 * @return a list with the last values
 	 */
-	private void getSensorValues(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void getSensorValues(ObjectInputStream ois, ObjectOutputStream oos)
+	throws Exception
+	{
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
 		List<Sensor> sensorList = manager.getSensors();
@@ -145,13 +150,17 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	private void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void getSensorHistory(ObjectInputStream ois, ObjectOutputStream oos)
+	throws Exception
+	{
 		// Read sensor pinid and type
 		String pinidType = (String) ois.readObject();
 		System.out.println("\t -Params: " + pinidType);
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
-		List<Map<String, Double>> history = manager.getLastXFromSensor(5, pinidType.substring(0, pinidType.indexOf(':')), pinidType.substring(pinidType.indexOf(':') + 1));
+		List<Map<String, Double>> history = manager.getLastXFromSensor(
+			5, pinidType.substring(0, pinidType.indexOf(':')),
+			pinidType.substring(pinidType.indexOf(':') + 1));
 		manager.disconnect();
 		// Tell to the client how many values it has to expect
 		int number = history.size();
@@ -162,17 +171,22 @@ public class NetServer {
 
 		while(number > 0) {
 			Map<String, Double> map = history.get(index);
-			String toWrite = Utils.encode64((String) map.keySet().toArray()[0]) + ":" + Utils.encode64(map.get((String) map.keySet().toArray()[0]));
+			String toWrite = Utils.encode64((String) map.keySet().toArray()[0])
+			 + ":" + Utils.encode64(map.get((String) map.keySet().toArray()[0]));
 			oos.writeObject(toWrite);
 			oos.flush();
 			String control = (String) ois.readObject();
-			if(control.equals("ACK")){
-				System.out.println("\t ACK " + (String) map.keySet().toArray()[0] + ":" + map.get((String) map.keySet().toArray()[0]));
+			if(control.equals("ACK")) {
+				System.out.println("\t ACK "
+				 + (String) map.keySet().toArray()[0]
+				 + ":" + map.get((String) map.keySet().toArray()[0]));
 				number--;
 				index++;
 				error = 0;
 			} else {
-				System.out.println("\t NACK " + (String) map.keySet().toArray()[0] + ":" + map.get((String) map.keySet().toArray()[0]));
+				System.out.println("\t NACK "
+					+ (String) map.keySet().toArray()[0]
+					+ ":" + map.get((String) map.keySet().toArray()[0]));
 				if(error < 3)
 					error++;
 				else {
@@ -193,17 +207,21 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	private void getSensorLastValue(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void getSensorLastValue(ObjectInputStream ois,
+	 ObjectOutputStream oos) throws Exception
+	{
 		// Read sensor pinid and type
 		String pinidType = (String) ois.readObject();
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
-		try{
-			double reading = manager.getLastReading(pinidType.substring(0, pinidType.indexOf(':')), pinidType.substring(pinidType.indexOf(':') + 1));
+		try {
+			double reading = manager.getLastReading(
+				pinidType.substring(0, pinidType.indexOf(':')),
+				pinidType.substring(pinidType.indexOf(':') + 1));
 			oos.writeObject(Utils.encode64(Double.valueOf(reading).toString()));
 			oos.flush();
 			System.out.println(reading);
-		}catch(GreenhouseDatabaseException e) {
+		} catch(GreenhouseDatabaseException e) {
 			oos.writeObject("X");
 			oos.flush();
 		}
@@ -217,7 +235,9 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	private void createSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void createSensor(ObjectInputStream ois, ObjectOutputStream oos)
+	throws Exception
+	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[5];
@@ -231,10 +251,16 @@ public class NetServer {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);				
-				manager.insertSensor(new Sensor(new String(Base64.decodeBase64(temp[0])), temp[1],
-						SensorType.valueOf(temp[2]), Long.valueOf(temp[3]), Boolean.valueOf(temp[4])));
+				manager.insertSensor(new Sensor(
+					new String(Base64.decodeBase64(temp[0])),
+					temp[1],
+					SensorType.valueOf(temp[2]),
+					Long.valueOf(temp[3]),
+					Boolean.valueOf(temp[4])));
 				manager.disconnect();
-			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+			} catch (NumberFormatException | SQLException |
+			 ClassNotFoundException e)
+			{
 				e.printStackTrace(); 
 				errorCode = "Internal Server Error";
 			}
@@ -256,7 +282,9 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	private void updateSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void updateSensor(ObjectInputStream ois, ObjectOutputStream oos)
+	throws Exception
+	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[5];
@@ -270,10 +298,16 @@ public class NetServer {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);				
-				manager.updateSensor(new Sensor(new String(Base64.decodeBase64(temp[0])), temp[1],
-						SensorType.valueOf(temp[2]), Long.valueOf(temp[3]), Boolean.valueOf(temp[4])));
+				manager.updateSensor(
+					new Sensor(new String(Base64.decodeBase64(temp[0])),
+					temp[1],
+					SensorType.valueOf(temp[2]),
+					Long.valueOf(temp[3]),
+					Boolean.valueOf(temp[4])));
 				manager.disconnect();
-			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+			} catch (NumberFormatException | SQLException |
+				ClassNotFoundException e)
+			{
 				e.printStackTrace(); 
 				errorCode = "Internal Server Error";
 			}
@@ -290,12 +324,15 @@ public class NetServer {
 		ois.close();
 	}
 	
-	/** Processes POWSAV command. Activates/deactivates power saving mode on a sensor.
+	/** Processes POWSAV command.
+	 * Activates/deactivates power saving mode on a sensor.
 	 * @param ois
 	 * @param oos
 	 * @throws Exception
 	 */
-	private void setPowerSaving(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void setPowerSaving(ObjectInputStream ois, ObjectOutputStream oos)
+	 throws Exception
+	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[3];
@@ -325,7 +362,9 @@ public class NetServer {
 	 * @param oos
 	 * @throws Exception
 	 */
-	private void deleteSensor(ObjectInputStream ois, ObjectOutputStream oos) throws Exception {
+	private void deleteSensor(ObjectInputStream ois, ObjectOutputStream oos)
+	 throws Exception
+	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[2];

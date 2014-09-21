@@ -61,6 +61,17 @@
     <string name="from_gallery">Choose from gallery</string>
     <string name="from_default">Default icon</string>
     <string name="add_sensors">SELECT RELATED SENSORS</string>
+    <!-- activity sensor creation -->
+    <string name="title_sensor_creation">CREATE SENSOR</string>
+    <string name="title_sensor_edition">EDIT SENSOR</string>
+    <string name="radio_analog">Analog</string>
+    <string name="radio_digital">Digital</string>
+    <string name="pin">PIN</string>
+    <string name="sensor_type">Sensor type</string>
+    <string name="refresh_rate">Refresh rate (seconds)</string>
+    <string name="ensure_refresh">Ensure refresh rate?</string>
+    <string name="yes">Yes, please</string>
+    <string name="no">Nope, don\'t worry</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

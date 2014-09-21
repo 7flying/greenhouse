@@ -27,6 +27,7 @@
     <string name="edit_alert">EDITAR ALERTA</string>
     <string name="edit_alert_context_menu">Editar</string>
     <string name="edit_monitoring_item">EDITAR ITEM</string>
+    <string name="ensure_refresh">¿Garantizar el ratio de refresco?</string>
     <string name="from_camera">Sacar foto</string>
     <string name="from_default">Icono por defecto</string>
     <string name="from_gallery">Elegir de la galería</string>
@@ -34,11 +35,17 @@
     <string name="logic_alert_on_sensor">Alerta en el sensor</string>
     <string name="monitoring_items">ITEMS MONITORIZADOS</string>
     <string name="name">Nombre</string>
+    <string name="no">No, sin agobios</string>
     <string name="no_alerts">No hay ninguna alerta, ¡intenta añadir una!</string>
     <string name="no_connection">Sin conexión</string>
     <string name="ok">Ok</string>
+    <string name="pin">PIN</string>
+    <string name="radio_analog">Analógico</string>
+    <string name="radio_digital">Digital</string>
+    <string name="refresh_rate">Ratio de refresco (segundos)</string>
     <string name="select_sensor_spinner">Sensor</string>
     <string name="sensor_icon_descp">Icono de sensor</string>
+    <string name="sensor_type">Tipo de sensor</string>
     <string name="string_alert">Alerta</string>
     <string name="tab_actuators">Actuadores</string>
     <string name="tab_alerts">Alertas</string>
@@ -47,6 +54,8 @@
     <string name="title_about">Acerca de</string>
     <string name="title_add_item">Añadir item</string>
     <string name="title_add_alert">Añadir alerta</string>
+    <string name="title_sensor_creation">CREAR SENSOR</string>
+    <string name="title_sensor_edition">EDITAR SENSOR</string>
     <string name="title_sensor_status">Información de sensor</string>
     <string name="title_settings">Ajustes</string>
     <string name="title_item_status">Información de item</string>
@@ -57,5 +66,6 @@
     <string name="xml_sensor_sensor_word">sensor</string>
     <string name="xml_sensor_type">Tipo:</string>
     <string name="xml_sensor_updated_word">Actualziado:</string>
+    <string name="yes">Sí, por favor</string>
 
 </resources>
