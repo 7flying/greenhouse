@@ -6,15 +6,21 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.domain.SensorType;
 import com.sevenflying.greenhouseclient.net.Communicator;
+
+import java.io.IOError;
+import java.io.IOException;
 
 /** This activity is used to create sensors.
  * Created by 7flying on 19/09/2014.
@@ -25,6 +31,10 @@ public class SensorCreationActivity extends FragmentActivity {
     private RadioButton radioAnalog, radioDigital, radioYes, radioNo;
     private Button buttonCreate;
     private boolean [] validated = { false, false, false };
+    private int spinnerSelectedType = 0;
+    private SensorType [] sensorTypeArray = { SensorType.HUMIDITY, SensorType.LIGHT,
+                                              SensorType.TEMPERATURE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,15 @@ public class SensorCreationActivity extends FragmentActivity {
                 R.array.sensor_type, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sensorTypeSpinner.setAdapter(spinnerAdapter);
+        sensorTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+                SensorCreationActivity.this.spinnerSelectedType = index;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
         // Refresh rate
         etRefreshRate = (EditText) findViewById(R.id.et_refresh_rate);
         etRefreshRate.addTextChangedListener(new TextWatcher() {
@@ -118,7 +137,33 @@ public class SensorCreationActivity extends FragmentActivity {
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Communicator.createSensor(); // TODO
+                String analogDig = radioAnalog.isChecked() ? "A" : "D";
+                etPin.getText();
+                String type = sensorTypeArray[spinnerSelectedType].toString();
+                etRefreshRate.getText();
+                boolean ensureRefresh = radioYes.isChecked();
+                int result = 0;
+                try {
+                    result = Communicator.createSensor(
+                            etName.getText().toString(),
+                            analogDig,
+                            etPin.getText().toString(),
+                            type,
+                            etRefreshRate.getText().toString(),
+                            ensureRefresh
+                    );
+                }catch (Exception e) {
+                    result = -1;
+                }
+                if(result == 0) {
+                    Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.sensor_created),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.sensor_error),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
         TextView tvDescription = (TextView) findViewById(R.id.title_sensor_add_edit);

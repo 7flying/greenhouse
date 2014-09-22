@@ -7,5 +7,6 @@ public class Constants {
 
     public static final String serverIP = "192.168.1.12";
     public static final int serverPort = 5432;
+    public static final String OK = "OK\n";
 
 }

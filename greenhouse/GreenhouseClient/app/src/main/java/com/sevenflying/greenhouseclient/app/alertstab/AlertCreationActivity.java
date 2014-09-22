@@ -86,8 +86,7 @@ public class AlertCreationActivity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     AlertCreationActivity.this.selectedAlert = i; // The resource order doesn't change
             }
-
-            public void onNothingSelected(AdapterView<?> adapterView) {  }
+            public void onNothingSelected(AdapterView<?> adapterView){}
         });
 
         // Edit Text Value

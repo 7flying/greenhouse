@@ -34,7 +34,8 @@ public class Communicator {
             oos.flush();
             oos.writeObject(sensorPinId + ":" + sensorType);
             oos.flush();
-            lastValue = Double.valueOf(new String(Base64.decode(((String) ois.readObject()).getBytes(), Base64.DEFAULT)));
+            lastValue = Double.valueOf(new String(
+                    Base64.decode(((String) ois.readObject()).getBytes(), Base64.DEFAULT)));
             s.close();
             oos.close();
             ois.close();
@@ -42,5 +43,45 @@ public class Communicator {
             e.printStackTrace();
         }
         return lastValue;
+    }
+
+    /** Requests a Sensor creation on the server.
+     * @param name - sensor name
+     * @param analogDig - sensor type (analog/digital)
+     * @param pin - sensor's pin
+     * @param type - sensor's type
+     * @param refreshRate - sensor's refresh rate
+     * @param isRefreshEnsured - whether the refresh rate has to be ensured
+     * @return 0 if everything went right
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static int createSensor(String name, String analogDig, String pin, String type,
+        String refreshRate, boolean isRefreshEnsured) throws IOException, ClassNotFoundException
+    {
+        int ret = -1;
+        try {
+            InetAddress add = InetAddress.getByName(Constants.serverIP);
+            Socket s = new Socket(add, Constants.serverPort);
+            ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+            oos.writeObject(Commands.NEW);
+            oos.flush();
+            if(pin.length() == 1)
+                pin = "0" + pin;
+            String send = new String(Base64.encode(name.getBytes(), Base64.DEFAULT)) + ":" +
+                    analogDig + pin + ":" + type + ":" + refreshRate + ":" +
+                    String.valueOf(isRefreshEnsured);
+            oos.writeObject(send);
+            oos.flush();
+            if(ois.readObject().equals(Constants.OK))
+                ret = 0;
+            s.close();
+            oos.close();
+            ois.close();
+        }catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 }

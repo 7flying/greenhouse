@@ -88,6 +88,8 @@
     <string name="item_created">Item created.</string>
     <string name="item_deleted">Item deleted.</string>
     <string name="item_edited">Item edited.</string>
+    <string name="sensor_created">Sensor created.</string>
+    <string name="sensor_error">Error creating sensor.</string>
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>

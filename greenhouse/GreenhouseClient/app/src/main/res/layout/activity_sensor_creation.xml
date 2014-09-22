@@ -109,6 +109,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="4dp"
             android:background="#333333"/>
+        <!-- Ensure refresh -->
         <RadioGroup
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
