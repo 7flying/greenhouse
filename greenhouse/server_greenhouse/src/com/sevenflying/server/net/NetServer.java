@@ -17,6 +17,7 @@ import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
+import com.sevenflying.server.domain.exceptions.NoDataException;
 import com.sevenflying.utils.Utils;
 
 
@@ -84,6 +85,7 @@ public class NetServer {
 						setPowerSaving(ois, oos);
 						break;
 					default:
+						System.out.println("$$ Command " + command + " UNKNOWN");
 						oos.close();
 						ois.close();
 						break;
@@ -117,7 +119,7 @@ public class NetServer {
 
 		int index = 0, error = 0;
 		int number = ret.size();
-
+		System.out.println("\t Returning: " + ret.size() + " sensors");
 		// Tell to the client how many sensors it has to expect
 		oos.writeObject(Integer.valueOf(number).toString());
 		oos.flush();
@@ -214,14 +216,19 @@ public class NetServer {
 		String pinidType = (String) ois.readObject();
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
+		double reading = -1;
 		try {
-			double reading = manager.getLastReading(
+			reading = manager.getLastReading(
 				pinidType.substring(0, pinidType.indexOf(':')),
 				pinidType.substring(pinidType.indexOf(':') + 1));
 			oos.writeObject(Utils.encode64(Double.valueOf(reading).toString()));
 			oos.flush();
 			System.out.println(reading);
-		} catch(GreenhouseDatabaseException e) {
+		} catch(NoDataException e) {
+			oos.writeObject(Utils.encode64(Double.valueOf(reading).toString()));
+			oos.flush();
+			System.out.println(reading);
+		} catch(SQLException e1) {
 			oos.writeObject("X");
 			oos.flush();
 		}
@@ -243,7 +250,8 @@ public class NetServer {
 		String [] temp = new String[5];
 		int index = 0;
 		while(tokenizer.hasMoreTokens()) {
-			temp[index] = tokenizer.nextToken();
+			temp[index] = tokenizer.nextToken().trim();
+			System.out.println(temp[index]);
 			index++;
 		}
 		String errorCode = null;
@@ -254,10 +262,11 @@ public class NetServer {
 				manager.insertSensor(new Sensor(
 					new String(Base64.decodeBase64(temp[0])),
 					temp[1],
-					SensorType.valueOf(temp[2]),
+					SensorType.valueOf(temp[2].toUpperCase()),
 					Long.valueOf(temp[3]),
 					Boolean.valueOf(temp[4])));
 				manager.disconnect();
+				
 			} catch (NumberFormatException | SQLException |
 			 ClassNotFoundException e)
 			{
