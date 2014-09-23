@@ -138,9 +138,7 @@ public class SensorCreationActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 String analogDig = radioAnalog.isChecked() ? "A" : "D";
-                etPin.getText();
                 String type = sensorTypeArray[spinnerSelectedType].toString();
-                etRefreshRate.getText();
                 boolean ensureRefresh = radioYes.isChecked();
                 int result = 0;
                 try {
@@ -153,6 +151,7 @@ public class SensorCreationActivity extends FragmentActivity {
                             ensureRefresh
                     );
                 }catch (Exception e) {
+                    e.printStackTrace();
                     result = -1;
                 }
                 if(result == 0) {
@@ -164,6 +163,7 @@ public class SensorCreationActivity extends FragmentActivity {
                             getResources().getString(R.string.sensor_error),
                             Toast.LENGTH_SHORT).show();
                 }
+                finish();
             }
         });
         TextView tvDescription = (TextView) findViewById(R.id.title_sensor_add_edit);

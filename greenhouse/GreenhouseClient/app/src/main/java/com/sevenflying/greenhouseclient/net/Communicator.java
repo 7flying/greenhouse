@@ -1,6 +1,8 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -59,29 +61,25 @@ public class Communicator {
     public static int createSensor(String name, String analogDig, String pin, String type,
         String refreshRate, boolean isRefreshEnsured) throws IOException, ClassNotFoundException
     {
-        int ret = -1;
+        Log.d("COMMUNICATOR", "At communicator");
+        if(pin.length() == 1)
+            pin = "0" + pin;
+        String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
+        String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
+        SensorCreationTask task = new SensorCreationTask();
+        Integer ret  = 0;
+
         try {
-            InetAddress add = InetAddress.getByName(Constants.serverIP);
-            Socket s = new Socket(add, Constants.serverPort);
-            ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-            ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(Commands.NEW);
-            oos.flush();
-            if(pin.length() == 1)
-                pin = "0" + pin;
-            String send = new String(Base64.encode(name.getBytes(), Base64.DEFAULT)) + ":" +
-                    analogDig + pin + ":" + type + ":" + refreshRate + ":" +
-                    String.valueOf(isRefreshEnsured);
-            oos.writeObject(send);
-            oos.flush();
-            if(ois.readObject().equals(Constants.OK))
-                ret = 0;
-            s.close();
-            oos.close();
-            ois.close();
-        }catch (UnknownHostException e) {
-            e.printStackTrace();
+            task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured).get();
+        }catch (Exception e) {
+            ret = -1;
         }
         return ret;
+    }
+
+    public static int updateSensor(String name, String analogDig, String pin, String type,
+        String refreshRate, boolean isRefreshEnsured) {
+
+        return -1;
     }
 }
