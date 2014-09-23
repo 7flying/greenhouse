@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
+import com.sevenflying.server.domain.exceptions.NoDataException;
 
 public class DBManager {
 
@@ -196,7 +197,7 @@ public class DBManager {
 	 * @throws SQLException
 	 * @throws GreenhouseDatabaseException - when there aren't readings from a sensor
 	 */
-	public double getLastReading(Sensor sensor) throws SQLException, GreenhouseDatabaseException {
+	public double getLastReading(Sensor sensor) throws SQLException, NoDataException {
 		int idSensor = getSensorDBid(sensor);
 		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings WHERE idsensor = ? and id = (SELECT max(id) FROM Readings WHERE idsensor = ?);");
 		pre.setInt(1, idSensor);
@@ -213,7 +214,7 @@ public class DBManager {
 		if(reading)
 			return ret;
 		else 
-			throw new GreenhouseDatabaseException();
+			throw new NoDataException();
 	}
 	
 	/** Returns the last reading of a sensor
@@ -223,7 +224,7 @@ public class DBManager {
 	 * @throws SQLException
 	 * @throws GreenhouseDatabaseException - when there aren't readings from a sensor
 	 */
-	public double getLastReading(String pinId, String type) throws SQLException, GreenhouseDatabaseException {
+	public double getLastReading(String pinId, String type) throws SQLException, NoDataException {
 		int id = getSensorBDid(pinId, type);
 		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings WHERE idsensor = ? and id = (SELECT max(id) FROM Readings WHERE idsensor = ?);");
 		pre.setInt(1, id);
@@ -240,7 +241,7 @@ public class DBManager {
 		if(reading)
 			return ret;
 		else 
-			throw new GreenhouseDatabaseException();
+			throw new NoDataException();
 	}
 	
 	/** Returns all the sensors from the database.

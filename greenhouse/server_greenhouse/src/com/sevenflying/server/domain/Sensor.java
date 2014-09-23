@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
+import com.sevenflying.server.domain.exceptions.NoDataException;
 
 public class Sensor extends BlossomSensor {
 
@@ -42,19 +43,20 @@ public class Sensor extends BlossomSensor {
 	/** Gets the sensor's last stored value
 	 * @return sensor's last value
 	 * @throws SQLException
-	 * @throws GreenhouseDatabaseException - when there are no values
 	 */
-	public double getLastValue() throws SQLException,
-	 GreenhouseDatabaseException
-	 {
+	public double getLastValue() throws SQLException {
 		double ret = -2366; 
+		DBManager manager = DBManager.getInstance();
 		try {
-			DBManager manager = DBManager.getInstance();
 			manager.connect(DBManager.DBPath);
 			ret = manager.getLastReading(this);
 			manager.disconnect();
+		} catch (NoDataException ee) {
+			ret = -2366;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		}finally{
+			manager.disconnect();
 		}
 		return ret;
 	}
