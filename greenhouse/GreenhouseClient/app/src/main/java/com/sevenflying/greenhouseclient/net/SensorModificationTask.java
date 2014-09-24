@@ -1,18 +1,16 @@
 package com.sevenflying.greenhouseclient.net;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-
-/** Requests a Sensor creation on the server using a background task.
- * Created by 7flying on 23/09/2014.
+/** Requests to update the description of a sensor using a background task. PinID and type
+ * Created by 7flying on 24/09/2014.
  */
-public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
+public class SensorModificationTask extends AsyncTask<String, Void, Integer> {
 
     @Override
     protected Integer doInBackground(String... strings) {
@@ -30,18 +28,15 @@ public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
             Socket s = new Socket(add, Constants.serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(Commands.NEW);
+            oos.writeObject(Commands.UPDATE);
             oos.flush();
-            Log.d("SENSOR CREATION TASK", "New Sent");
             String send = strings[0] + ":" + strings[1] + strings[2] + ":" + strings[3] + ":" +
                     strings[4] + ":" + strings[5];
             oos.writeObject(send);
             oos.flush();
-
             String response = (String) ois.readObject();
             if(response.equals(Constants.OK))
                 ret = 0;
-            Log.d("SENSOR CREATION TASK", "Response received");
             s.close();
             oos.close();
             ois.close();
@@ -50,5 +45,4 @@ public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
         }
         return ret;
     }
-
 }

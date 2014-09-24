@@ -307,8 +307,8 @@ public class NetServer {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);				
-				manager.updateSensor(
-					new Sensor(new String(Base64.decodeBase64(temp[0])),
+				manager.updateSensor(new Sensor(
+					new String(Base64.decodeBase64(temp[0])),
 					temp[1],
 					SensorType.valueOf(temp[2]),
 					Long.valueOf(temp[3]),

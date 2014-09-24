@@ -1,6 +1,5 @@
 package com.sevenflying.greenhouseclient.net;
 
-import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
@@ -67,19 +66,56 @@ public class Communicator {
         String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
         SensorCreationTask task = new SensorCreationTask();
-        Integer ret  = 0;
-
+        Integer ret = -1;
         try {
-            task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured).get();
-        }catch (Exception e) {
+            ret = task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured)
+                    .get();
+        } catch (Exception e) {
             ret = -1;
         }
         return ret;
     }
 
-    public static int updateSensor(String name, String analogDig, String pin, String type,
-        String refreshRate, boolean isRefreshEnsured) {
+    /** Request the modification of a sensor
+     * @param name - sensor name
+     * @param analogDig - sensor type (analog/digital)
+     * @param pin - sensor's pin
+     * @param type - sensor's type
+     * @param refreshRate - sensor's refresh rate
+     * @param isRefreshEnsured - whether the refresh rate has to be ensured
+     * @return 0 if everything went right
+     */
+    public static int modificateSensor(String name, String analogDig, String pin, String type,
+        String refreshRate, boolean isRefreshEnsured)
+    {
+        if(pin.length() == 1)
+            pin = "0" + pin;
+        String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
+        String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
+        Integer ret = -1;
+        SensorModificationTask task = new SensorModificationTask();
+        try {
+            ret = task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured)
+                    .get();
+        } catch (Exception e) {
+            ret = -1;
+        }
+        return ret;
+    }
 
-        return -1;
+    /** Deletes from the server a sensor given its pinId and type
+     * @param pinID - sensor's pin id
+     * @param type - - sensor's type
+     * @return -1 if error
+     */
+    public static int deleteSensor(String pinID, String type) {
+        SensorRemovalTask task = new SensorRemovalTask();
+        Integer ret = -1;
+        try {
+           ret = task.execute(pinID, type).get();
+        } catch (Exception e) {
+            ret = -1;
+        }
+        return ret;
     }
 }
