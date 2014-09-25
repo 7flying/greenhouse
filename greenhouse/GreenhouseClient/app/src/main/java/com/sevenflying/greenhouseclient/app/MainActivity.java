@@ -102,7 +102,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 return true;
             case R.id.action_add_generic:
                 Log.v("OPTIONS", "Add generic");
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(getString(R.string.what_to_add))
                         .setItems(R.array.items_to_create_array, new DialogInterface.OnClickListener() {
                             @Override
@@ -125,7 +125,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                                 }
                             }
                         });
-                builder.create();
+                builder.show();
                 return true;
             case R.id.action_add_item:
                 startActivityForResult(new Intent(MainActivity.this,
