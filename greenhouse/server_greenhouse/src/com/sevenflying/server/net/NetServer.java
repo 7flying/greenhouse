@@ -16,7 +16,6 @@ import com.sevenflying.server.GreenServer;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
-import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 import com.sevenflying.utils.Utils;
 
@@ -383,9 +382,10 @@ public class NetServer {
 			index++;
 		}
 		String errorCode = null;
-		if(index == 3) {
+		if(index == 2) {
 			DBManager manager = DBManager.getInstance();
 			try {
+				System.out.println("\t -Params: " + temp[0] + ":" + temp[1]);
 				manager.connect(pathToDB);				
 				manager.deleteSensor(temp[0], temp[1]);
 				manager.disconnect();
