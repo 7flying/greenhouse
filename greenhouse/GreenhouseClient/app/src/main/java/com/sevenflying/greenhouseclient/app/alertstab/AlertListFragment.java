@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sevenflying.greenhouseclient.app.ActivityResultHandler;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
@@ -90,32 +91,6 @@ public class AlertListFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu_alert_fragment, menu);
-        setMenuVisibility(true);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                // TODO
-                return true;
-            case R.id.action_settings:
-                // TODO
-                return true;
-            case R.id.action_new_alert:
-                Intent intent = new Intent(AlertListFragment.this.getActivity(), AlertCreationActivity.class);
-                startActivityForResult(intent, Codes.CODE_CREATE_NEW_ALERT);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
-
 
     public void checkLayoutVisibility() {
         if(alertList.size() > 0)
@@ -136,27 +111,10 @@ public class AlertListFragment extends Fragment {
         if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {
-                Alert a = (Alert) data.getSerializableExtra("alert");
-                // Check if an alert of the same type on the sensor is created
-                if(manager.hasAlertsCreatedFrom(a.getSensorPinId(), a.getSensorType(), a.getAlertType())) {
-                    // Display message telling to the user that he/she cannot create two alerts
-                    // of the same type on the same sensor
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage(getResources().getString(R.string.alert_repeated_notification));
-                    builder.setPositiveButton(R.string.ok,new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialogInterface, int i) {}
-                    });
-                    builder.show();
-                } else {
-                    // Commit the alert
-                    alertList.add(a);
-                    adapter.notifyDataSetChanged();
-                    checkLayoutVisibility();
-                    manager.addAlert(a);
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getResources().getString(R.string.alert_created),
-                            Toast.LENGTH_SHORT).show();
-                }
+                ActivityResultHandler.handleCreateNewAlert(getActivity().getApplicationContext(),
+                        data, this.getActivity());
+                adapter.notifyDataSetChanged();
+                checkLayoutVisibility();
             }
         } else {
             if(requestCode == Codes.CODE_EDIT_ALERT) {
@@ -167,7 +125,6 @@ public class AlertListFragment extends Fragment {
                     alertList.remove(a);
                     manager.addAlert(a);
                     alertList.add(a);
-                   // manager.commit();
                     adapter.notifyDataSetChanged();
                 }
             }

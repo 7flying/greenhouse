@@ -2,15 +2,27 @@ package com.sevenflying.greenhouseclient.app;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
+import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
+import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
+import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
+
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -58,15 +70,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 pendingIntent);
     }
 
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //menu.clear();
-        getMenuInflater().inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-    */
     @Override
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
     }
@@ -80,5 +83,75 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         // Listener to tab change event
         viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_app, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // TODO
+                return true;
+            case R.id.action_settings:
+                // TODO
+                return true;
+            case R.id.action_add_generic:
+                Log.v("OPTIONS", "Add generic");
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(getString(R.string.what_to_add))
+                        .setItems(R.array.items_to_create_array, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int index) {
+                                switch (index) {
+                                    case 0: // Alert
+                                        startActivityForResult(new Intent(MainActivity.this,
+                                                AlertCreationActivity.class),
+                                                Codes.CODE_CREATE_NEW_ALERT);
+                                        break;
+                                    case 1: // Monitoring item
+                                        startActivityForResult(new Intent(MainActivity.this,
+                                                MoniItemCreationActivity.class)
+                                                , Codes.CODE_NEW_MONI_ITEM);
+                                        break;
+                                    case 2: // Sensor
+                                        startActivity(new Intent(MainActivity.this,
+                                                SensorCreationActivity.class));
+                                        break;
+                                }
+                            }
+                        });
+                builder.create();
+                return true;
+            case R.id.action_add_item:
+                startActivityForResult(new Intent(MainActivity.this,
+                        MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
+            // Callback from AlertCreationActivity
+            if(resultCode == Activity.RESULT_OK)
+                ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
+        } else {
+            if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
+                // Callback from MoniItemCreationActivity
+                if(resultCode == Activity.RESULT_OK) {
+                    ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(),
+                            data, this);
+                }
+            } else {
+                // TODO handle sensor creation
+            }
+        }
     }
 }

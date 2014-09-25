@@ -70,5 +70,8 @@
     <string name="xml_sensor_type">Tipo:</string>
     <string name="xml_sensor_updated_word">Actualziado:</string>
     <string name="yes">Sí, por favor</string>
+    <string name="sensor">Sensor</string>
+    <string name="sensor_deleted">Sensor borrado.</string>
+    <string name="sensor_error_delete">Error borrando sensor.</string>
 
 </resources>

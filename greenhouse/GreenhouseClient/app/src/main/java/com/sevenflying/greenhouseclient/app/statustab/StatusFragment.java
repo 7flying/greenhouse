@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sevenflying.greenhouseclient.app.ActivityResultHandler;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Actuator;
@@ -126,14 +124,12 @@ public class StatusFragment extends Fragment {
         if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
             // Callback from MoniItemCreationActivity
             if(resultCode == Activity.RESULT_OK) {
+                ActivityResultHandler.handleCreateNewMoniItem(getActivity().getApplicationContext(),
+                        data, getActivity());
                 MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable("moni-item");
-                moniManager.addItem(item);
-                moniManager.commit();
                 monitoringItems.remove(item);
                 monitoringItems.add(item);
                 actuatorAdapter.notifyDataSetChanged();
-                Toast.makeText(getActivity().getApplicationContext(),
-                        getString(R.string.item_created), Toast.LENGTH_SHORT).show();
             }
         } else {
             if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
@@ -149,30 +145,5 @@ public class StatusFragment extends Fragment {
         super.onResume();
         actuatorAdapter.notifyDataSetChanged();
         moniAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu_status_fragment, menu);
-        setMenuVisibility(true);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                // TODO
-                return true;
-            case R.id.action_settings:
-                // TODO
-                return true;
-            case R.id.action_add_item:
-                startActivityForResult(new Intent(StatusFragment.this.getActivity(),
-                        MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }
