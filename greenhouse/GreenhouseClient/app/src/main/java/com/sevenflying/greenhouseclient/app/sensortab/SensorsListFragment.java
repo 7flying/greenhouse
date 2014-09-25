@@ -1,5 +1,7 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.SensorsValueUpdater;
 
 import java.util.ArrayList;
@@ -57,6 +61,51 @@ public class SensorsListFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+            // Context menu stuff
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int listPosition, long l) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.sensor))
+                            .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogInterface, int position) {
+                                    switch (position) {
+                                        case 0: // Edit
+                                            // TODO
+                                            break;
+                                        case 1: // Delete
+                                            int result = 0;
+                                            try {
+                                                result = Communicator.deleteSensor(
+                                                        sensorList.get(listPosition).getPinId(),
+                                                        Character.toString(sensorList.get(
+                                                                listPosition).getType()
+                                                                .getIdentifier()));
+                                            }catch (Exception e) {
+                                                e.printStackTrace();
+                                                result = -1;
+                                            }
+                                            if(result == 0) {
+                                                new DBManager(getActivity().getApplicationContext())
+                                                        .deleteSensor(sensorList.get(listPosition));
+                                                Toast.makeText(SensorsListFragment.this.getActivity(),
+                                                        getResources().getString(
+                                                                R.string.sensor_deleted),
+                                                                Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(SensorsListFragment.this.getActivity(),
+                                                        getResources().getString(
+                                                                R.string.sensor_error_delete),
+                                                                Toast.LENGTH_SHORT).show();
+                                            }
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    return true;
+                }
+            });
 
             // populate list by updaters
             updateSensors();
@@ -64,9 +113,10 @@ public class SensorsListFragment extends Fragment {
 		}
     }
 
+    /*
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
         inflater.inflate(R.menu.menu_sensor_fragment, menu);
         setMenuVisibility(true);
         super.onCreateOptionsMenu(menu, inflater);
@@ -74,27 +124,19 @@ public class SensorsListFragment extends Fragment {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_about:
-                // TODO
-                return true;
-            case R.id.action_settings:
-                // TODO
-                return true;
             case R.id.action_refresh:
                 updateSensors();
-                return true;
-            case R.id.action_new_sensor:
-                startActivity(new Intent(SensorsListFragment.this.getActivity(),
-                        SensorCreationActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    */
     public void updateSensors(){
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);
         updater.execute();
     }
+
+
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="items_to_create_array">
+        <item>Alert</item>
+        <item>Item to monitor</item>
+        <item>Sensor</item>
+    </string-array>
+</resources>

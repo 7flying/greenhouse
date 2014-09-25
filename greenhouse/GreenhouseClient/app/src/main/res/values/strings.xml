@@ -79,6 +79,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="edit_alert_context_menu">Edit</string>
     <string name="delete_alert_context_menu">Delete</string>
+    <string name="what_to_add">What to add?</string>
     <!-- Notifications -->
     <string name="logic_alert_on_sensor">Alert on sensor</string>
     <!-- Toasts -->
@@ -101,4 +102,7 @@
     <string name="action_new_alert">New alert</string>
     <string name="action_new_sensor">New sensor</string>
     <string name="action_add_item">Add item</string>
+    <string name="sensor">Sensor</string>
+    <string name="sensor_deleted">Sensor deleted.</string>
+    <string name="sensor_error_delete">Error deleting sensor.</string>
 </resources>

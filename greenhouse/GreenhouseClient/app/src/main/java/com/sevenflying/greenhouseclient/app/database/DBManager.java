@@ -147,6 +147,16 @@ public class DBManager extends SQLiteOpenHelper {
         }
     }
 
+    /** Deletes a sensor from the DB.
+     * @param s - sensor to delete
+     */
+    public synchronized void deleteSensor(Sensor s) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(SensorEntry.TABLE_NAME, SensorEntry.S_PIN_ID +
+                " = ? AND " + SensorEntry.S_TYPE + " = ?", new String [] { s.getPinId(),
+                Character.toString(s.getType().getIdentifier()) });
+    }
+
     private Sensor handleSensor(Cursor c) {
         Sensor temp = new Sensor();
         temp.setName(c.getString(c.getColumnIndex(SensorEntry.S_NAME)));
