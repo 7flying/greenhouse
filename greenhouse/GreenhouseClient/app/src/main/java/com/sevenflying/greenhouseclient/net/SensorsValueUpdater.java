@@ -27,10 +27,12 @@ import java.util.StringTokenizer;
 public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> { // Params, progress, result
     // AsyncTask<Void, Sensor, List<Sensor>> -> means Params, Progress and Result
     private SensorAdapter adapter;
-    private List<Sensor> buffer;
+    private List<Sensor> buffer, dbSensors;
     private LinearLayout layoutCharge, layoutNoConnection;
     private Exception exception;
     private Context context;
+    private  DBManager manager;
+
 
     public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layoutCharge,
            LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
@@ -46,6 +48,8 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     protected void onPreExecute() {
         layoutNoConnection.setVisibility(View.GONE);
         layoutCharge.setVisibility(View.VISIBLE);
+        manager= new DBManager(context);
+        dbSensors = manager.getSensors();
     }
 
     @Override
@@ -102,13 +106,14 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     protected void onPostExecute(List<Sensor> result) {
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
-        DBManager sensorManager = new DBManager(context);
+
         for(Sensor s : result) {
             if(!buffer.contains(s)) {
                 buffer.add(s);
+                if(!dbSensors.contains(s))
+                    manager.addSensor(s);
+                manager.updateSensor(s, s.getValue(), s.getUpdatedAt());
                 adapter.notifyDataSetChanged();
-
-                sensorManager.addSensor(s);
             }
         }
         layoutCharge.setVisibility(View.GONE);

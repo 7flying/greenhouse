@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,23 +14,24 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.SensorsValueUpdater;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /** This fragment shows the sensor list retrieved from the server.
  * Created by 7flying on 25/06/2014.
  */
-public class SensorsListFragment extends Fragment {
+public class SensorsListFragment extends Fragment implements Updateable {
 
-	private ListView listView;
-	private ArrayList<Sensor> sensorList;
+	private List<Sensor> sensorList;
     private LinearLayout layoutProgress;
     private LinearLayout layoutNoConnection;
     private SensorAdapter adapter;
+    private DBManager manager;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
 
@@ -43,11 +41,11 @@ public class SensorsListFragment extends Fragment {
             setMenuVisibility(true);
             setHasOptionsMenu(true);
 			View view = inflater.inflate(R.layout.fragment_sensors_list, container, false);
-			listView = (ListView) view.findViewById(R.id.sensorsListView);
+			ListView listView = (ListView) view.findViewById(R.id.sensorsListView);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             layoutNoConnection = (LinearLayout) view.findViewById(R.id.linear_layout_connection);
-            sensorList = (ArrayList<Sensor>) new DBManager(
-                    getActivity().getApplicationContext()).getSensors();
+            manager = new DBManager(getActivity().getApplicationContext());
+            sensorList = manager.getSensors();
         	adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -85,8 +83,9 @@ public class SensorsListFragment extends Fragment {
                                                 result = -1;
                                             }
                                             if(result == 0) {
-                                                new DBManager(getActivity().getApplicationContext())
-                                                        .deleteSensor(sensorList.get(listPosition));
+                                                manager.deleteSensor(sensorList.get(listPosition));
+                                                sensorList.remove(listPosition);
+                                                adapter.notifyDataSetChanged();
                                                 Toast.makeText(SensorsListFragment.this.getActivity(),
                                                         getResources().getString(
                                                                 R.string.sensor_deleted),
@@ -106,37 +105,20 @@ public class SensorsListFragment extends Fragment {
                     return true;
                 }
             });
-
             // populate list by updaters
             updateSensors();
             return view;
 		}
     }
 
-    /*
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_sensor_fragment, menu);
-        setMenuVisibility(true);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                updateSensors();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    */
     public void updateSensors(){
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);
         updater.execute();
     }
 
-
+    @Override
+    public void update() {
+        updateSensors();
+    }
 }

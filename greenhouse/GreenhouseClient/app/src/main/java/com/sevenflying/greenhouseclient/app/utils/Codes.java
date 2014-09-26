@@ -8,4 +8,5 @@ public class Codes {
     public static final int CODE_EDIT_ALERT = 2;
     public static final int CODE_NEW_MONI_ITEM = 3;
     public static final int CODE_EDIT_MONI_ITEM = 4;
+    public static final int CODE_NEW_SENSOR = 5;
 }

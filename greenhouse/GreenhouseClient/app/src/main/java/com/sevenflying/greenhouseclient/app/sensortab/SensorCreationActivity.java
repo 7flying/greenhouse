@@ -1,6 +1,7 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
 import com.sevenflying.greenhouseclient.net.Communicator;
 
@@ -141,27 +144,39 @@ public class SensorCreationActivity extends FragmentActivity {
                 String type = sensorTypeArray[spinnerSelectedType].toString();
                 boolean ensureRefresh = radioYes.isChecked();
                 int result = 0;
-                try {
-                    result = Communicator.createSensor(
-                            etName.getText().toString(),
-                            analogDig,
-                            etPin.getText().toString(),
-                            type,
-                            etRefreshRate.getText().toString(),
-                            ensureRefresh
-                    );
-                }catch (Exception e) {
-                    e.printStackTrace();
-                    result = -1;
-                }
-                if(result == 0) {
-                    Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.sensor_created),
-                            Toast.LENGTH_SHORT).show();
+                if(getIntent().hasExtra("sensor-to-edit")) {
+                    // Handle edit sensor
                 } else {
-                    Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.sensor_error),
-                            Toast.LENGTH_SHORT).show();
+                    try {
+                        result = Communicator.createSensor(
+                                etName.getText().toString(),
+                                analogDig,
+                                etPin.getText().toString(),
+                                type,
+                                etRefreshRate.getText().toString(),
+                                ensureRefresh
+                        );
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                        result = -1;
+                    }
+                    if(result == 0) {
+                        Sensor temp = new Sensor();
+                        temp.setName(etName.getText().toString());
+                        temp.setPinId(analogDig + etPin.getText().toString());
+                        temp.setType(SensorType.valueOf(type.toUpperCase()));
+                        temp.setRefreshRate(Long.valueOf(etRefreshRate.getText().toString()));
+
+                        // Return sensor to previous activity
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("sensor", temp);
+                        setResult(RESULT_OK, returnIntent);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.sensor_error),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 finish();
             }

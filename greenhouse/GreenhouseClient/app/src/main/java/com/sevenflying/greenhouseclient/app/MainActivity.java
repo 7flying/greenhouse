@@ -120,8 +120,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                                                 , Codes.CODE_NEW_MONI_ITEM);
                                         break;
                                     case 2: // Sensor
-                                        startActivity(new Intent(MainActivity.this,
-                                                SensorCreationActivity.class));
+                                        startActivityForResult(new Intent(MainActivity.this,
+                                                SensorCreationActivity.class), Codes.CODE_NEW_SENSOR);
                                         break;
                                 }
                             }
@@ -149,12 +149,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
                 // Callback from MoniItemCreationActivity
                 if(resultCode == Activity.RESULT_OK) {
-                    ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(),
-                            data, this);
+                    ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
+                    tabsPaAdapter.update(0);
                 }
 
             } else {
-                // TODO handle sensor creation
+                // Callback from SensorCreationActivity
+                if(requestCode == Codes.CODE_NEW_SENSOR) {
+                   ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
+                    tabsPaAdapter.update(1);
+                }
             }
         }
     }

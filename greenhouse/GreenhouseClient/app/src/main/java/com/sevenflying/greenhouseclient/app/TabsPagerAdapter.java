@@ -14,6 +14,9 @@ import com.sevenflying.greenhouseclient.app.statustab.StatusFragment;
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     private FragmentManager fragmentManager;
+    private StatusFragment statusFragment;
+    private SensorsListFragment sensorsListFragment;
+    private AlertListFragment alertListFragment;
 
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -23,11 +26,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int index) {
         switch (index) {
             case 0:
-                return new StatusFragment();
+                statusFragment = new StatusFragment();
+                return statusFragment;
             case 1:
-                return new SensorsListFragment();
+                sensorsListFragment = new SensorsListFragment();
+                return sensorsListFragment;
             case 2:
-                return new AlertListFragment();
+                alertListFragment = new AlertListFragment();
+                return alertListFragment;
             default:
                 return null;
         }
@@ -35,5 +41,19 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     public int getCount() {
         return  3;
+    }
+
+    public void update(int index) {
+        switch (index) {
+            case 0:
+                statusFragment.update();
+                break;
+            case 1:
+                sensorsListFragment.update();
+                break;
+            case 2:
+                alertListFragment.update();
+                break;
+        }
     }
 }

@@ -170,10 +170,19 @@ public class DBManager extends SQLiteOpenHelper {
         return temp;
     }
 
+    public void updateSensor(Sensor s, double lastValue, String updatedAt) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SensorEntry.S_LAST_VALUE, lastValue);
+        values.put(SensorEntry.S_UPDATED_AT, updatedAt);
+        db.update(SensorEntry.TABLE_NAME, values, SensorEntry.S_PIN_ID + " = ?",
+                new String[]{ Integer.toString(getSensorID(s.getPinId(),
+                        String.valueOf(s.getType().getIdentifier())))});
+    }
+
     /** Returns all the sensors at the manager.
      * @return list of sensors  */
     public  List<Sensor> getSensors() {
-
         List<Sensor> ret = new ArrayList<Sensor>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Sensors", new String[]{});
