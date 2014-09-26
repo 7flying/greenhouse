@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,7 @@ import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Constants;
 // import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.util.ArrayList;
@@ -123,6 +125,7 @@ public class AlertCreationActivity extends FragmentActivity {
                 a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
                 a.setCompareValue(Double.parseDouble(editTextValue.getText().toString()));
                 a.setAlertType(alertTypes[selectedAlert]);
+                Log.d(Constants.DEBUGTAG, " $ createAlert on AlertCreationAct.  arg:" + a.toString());
                 // Return alert to previous activity
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("alert", a);

@@ -9,4 +9,6 @@ public class Constants {
     public static final int serverPort = 5432;
     public static final String OK = "OK\n";
 
+
+    public static final String DEBUGTAG = "GREEN_HOUSE";
 }

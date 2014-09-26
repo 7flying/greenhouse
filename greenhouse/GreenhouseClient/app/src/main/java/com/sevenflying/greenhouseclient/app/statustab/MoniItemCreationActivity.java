@@ -15,15 +15,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
-import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +41,6 @@ public class MoniItemCreationActivity extends FragmentActivity {
     private Button buttonCreate;
     private List<Sensor> sensorList;
     private SensorCheckAdapter adapter;
-    private ImageButton buttonTakePhoto, buttonFromGallery, buttonDefault;
     private static final int REQUEST_IMAGE_CAPTURE = 1, PICK_IMAGE = 2;
 
     @Override
@@ -87,21 +85,15 @@ public class MoniItemCreationActivity extends FragmentActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
         });
         imagePreview = (ImageView) findViewById(R.id.image_preview);
-        buttonTakePhoto = (ImageButton) findViewById(R.id.button_take_photo);
+        Button buttonTakePhoto = (Button) findViewById(R.id.button_take_photo);
         buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
-        buttonFromGallery = (ImageButton) findViewById(R.id.button_from_gallery);
-        buttonFromGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchSelectFromGalleryIntent();
-            }
-        });
-        buttonDefault = (ImageButton) findViewById(R.id.button_leave_default);
+
+        Button buttonDefault = (Button) findViewById(R.id.button_leave_default);
         buttonDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,8 +102,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
             }
         });
         ListView listViewSensos = (ListView) findViewById(R.id.list_check_sensors);
-        sensorList =  SensorManager.getInstance(getApplicationContext())
-                .getSensors();
+        sensorList =  new DBManager(getApplicationContext()).getSensors();
         adapter = new SensorCheckAdapter(getApplicationContext(), R.layout.sensor_check_row,
                 sensorList);
         listViewSensos.setAdapter(adapter);
@@ -150,13 +141,6 @@ public class MoniItemCreationActivity extends FragmentActivity {
                 photoPath = photo.getPath();
             }
         }
-    }
-
-    private void dispatchSelectFromGalleryIntent() {
-        Intent pickImageIntent = new Intent();
-        pickImageIntent.setType("image/*");
-        pickImageIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(pickImageIntent, ""), PICK_IMAGE);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

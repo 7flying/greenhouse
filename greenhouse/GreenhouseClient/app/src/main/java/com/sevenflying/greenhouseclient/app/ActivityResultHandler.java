@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
-import com.sevenflying.greenhouseclient.domain.MoniItemManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 
 /** Manages the results when we ask an activity for a result.
@@ -42,10 +41,8 @@ public class ActivityResultHandler {
 
     public static void handleCreateNewMoniItem(Context context, Intent data, Activity activity) {
         MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable("moni-item");
-        MoniItemManager moniManager = MoniItemManager.getInstance(
-                context);
-        moniManager.addItem(item);
-        moniManager.commit();
+        DBManager manager = new DBManager(context);
+        manager.addItem(item);
         Toast.makeText(context, context.getString(R.string.item_created), Toast.LENGTH_SHORT)
                 .show();
     }

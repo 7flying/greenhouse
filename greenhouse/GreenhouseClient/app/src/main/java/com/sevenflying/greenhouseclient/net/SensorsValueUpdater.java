@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.domain.Sensor;
-import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

@@ -13,6 +13,7 @@ import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,7 +144,6 @@ public class DBManager extends SQLiteOpenHelper {
             values.put(SensorEntry.S_LAST_VALUE, s.getValue());
             values.put(SensorEntry.S_UPDATED_AT, s.getUpdatedAt());
             db.insert(SensorEntry.TABLE_NAME, null, values);
-            getSensors();
         }
     }
 
@@ -155,6 +155,7 @@ public class DBManager extends SQLiteOpenHelper {
         db.delete(SensorEntry.TABLE_NAME, SensorEntry.S_PIN_ID +
                 " = ? AND " + SensorEntry.S_TYPE + " = ?", new String [] { s.getPinId(),
                 Character.toString(s.getType().getIdentifier()) });
+        Log.d(Constants.DEBUGTAG, " $ deteteSensor  arg:" + s.toString());
     }
 
     private Sensor handleSensor(Cursor c) {
@@ -183,7 +184,7 @@ public class DBManager extends SQLiteOpenHelper {
             } while(c.moveToNext());
         }
         c.close();
-        Log.v(TAG, " $ getSensors size:" + ret.size());
+        Log.d(Constants.DEBUGTAG, " $ getSensors size:" + ret.size());
         return ret;
     }
 
@@ -201,6 +202,7 @@ public class DBManager extends SQLiteOpenHelper {
         if(c.moveToFirst())
             temp = handleSensor(c);
         c.close();
+
         return temp;
     }
 
@@ -211,6 +213,7 @@ public class DBManager extends SQLiteOpenHelper {
         if(c.moveToFirst())
             temp = handleSensor(c);
         c.close();
+        Log.d(Constants.DEBUGTAG, " $ getSensorBy(String bid)  arg:" + bid);
         return temp;
     }
 
@@ -222,7 +225,7 @@ public class DBManager extends SQLiteOpenHelper {
         if(c.moveToFirst())
            ret = c.getInt(c.getColumnIndex(SensorEntry._ID));
         c.close();
-        Log.v(TAG, " $ sensorId " + ret);
+        Log.d(Constants.DEBUGTAG, " $ sensorId " + ret);
         return ret;
     }
 
@@ -232,7 +235,7 @@ public class DBManager extends SQLiteOpenHelper {
         Map<String, Sensor> ret = new HashMap<String, Sensor>();
         for(Sensor s : getSensors())
             ret.put(s.getName() + " (" + s.getPinId() + ") " + s.getType().toString(), s);
-        Log.v(TAG, " $ getFormattedSensors map:" + ret.toString());
+        Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map:" + ret.toString());
         return ret;
     }
 
@@ -240,7 +243,7 @@ public class DBManager extends SQLiteOpenHelper {
      * @param a - Alert to add
      */
     public synchronized void addAlert(Alert a) {
-        Log.v(TAG, " $ addAlert " + a.toString());
+        Log.d(Constants.DEBUGTAG, " $ addAlert " + a.toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(AlertEntry.A_SENSOR_REF, getSensorID(a.getSensorPinId(),
@@ -249,6 +252,7 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(AlertEntry.A_COMPARE_VALUE, a.getCompareValue());
         values.put(AlertEntry.A_ACTIVE, a.isActive());
         db.insert(AlertEntry.TABLE_NAME, null, values);
+        Log.d(Constants.DEBUGTAG, " $ addAlert  arg:" + a.toString());
     }
 
     /** Removes and alert from the Manager.
@@ -263,6 +267,7 @@ public class DBManager extends SQLiteOpenHelper {
                 a.getAlertType().getSymbol()
         };
         db.delete(AlertEntry.TABLE_NAME, selection, selectionArgs);
+        Log.d(Constants.DEBUGTAG, " $ deleteAlert  arg:" + a.toString());
     }
 
     /** Checks whether the manager has alerts created concerning a sensor of a certain alert type
@@ -285,8 +290,8 @@ public class DBManager extends SQLiteOpenHelper {
         if(c.moveToFirst())
             ret = c.getCount();
         c.close();
-        Log.v(TAG, " $ hasAlertsCreatedFrom  ret:" + ret);
-       return ret != 0;
+        Log.d(Constants.DEBUGTAG, " $ hasAlertsCreatedFrom  ret:" + ret);
+       return ret > 0;
     }
 
 
@@ -314,7 +319,7 @@ public class DBManager extends SQLiteOpenHelper {
                 }catch(Exception e) { e.printStackTrace();}
             } while(c.moveToNext());
         }
-        Log.v(TAG, " $ getAlerts  size:" + ret.size());
+        Log.d(Constants.DEBUGTAG, " $ getAlerts  size:" + ret.size());
         c.close();
         return ret;
     }
@@ -327,10 +332,12 @@ public class DBManager extends SQLiteOpenHelper {
             do {
                 Sensor temp = getSensorBy(c.getColumnName(
                         c.getColumnIndex(MoniItemSensorEntry.MS_SENSOR_REF)));
+                Log.d(Constants.DEBUGTAG, " $ getSensorsFromMoniItem  arg:" + temp.toString());
                 ret.add(temp);
             } while(c.moveToNext());
         }
         c.close();
+        Log.d(Constants.DEBUGTAG, " $ getSensorsFromMoniItem  total:" + ret.size());
         return ret;
     }
 
@@ -348,12 +355,14 @@ public class DBManager extends SQLiteOpenHelper {
                 temp.setWarningEnabled(Boolean.valueOf(c.getColumnName(
                         c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
                 String moniId = c.getColumnName(c.getColumnIndex(MoniItemEntry._ID));
-                for(Sensor sensor : getSensorsFromMoniItem(moniId))
+                for(Sensor sensor : getSensorsFromMoniItem(moniId)) {
                     temp.addSensor(sensor);
+                }
                 ret.add(temp);
             } while(c.moveToNext());
         }
         c.close();
+        Log.d(Constants.DEBUGTAG, " $ getMonitoringItems  ret:" + ret.size());
         return ret;
     }
 
@@ -364,6 +373,7 @@ public class DBManager extends SQLiteOpenHelper {
         if(c.moveToFirst())
             ret = c.getColumnName(c.getColumnIndex(MoniItemEntry._ID));
         c.close();
+        Log.d(Constants.DEBUGTAG, " $ getMoniItemId  ret:" + ret);
         return ret;
     }
 
@@ -376,6 +386,7 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(MoniItemEntry.M_PHOTO_PATH, item.getPhotoPath());
         values.put(MoniItemEntry.M_IS_WARNING, item.isWarningEnabled());
         db.insert(MoniItemEntry.TABLE_NAME, null, values);
+        Log.d(Constants.DEBUGTAG, " $ addItem arg:" + item.toString());
         for(Sensor s : item.getAttachedSensors())
             addSensorToMoni(item, s);
     }
@@ -391,6 +402,7 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(MoniItemSensorEntry.MS_SENSOR_REF, getSensorID(sensor.getPinId(),
                 String.valueOf(sensor.getType().getIdentifier())));
         db.insert(MoniItemSensorEntry.TABLE_NAME, null, values);
+        Log.d(Constants.DEBUGTAG, " $ addSensorToMoniItem  arg:" + sensor.toString());
     }
 
     /** Deletes a monitoring item
@@ -407,6 +419,7 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = MoniItemEntry.M_NAME + " = ? ";
         db.delete(AlertEntry.TABLE_NAME, selection, new String[] { name });
+        Log.d(Constants.DEBUGTAG, " $ deteteMoniItem  arg:" + name);
     }
 
 }

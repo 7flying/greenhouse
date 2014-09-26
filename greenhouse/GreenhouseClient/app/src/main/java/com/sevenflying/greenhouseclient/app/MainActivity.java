@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
+import com.sevenflying.greenhouseclient.app.alertstab.AlertListFragment;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
@@ -29,7 +30,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPaAdapter;
     private ActionBar actionBar;
-    private final int[] tabNames = {R.string.tab_status, R.string.tab_sensors,  R.string.tab_alerts};
+    private final int[] tabNames = {R.string.tab_status, R.string.tab_sensors, R.string.tab_alerts};
 
 
     @Override
@@ -140,8 +141,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
-            if(resultCode == Activity.RESULT_OK)
+            if(resultCode == Activity.RESULT_OK) {
                 ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
+                tabsPaAdapter.update(2);
+            }
         } else {
             if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
                 // Callback from MoniItemCreationActivity
@@ -149,6 +152,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(),
                             data, this);
                 }
+
             } else {
                 // TODO handle sensor creation
             }

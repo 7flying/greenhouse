@@ -10,15 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.ActivityResultHandler;
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.Updateable;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Actuator;
-import com.sevenflying.greenhouseclient.domain.MoniItemManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ import java.util.List;
  *  and the actuators that can be applied.
  * Created by 7flying on 25/06/2014.
  */
-public class StatusFragment extends Fragment {
+public class StatusFragment extends Fragment implements Updateable {
 
     private List<MonitoringItem> monitoringItems;
-    private MoniItemManager moniManager;
+    private DBManager moniManager;
     private ActuatorAdapter actuatorAdapter;
     private MonitoringItemAdapter moniAdapter;
 
@@ -53,7 +53,7 @@ public class StatusFragment extends Fragment {
             actuatorList.setAdapter(actuatorAdapter);
 
             monitoringItems = new ArrayList<MonitoringItem>();
-            moniManager = MoniItemManager.getInstance(getActivity().getApplicationContext());
+            moniManager = new DBManager(getActivity().getApplicationContext());
             monitoringItems = moniManager.getItems();
             moniAdapter = new MonitoringItemAdapter(getActivity(),
                     R.layout.monitoring_item_row, monitoringItems);
@@ -94,25 +94,13 @@ public class StatusFragment extends Fragment {
                                             Toast.makeText(getActivity().getApplicationContext(),
                                                     getResources().getString(R.string.item_deleted),
                                                     Toast.LENGTH_SHORT).show();
-                                            moniManager.commit();
                                             break;
                                     }
-                                    moniManager.commit();
                                 }
                             });
                     AlertDialog dialog = builder.create();
                     dialog.show();
                     return false;
-                }
-            });
-
-            // Listener on "add item" button
-            Button buttonAdd = (Button) view.findViewById(R.id.button_add_item);
-            buttonAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivityForResult(new Intent(StatusFragment.this.getActivity(),
-                            MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
                 }
             });
             return view;
@@ -126,9 +114,6 @@ public class StatusFragment extends Fragment {
             if(resultCode == Activity.RESULT_OK) {
                 ActivityResultHandler.handleCreateNewMoniItem(getActivity().getApplicationContext(),
                         data, getActivity());
-                MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable("moni-item");
-                monitoringItems.remove(item);
-                monitoringItems.add(item);
                 actuatorAdapter.notifyDataSetChanged();
             }
         } else {
@@ -143,6 +128,12 @@ public class StatusFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        actuatorAdapter.notifyDataSetChanged();
+        moniAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void update() {
         actuatorAdapter.notifyDataSetChanged();
         moniAdapter.notifyDataSetChanged();
     }

@@ -1,6 +1,9 @@
 package com.sevenflying.greenhouseclient.domain;
 
 import android.util.Base64;
+import android.util.Log;
+
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.Serializable;
 
@@ -57,6 +60,7 @@ public class Alert implements Serializable {
 	}
 
     public void setAlertType(String symbol) throws Exception {
+        Log.d(Constants.DEBUGTAG, " $ setAlertType  arg:" + symbol);
         if(symbol.equals(">"))
             this.type = AlertType.GREATER;
         else{

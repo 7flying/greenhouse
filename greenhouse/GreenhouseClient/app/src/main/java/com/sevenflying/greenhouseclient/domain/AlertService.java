@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.sevenflying.greenhouseclient.app.MainActivity;
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.net.Communicator;
 
 import java.util.List;
@@ -22,19 +23,22 @@ import java.util.List;
  */
 public class AlertService extends IntentService {
 
+    private DBManager manager;
+
     public AlertService() {
         super("AlertService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        manager = new DBManager(getApplicationContext());
         checkAlerts();
     }
 
     /** Checks if any alert is fired
      */
     private void checkAlerts() {
-        AlertManager manager = AlertManager.getInstance(getApplicationContext());
+
         List<Alert> alerts = manager.getAlerts();
         int alertCount = alerts.size() - 1;
         for(Alert alert : alerts) {
@@ -100,14 +104,12 @@ public class AlertService extends IntentService {
      * @param sensorType - type of the sensor that fired the alert
      */
     private void setWarning(String sensorPinId, String sensorType){
-        List<MonitoringItem> listItems = MoniItemManager.getInstance(getApplicationContext())
-                .getItems();
+        List<MonitoringItem> listItems = manager.getItems();
         for(MonitoringItem item : listItems) {
             if(!item.isWarningEnabled()) {
                 if(item.getSensorByKey(sensorPinId + sensorType) != null)
                     item.setWarningEnabled(true);
             }
         }
-        MoniItemManager.getInstance(getApplicationContext()).commit();
     }
 }

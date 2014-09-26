@@ -13,10 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
-import com.sevenflying.greenhouseclient.domain.MoniItemManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
@@ -85,14 +85,14 @@ public class MonItemStatusActivity extends FragmentActivity {
                 if(data.hasExtra("moni-item-result")) {
                     MonitoringItem itemEdited = (MonitoringItem) data
                             .getSerializableExtra("moni-item-result");
+
                     sensorList.clear();
                     sensorList.addAll(itemEdited.getAttachedSensors());
                     adapter.notifyDataSetChanged();
                     moniName.setText(itemEdited.getName());
-                    MoniItemManager manager = MoniItemManager.getInstance(getApplicationContext());
+                    DBManager manager = new DBManager(getApplicationContext());
                     manager.deleteItem(itemEdited.getName());
                     manager.addItem(itemEdited);
-                    manager.commit();
                     if(itemEdited.getPhotoPath() != null)
                         imageMonitoring.setImageBitmap(BitmapFactory.
                                 decodeFile(itemEdited.getPhotoPath()));
