@@ -59,7 +59,7 @@ public class Alert implements Serializable {
 		this.type = type;
 	}
 
-    public void setAlertType(String symbol) throws Exception {
+    public void setAlertTypeSymbol(String symbol) throws Exception {
         Log.d(Constants.DEBUGTAG, " $ setAlertType  arg:" + symbol);
         if(symbol.equals(">"))
             this.type = AlertType.GREATER;

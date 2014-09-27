@@ -49,12 +49,13 @@ public class DBManager extends SQLiteOpenHelper {
         );
         sqLiteDatabase.execSQL(
                         "CREATE TABLE " + AlertEntry.TABLE_NAME + " ( "
+                        + AlertEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                         + AlertEntry.A_SENSOR_REF + " INTEGER NOT NULL REFERENCES "
                           + SensorEntry.TABLE_NAME + "("+ SensorEntry._ID +") ON DELETE CASCADE,"
                         + AlertEntry.A_TYPE + " TEXT NOT NULL,"
                         + AlertEntry.A_COMPARE_VALUE + " REAL NOT NULL,"
-                        + AlertEntry.A_ACTIVE + " TEXT NOT NULL,"
-                        + "PRIMARY KEY (" + AlertEntry.A_SENSOR_REF + ", " + AlertEntry.A_TYPE + ")"
+                        + AlertEntry.A_ACTIVE + " TEXT NOT NULL"
+                      //  + "PRIMARY KEY (" + AlertEntry.A_SENSOR_REF + ", " + AlertEntry.A_TYPE + ")"
                         +" )"
         );
         sqLiteDatabase.execSQL(
@@ -257,11 +258,11 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(AlertEntry.A_SENSOR_REF, getSensorID(a.getSensorPinId(),
                 String.valueOf(a.getSensorType().getIdentifier())));
-        values.put(AlertEntry.A_TYPE, a.getAlertType().getSymbol());
+        values.put(AlertEntry.A_TYPE, a.getAlertType().toString());
         values.put(AlertEntry.A_COMPARE_VALUE, a.getCompareValue());
         values.put(AlertEntry.A_ACTIVE, a.isActive());
         db.insert(AlertEntry.TABLE_NAME, null, values);
-        Log.d(Constants.DEBUGTAG, " $ addAlert  arg:" + a.toString());
+        Log.d(Constants.DEBUGTAG, " $ After addAlert size:" + getAlerts().size());
     }
 
     /** Removes and alert from the Manager.
@@ -273,7 +274,7 @@ public class DBManager extends SQLiteOpenHelper {
         String[] selectionArgs = {
                 Integer.valueOf(getSensorID(a.getSensorPinId(),
                         String.valueOf(a.getSensorType().getIdentifier()))).toString(),
-                a.getAlertType().getSymbol()
+                a.getAlertType().toString()
         };
         db.delete(AlertEntry.TABLE_NAME, selection, selectionArgs);
         Log.d(Constants.DEBUGTAG, " $ deleteAlert  arg:" + a.toString());
@@ -294,7 +295,7 @@ public class DBManager extends SQLiteOpenHelper {
                         Integer.valueOf(
                                 getSensorID(pinId, String.valueOf(sensorType.getIdentifier())))
                                 .toString(),
-                        alertType.getSymbol()});
+                        alertType.toString()});
         int ret = 0;
         if(c.moveToFirst())
             ret = c.getCount();
@@ -309,17 +310,15 @@ public class DBManager extends SQLiteOpenHelper {
      */
     public List<Alert> getAlerts() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Alerts", new String [] {});
+        Cursor c = db.rawQuery("SELECT * FROM " + AlertEntry.TABLE_NAME, new String [] {});
         List<Alert> ret = new ArrayList<Alert>();
         if(c.moveToFirst()) {
             do {
                 try {
                     Alert temp = new Alert();
-                    temp.setAlertType(c.getColumnName(c.getColumnIndex(AlertEntry.A_TYPE)));
-                    temp.setCompareValue(Double.valueOf
-                            (c.getColumnName(c.getColumnIndex(AlertEntry.A_COMPARE_VALUE))));
-                    temp.setActive(Boolean.valueOf(c.getColumnName(
-                            c.getColumnIndex(AlertEntry.A_ACTIVE))));
+                    temp.setAlertType(AlertType.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_TYPE))));
+                    temp.setCompareValue(c.getDouble(c.getColumnIndex(AlertEntry.A_COMPARE_VALUE)));
+                    temp.setActive(Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE))));
                     Sensor s = getSensorBy(c.getColumnName(
                             c.getColumnIndex(AlertEntry.A_SENSOR_REF)));
                     temp.setSensorPinId(s.getPinId());

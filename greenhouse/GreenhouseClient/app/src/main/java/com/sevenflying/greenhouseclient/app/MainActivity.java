@@ -18,11 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
-import com.sevenflying.greenhouseclient.app.alertstab.AlertListFragment;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -43,7 +43,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabsPaAdapter);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
 
         // Adding Tabs
         for(int name : tabNames)
@@ -102,10 +101,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 // TODO
                 return true;
             case R.id.action_add_generic:
-                Log.v("OPTIONS", "Add generic");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(getString(R.string.what_to_add))
-                        .setItems(R.array.items_to_create_array, new DialogInterface.OnClickListener() {
+                        .setItems(R.array.items_to_create_array,
+                                new DialogInterface.OnClickListener()
+                        {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int index) {
                                 switch (index) {
@@ -142,6 +142,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {
+                Log.d(Constants.DEBUGTAG, " OnActivity result: CODE_CREATE_NEW_ALERT OK");
                 ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
                 tabsPaAdapter.update(2);
             }
@@ -154,10 +155,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 }
 
             } else {
-                // Callback from SensorCreationActivity
                 if(requestCode == Codes.CODE_NEW_SENSOR) {
-                   ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
-                    tabsPaAdapter.update(1);
+                    // Callback from SensorCreationActivity
+                    if(resultCode == Activity.RESULT_OK) {
+                        ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
+                        tabsPaAdapter.update(1);
+                    }
                 }
             }
         }

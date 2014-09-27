@@ -22,7 +22,6 @@ import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
-// import com.sevenflying.greenhouseclient.domain.SensorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +124,7 @@ public class AlertCreationActivity extends FragmentActivity {
                 a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
                 a.setCompareValue(Double.parseDouble(editTextValue.getText().toString()));
                 a.setAlertType(alertTypes[selectedAlert]);
-                Log.d(Constants.DEBUGTAG, " $ createAlert on AlertCreationAct.  arg:" + a.toString());
+                Log.d(Constants.DEBUGTAG, " $ createAlert on AlertCreationAct. arg:" + a.toString());
                 // Return alert to previous activity
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("alert", a);
@@ -145,7 +144,8 @@ public class AlertCreationActivity extends FragmentActivity {
                 tempBar.setTitle(getResources().getString(R.string.title_edit_alert));
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
             // the equals of sensor takes pinId + type
-            String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " + a.getSensorType().toString();
+            String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " +
+                    a.getSensorType().toString();
             List<String> list = new ArrayList<String>(formattedSensorMap.keySet());
             sensorListSpinner.setSelection(list.indexOf(key));
             sensorListSpinner.setEnabled(false);

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.ActivityResultHandler;
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Alert;
@@ -29,7 +30,7 @@ import java.util.List;
 /** Shows a list of Alerts
  * Created by 7flying on 25/06/2014.
  */
-public class AlertListFragment extends Fragment {
+public class AlertListFragment extends Fragment implements Updateable {
 
     private List<Alert> alertList;
     private AlertAdapter adapter;
@@ -56,16 +57,21 @@ public class AlertListFragment extends Fragment {
             checkLayoutVisibility();
             // Context menu stuff
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int listPosition, long l) {
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view,
+                                               final int listPosition, long l)
+                {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(getResources().getString(R.string.string_alert))
-                            .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
+                            .setItems(R.array.edit_delete_array,
+                                    new DialogInterface.OnClickListener()
+                            {
                                 public void onClick(DialogInterface dialogInterface, int position) {
                                     switch (position) {
                                         case 0: // Edit
                                             Intent intent = new Intent(AlertListFragment.this
                                                     .getActivity(), AlertCreationActivity.class);
-                                            intent.putExtra("alert-to-edit", alertList.get(listPosition));
+                                            intent.putExtra("alert-to-edit",
+                                                    alertList.get(listPosition));
                                             startActivityForResult(intent, Codes.CODE_EDIT_ALERT);
                                             break;
                                         case 1: // Delete
@@ -77,7 +83,6 @@ public class AlertListFragment extends Fragment {
                                                     Toast.LENGTH_SHORT).show();
                                             break;
                                     }
-                                    //manager.commit();
                                     checkLayoutVisibility();
                                 }
                             });
@@ -97,13 +102,6 @@ public class AlertListFragment extends Fragment {
             layoutNoAlerts.setVisibility(View.GONE);
         else
             layoutNoAlerts.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
-        checkLayoutVisibility();
     }
 
     @Override
@@ -129,5 +127,13 @@ public class AlertListFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public void update() {
+        alertList = manager.getAlerts();
+        adapter = new AlertAdapter(getActivity(), R.layout.alert_list_row, alertList);
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        checkLayoutVisibility();
     }
 }

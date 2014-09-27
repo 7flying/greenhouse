@@ -31,7 +31,7 @@ import java.util.List;
 public class StatusFragment extends Fragment implements Updateable {
 
     private List<MonitoringItem> monitoringItems;
-    private DBManager moniManager;
+    private DBManager manager;
     private ActuatorAdapter actuatorAdapter;
     private MonitoringItemAdapter moniAdapter;
 
@@ -53,8 +53,8 @@ public class StatusFragment extends Fragment implements Updateable {
             actuatorList.setAdapter(actuatorAdapter);
 
             monitoringItems = new ArrayList<MonitoringItem>();
-            moniManager = new DBManager(getActivity().getApplicationContext());
-            monitoringItems = moniManager.getItems();
+            manager = new DBManager(getActivity().getApplicationContext());
+            monitoringItems = manager.getItems();
             moniAdapter = new MonitoringItemAdapter(getActivity(),
                     R.layout.monitoring_item_row, monitoringItems);
             moniList.setAdapter(moniAdapter);
@@ -88,7 +88,7 @@ public class StatusFragment extends Fragment implements Updateable {
                                             startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
                                             break;
                                         case 1: // Delete
-                                            moniManager.deleteItem(monitoringItems.get(listPosition));
+                                            manager.deleteItem(monitoringItems.get(listPosition));
                                             monitoringItems.remove(monitoringItems.get(listPosition));
                                             moniAdapter.notifyDataSetChanged();
                                             Toast.makeText(getActivity().getApplicationContext(),
@@ -113,7 +113,7 @@ public class StatusFragment extends Fragment implements Updateable {
             // Callback from MoniItemCreationActivity
             if(resultCode == Activity.RESULT_OK) {
                 ActivityResultHandler.handleCreateNewMoniItem(getActivity().getApplicationContext(),
-                        data, getActivity());
+                        data);
                 actuatorAdapter.notifyDataSetChanged();
             }
         } else {
@@ -134,7 +134,9 @@ public class StatusFragment extends Fragment implements Updateable {
 
     @Override
     public void update() {
-        actuatorAdapter.notifyDataSetChanged();
+        monitoringItems = manager.getItems();
         moniAdapter.notifyDataSetChanged();
+        // actuatorList = managet.getActuators();
+        actuatorAdapter.notifyDataSetChanged();
     }
 }
