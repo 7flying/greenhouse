@@ -319,8 +319,9 @@ public class DBManager extends SQLiteOpenHelper {
                     temp.setAlertType(AlertType.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_TYPE))));
                     temp.setCompareValue(c.getDouble(c.getColumnIndex(AlertEntry.A_COMPARE_VALUE)));
                     temp.setActive(Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE))));
-                    Sensor s = getSensorBy(c.getColumnName(
-                            c.getColumnIndex(AlertEntry.A_SENSOR_REF)));
+                    Sensor s = getSensorBy(Integer.toString(c.getInt(c.getColumnIndex(
+                            AlertEntry.A_SENSOR_REF))));
+                    temp.setSensorName(s.getName());
                     temp.setSensorPinId(s.getPinId());
                     temp.setSensorType(s.getType());
                     ret.add(temp);
@@ -338,8 +339,8 @@ public class DBManager extends SQLiteOpenHelper {
         List<Sensor> ret = new ArrayList<Sensor>();
         if(c.moveToFirst()) {
             do {
-                Sensor temp = getSensorBy(c.getColumnName(
-                        c.getColumnIndex(MoniItemSensorEntry.MS_SENSOR_REF)));
+                Sensor temp = getSensorBy(Integer.toString(c.getInt(c.getColumnIndex(
+                        MoniItemSensorEntry.MS_SENSOR_REF))));
                 Log.d(Constants.DEBUGTAG, " $ getSensorsFromMoniItem  arg:" + temp.toString());
                 ret.add(temp);
             } while(c.moveToNext());

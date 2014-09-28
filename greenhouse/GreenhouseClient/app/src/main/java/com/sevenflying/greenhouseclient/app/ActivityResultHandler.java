@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
-import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 /** Manages the results when we ask an activity for a result.
