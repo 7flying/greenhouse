@@ -31,25 +31,27 @@ import java.util.List;
 public class StatusFragment extends Fragment implements Updateable {
 
     private List<MonitoringItem> monitoringItems;
+    private List<Actuator> actuators;
     private DBManager manager;
     private ActuatorAdapter actuatorAdapter;
     private MonitoringItemAdapter moniAdapter;
+    private ListView moniList, actuatorList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
             return null;
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
-            ListView actuatorList = (ListView) view.findViewById(R.id.list_actuators);
-            final ListView moniList = (ListView) view.findViewById(R.id.list_items);
+            actuatorList = (ListView) view.findViewById(R.id.list_actuators);
+            moniList = (ListView) view.findViewById(R.id.list_items);
 
-            ArrayList<Actuator> tempActuator = new ArrayList<Actuator>();
+            actuators = new ArrayList<Actuator>();
             for(int i = 0 ; i < 3; i++){
                 Actuator a = new Actuator("Water pump " + i, "D0" + i);
-                tempActuator.add(a);
+                actuators.add(a);
             }
-             actuatorAdapter= new ActuatorAdapter(getActivity(),
-                    R.layout.actuator_row, tempActuator);
+             actuatorAdapter = new ActuatorAdapter(getActivity(),
+                    R.layout.actuator_row, actuators);
             actuatorList.setAdapter(actuatorAdapter);
 
             monitoringItems = new ArrayList<MonitoringItem>();
@@ -134,9 +136,16 @@ public class StatusFragment extends Fragment implements Updateable {
 
     @Override
     public void update() {
+        // Monitoring Items
         monitoringItems = manager.getItems();
+        moniAdapter = new MonitoringItemAdapter(getActivity(), R.layout.monitoring_item_row,
+                monitoringItems);
+        moniList.setAdapter(moniAdapter);
         moniAdapter.notifyDataSetChanged();
-        // actuatorList = managet.getActuators();
+        // Actuators
+        // actuatorList = manager.getActuators();
+        actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuators);
+        actuatorList.setAdapter(actuatorAdapter);
         actuatorAdapter.notifyDataSetChanged();
     }
 }

@@ -272,8 +272,8 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = AlertEntry.A_SENSOR_REF + " = ? AND " + AlertEntry.A_TYPE + " = ?";
         String[] selectionArgs = {
-                Integer.valueOf(getSensorID(a.getSensorPinId(),
-                        String.valueOf(a.getSensorType().getIdentifier()))).toString(),
+                Integer.toString(getSensorID(a.getSensorPinId(),
+                        String.valueOf(a.getSensorType().getIdentifier()))),
                 a.getAlertType().toString()
         };
         db.delete(AlertEntry.TABLE_NAME, selection, selectionArgs);
@@ -358,12 +358,12 @@ public class DBManager extends SQLiteOpenHelper {
         List<MonitoringItem> ret = new ArrayList<MonitoringItem>();
         if(c.moveToFirst()) {
             do {
-                MonitoringItem temp = new MonitoringItem(
-                        c.getColumnName(c.getColumnIndex(MoniItemEntry.M_NAME)));
-                temp.setPhotoPath(c.getColumnName(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
-                temp.setWarningEnabled(Boolean.valueOf(c.getColumnName(
+                MonitoringItem temp = new MonitoringItem(c.getString
+                        (c.getColumnIndex(MoniItemEntry.M_NAME)));
+                temp.setPhotoPath(c.getString(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
+                temp.setWarningEnabled(Boolean.valueOf(c.getString(
                         c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
-                String moniId = c.getColumnName(c.getColumnIndex(MoniItemEntry._ID));
+                String moniId = c.getString(c.getColumnIndex(MoniItemEntry._ID));
                 for(Sensor sensor : getSensorsFromMoniItem(moniId)) {
                     temp.addSensor(sensor);
                 }
@@ -380,7 +380,7 @@ public class DBManager extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM Monitems WHERE name = ?", new String [] {name});
         String ret = null;
         if(c.moveToFirst())
-            ret = c.getColumnName(c.getColumnIndex(MoniItemEntry._ID));
+            ret = Integer.toString(c.getInt(c.getColumnIndex(MoniItemEntry._ID)));
         c.close();
         Log.d(Constants.DEBUGTAG, " $ getMoniItemId  ret:" + ret);
         return ret;
@@ -427,7 +427,7 @@ public class DBManager extends SQLiteOpenHelper {
     public synchronized void deleteItem(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = MoniItemEntry.M_NAME + " = ? ";
-        db.delete(AlertEntry.TABLE_NAME, selection, new String[] { name });
+        db.delete(MoniItemEntry.TABLE_NAME, selection, new String[] { name });
         Log.d(Constants.DEBUGTAG, " $ deteteMoniItem  arg:" + name);
     }
 

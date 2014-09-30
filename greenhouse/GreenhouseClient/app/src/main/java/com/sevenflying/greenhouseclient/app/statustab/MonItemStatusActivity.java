@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -37,7 +38,10 @@ public class MonItemStatusActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar tempBar = getActionBar();
+        if( tempBar != null) {
+            tempBar.setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.activity_mon_item_status);
         imageMonitoring = (ImageView) findViewById(R.id.image_monitoring);
         moniName = (TextView) findViewById(R.id.tv_moni_name);

@@ -124,16 +124,11 @@ public class AlertCreationActivity extends FragmentActivity {
                 a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
                 a.setCompareValue(Double.parseDouble(editTextValue.getText().toString()));
                 a.setAlertType(alertTypes[selectedAlert]);
-                Log.d(Constants.DEBUGTAG, " $ createAlert on AlertCreationAct. arg:" + a.toString());
+                Log.d(Constants.DEBUGTAG, " $ OK on AlertCreationAct. arg:" + a.toString());
                 // Return alert to previous activity
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("alert", a);
                 setResult(RESULT_OK, returnIntent);
-                if(!sensorListSpinner.isEnabled()) {
-                    Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.alert_edited),
-                            Toast.LENGTH_SHORT).show();
-                }
                 finish();
             }
         });

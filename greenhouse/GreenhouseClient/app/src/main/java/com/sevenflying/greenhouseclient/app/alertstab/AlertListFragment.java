@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Alert;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.util.List;
 
@@ -119,11 +121,14 @@ public class AlertListFragment extends Fragment implements Updateable {
                 // Callback from AlertCreationActivity on Edit mode
                 if(resultCode == Activity.RESULT_OK) {
                     Alert a = (Alert) data.getSerializableExtra("alert");
+                    Log.d(Constants.DEBUGTAG, " $ Calling remove alert " + a.toString());
                     manager.removeAlert(a);
-                    alertList.remove(a);
-                    manager.addAlert(a);
-                    alertList.add(a);
-                    adapter.notifyDataSetChanged();
+                    Log.d(Constants.DEBUGTAG, " $ Calling add alert");
+                    manager.addAlert(a); // TODO consider update statement
+                    update();
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            getResources().getString(R.string.alert_edited),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }
