@@ -16,8 +16,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
@@ -110,9 +112,26 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                             public void onClick(DialogInterface dialogInterface, int index) {
                                 switch (index) {
                                     case 0: // Alert
-                                        startActivityForResult(new Intent(MainActivity.this,
-                                                AlertCreationActivity.class),
-                                                Codes.CODE_CREATE_NEW_ALERT);
+                                        if(new DBManager(getApplicationContext()).getSensors()
+                                                .size() >0 )
+                                        {
+                                            startActivityForResult(new Intent(MainActivity.this,
+                                                            AlertCreationActivity.class),
+                                                    Codes.CODE_CREATE_NEW_ALERT);
+                                        } else {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                                   MainActivity.this);
+                                            builder.setMessage(MainActivity.this
+                                                    .getResources()
+                                                    .getString(R.string.alert_creation_no));
+                                            builder.
+                                                    setPositiveButton(R.string.ok,
+                                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialogInterface,
+                                                                    int i) {}
+                                            });
+                                            builder.show();
+                                        }
                                         break;
                                     case 1: // Monitoring item
                                         startActivityForResult(new Intent(MainActivity.this,

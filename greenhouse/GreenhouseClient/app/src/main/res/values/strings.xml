@@ -74,6 +74,9 @@
     <string name="ensure_refresh">Ensure refresh rate?</string>
     <string name="yes">Yes, please</string>
     <string name="no">Nope, don\'t worry</string>
+    <!-- Main activity -->
+    <string name="alert_creation_no">There isn\'t any sensor to attach the alert,
+        please create a new sensor first.</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

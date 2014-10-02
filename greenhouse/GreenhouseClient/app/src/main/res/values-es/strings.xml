@@ -1,6 +1,8 @@
 <resources>
     <string name="action_about">Acerca de</string>
     <string name="action_bar_sensor_info">Sensor</string>
+    <string name="alert_creation_no">No hay ningún sensor al que agregar alertas,
+        por favor crea primero un sensor.</string>
     <string name="action_new">Añadir</string>
     <string name="action_new_sensor">Nuevo sensor</string>
     <string name="action_refresh">Actualizar</string>
