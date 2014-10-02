@@ -98,7 +98,6 @@ public class AlertListFragment extends Fragment implements Updateable {
         }
     }
 
-
     public void checkLayoutVisibility() {
         if(alertList.size() > 0)
             layoutNoAlerts.setVisibility(View.GONE);
@@ -120,15 +119,10 @@ public class AlertListFragment extends Fragment implements Updateable {
             if(requestCode == Codes.CODE_EDIT_ALERT) {
                 // Callback from AlertCreationActivity on Edit mode
                 if(resultCode == Activity.RESULT_OK) {
-                    Alert a = (Alert) data.getSerializableExtra("alert");
-                    Log.d(Constants.DEBUGTAG, " $ Calling remove alert " + a.toString());
-                    manager.removeAlert(a);
-                    Log.d(Constants.DEBUGTAG, " $ Calling add alert");
-                    manager.addAlert(a); // TODO consider update statement
+                    Log.d(Constants.DEBUGTAG, " $ Callback of edit alert on list activity");
+                    ActivityResultHandler.handleEditAlert(getActivity().getApplicationContext(),
+                            data);
                     update();
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getResources().getString(R.string.alert_edited),
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         }

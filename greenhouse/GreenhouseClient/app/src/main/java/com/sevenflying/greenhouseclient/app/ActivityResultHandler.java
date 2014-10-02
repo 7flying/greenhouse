@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -65,5 +66,20 @@ public class ActivityResultHandler {
     public static void handleCreateNewSensor(Context context) {
         Toast.makeText(context, context.getString(R.string.sensor_created), Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    /** Handles the edition of an Alert
+     * @param context
+     * @param data
+     */
+    public static void handleEditAlert(Context context, Intent data) {
+        Alert a = (Alert) data.getSerializableExtra("alert");
+        Log.d(Constants.DEBUGTAG, " $ Calling remove alert on handle edit" + a.toString());
+        DBManager manager = new DBManager(context);
+        manager.removeAlert(a);
+        Log.d(Constants.DEBUGTAG, " $ Calling add alert on handle edit");
+        manager.addAlert(a); // TODO consider update statement
+        Toast.makeText(context, context.getResources().getString(R.string.alert_edited),
+                        Toast.LENGTH_SHORT).show();
     }
 }

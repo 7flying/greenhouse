@@ -24,6 +24,7 @@ import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
+import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 
@@ -127,9 +128,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                                             builder.
                                                     setPositiveButton(R.string.ok,
                                                             new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialogInterface,
-                                                                    int i) {}
-                                            });
+                                                                public void onClick(DialogInterface dialogInterface,
+                                                                                    int i) {
+                                                                }
+                                                            });
                                             builder.show();
                                         }
                                         break;
@@ -179,6 +181,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     if(resultCode == Activity.RESULT_OK) {
                         ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
                         tabsPaAdapter.update(1);
+                    }
+                } else {
+                    if(requestCode == Codes.CODE_EDIT_ALERT) {
+                        // Callback from AlertCreationActivity on Edit mode
+                        if(resultCode == Activity.RESULT_OK) {
+                            Log.d(Constants.DEBUGTAG, " $ Callback of alert edit on main");
+                            ActivityResultHandler.handleEditAlert(MainActivity.this, data);
+                            tabsPaAdapter.update(2);
+                        }
                     }
                 }
             }
