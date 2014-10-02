@@ -333,6 +333,22 @@ public class DBManager extends SQLiteOpenHelper {
         return ret;
     }
 
+    /** Sets on or off a certain alert.
+     * @param alert - alert to modify
+     * @param enabled - status
+     */
+    public void setEnabled(Alert alert, boolean enabled) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AlertEntry.A_ACTIVE, enabled);
+        db.update(AlertEntry.TABLE_NAME, values, AlertEntry.A_SENSOR_REF + " = ? AND "
+                + AlertEntry.A_TYPE + "= ?", new String[] {
+                Integer.toString(getSensorID(
+                    alert.getSensorPinId(),
+                    Character.toString(alert.getSensorType().getIdentifier()))),
+                alert.getAlertType().toString()});
+    }
+
     private List<Sensor> getSensorsFromMoniItem(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM MoniSensors WHERE monitemid = ?", new String [] {id});

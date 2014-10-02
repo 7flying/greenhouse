@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
 
 import java.io.Serializable;
@@ -29,6 +30,7 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 getItem(post).setActive(compoundButton.isChecked());
+                new DBManager(getContext()).setEnabled(getItem(post), compoundButton.isChecked());
             }
         });
 
