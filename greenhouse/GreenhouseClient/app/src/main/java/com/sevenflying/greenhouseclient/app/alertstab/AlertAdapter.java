@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
@@ -26,11 +26,12 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
         if(alertView == null)
             alertView = AlertView.inflate(parent);
         // Add listener for each toggle
-        alertView.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final ToggleButton button = alertView.getToggle();
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                getItem(post).setActive(compoundButton.isChecked());
-                new DBManager(getContext()).setEnabled(getItem(post), compoundButton.isChecked());
+            public void onClick(View view) {
+                getItem(post).setActive(button.isChecked());
+                new DBManager(getContext()).setEnabled(getItem(post), button.isChecked());
             }
         });
 
