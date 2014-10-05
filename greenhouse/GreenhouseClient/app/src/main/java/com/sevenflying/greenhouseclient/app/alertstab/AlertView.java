@@ -2,6 +2,7 @@ package com.sevenflying.greenhouseclient.app.alertstab;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import android.widget.ToggleButton;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Alert;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 /** AlertView class.
  * Created by 7flying on 15/07/2014.
@@ -50,6 +52,7 @@ public class AlertView extends LinearLayout {
     }
 
     public void setAlert(Alert alert) {
+        Log.d(Constants.DEBUGTAG, " $ On Alert View set alert");
         toggle.setEnabled(true);
         toggle.setChecked(alert.isActive());
         textSensorName.setText(alert.getSensorName());

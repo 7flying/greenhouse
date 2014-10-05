@@ -1,6 +1,7 @@
 package com.sevenflying.greenhouseclient.app.alertstab;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -8,6 +9,7 @@ import android.widget.ToggleButton;
 
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,6 +34,7 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
             public void onClick(View view) {
                 getItem(post).setActive(button.isChecked());
                 new DBManager(getContext()).setEnabled(getItem(post), button.isChecked());
+                Log.d(Constants.DEBUGTAG, " $ On Alert Adapter get view, toggle button clicked");
             }
         });
 
