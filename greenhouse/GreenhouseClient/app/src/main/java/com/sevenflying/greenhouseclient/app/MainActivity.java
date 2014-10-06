@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
+import com.sevenflying.greenhouseclient.app.settings.SettingsActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
@@ -101,7 +102,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 // TODO
                 return true;
             case R.id.action_settings:
-                // TODO
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.action_add_generic:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
