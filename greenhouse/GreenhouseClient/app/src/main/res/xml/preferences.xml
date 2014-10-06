@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+   <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+       <PreferenceCategory android:title="@string/prefs_server">
+           <EditTextPreference
+               android:key="preference_server_ip"
+               android:title="@string/prefs_serverip"
+               android:summary="@string/prefs_insert_server_ip"/>
+            <EditTextPreference
+                android:key="preference_server_port"
+                android:title="@string/prefs_serverport"
+                android:summary="@string/prefs_insert_server_port"/>
+  </PreferenceCategory>
+</PreferenceScreen>

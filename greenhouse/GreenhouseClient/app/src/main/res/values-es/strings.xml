@@ -43,6 +43,11 @@
     <string name="no_connection">Sin conexión</string>
     <string name="ok">Ok</string>
     <string name="pin">PIN</string>
+    <string name="prefs_server">Configuración del servidor</string>
+    <string name="prefs_serverip">IP</string>
+    <string name="prefs_insert_server_ip">Insertar IP del servidor</string>
+    <string name="prefs_serverport">Puerto</string>
+    <string name="prefs_insert_server_port">Insertar puerto del servidor</string>
     <string name="radio_analog">Analógico</string>
     <string name="radio_digital">Digital</string>
     <string name="refresh_rate">Ratio de refresco (segundos)</string>
