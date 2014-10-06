@@ -128,13 +128,6 @@ public class StatusFragment extends Fragment implements Updateable {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        actuatorAdapter.notifyDataSetChanged();
-        moniAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void update() {
         // Monitoring Items
         monitoringItems = manager.getItems();
