@@ -21,11 +21,13 @@
         el mismo sensor. Por favor, modifique o borre la alerta.</string>
     <string name="alert_type_spinner">Tipo de alerta</string>
     <string name="app_name">Greenhouse</string>
+    <string name="app_version">Versión</string>
     <string name="attached_sensors">SENSORES ASOCIADOS</string>
     <string name="button_cancel_alarm_creation_delete">Cancelar</string>
     <string name="button_save">Guardar</string>
     <string name="content_description_image">Imagen</string>
     <string name="content_image_sensor_desc">Imagen de sensor</string>
+    <string name="credits">Por I. Díez</string>
     <string name="delete_alert_context_menu">Borrar</string>
     <string name="edit_alert">EDITAR ALERTA</string>
     <string name="edit_alert_context_menu">Editar</string>
@@ -51,6 +53,7 @@
     <string name="radio_analog">Analógico</string>
     <string name="radio_digital">Digital</string>
     <string name="refresh_rate">Ratio de refresco (segundos)</string>
+    <string name="repo">Código en GitHub</string>
     <string name="select_sensor_spinner">Sensor</string>
     <string name="sensor_creation">CREAR SENSOR</string>
     <string name="sensor_edition">EDITAR SENSOR</string>
