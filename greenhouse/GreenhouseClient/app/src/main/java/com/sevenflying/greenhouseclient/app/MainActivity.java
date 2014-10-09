@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.sevenflying.greenhouseclient.app.about.AboutActivity;
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
@@ -99,7 +100,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                // TODO
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
