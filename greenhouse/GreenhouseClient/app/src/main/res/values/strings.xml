@@ -6,7 +6,6 @@
     <string name="app_version_number">0.1</string>
     <string name="hello_world">Hello world!</string>
     <string name="sensor_icon_descp">Sensor icon</string>
-    <string name="app_version">Version</string>
     <string name="credits">By I. Díez</string>
     <string name="repo">Code at GitHub</string>
     <string name="repo_link">https://github.com/7flying/greenhouse</string>

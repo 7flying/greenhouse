@@ -2,10 +2,7 @@ package com.sevenflying.greenhouseclient.app.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.R;
 
@@ -38,11 +35,15 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(PREF_SERVER_IP)) {
-            findPreference(s).setSummary("Whatever");
-        } else if (s.equals(PREF_SERVER_PORT)) {
-            findPreference(s).setSummary(sharedPreferences.getString(s, ""));
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (key.equals(PREF_SERVER_IP)) {
+            findPreference(key).setSummary(sharedPreferences.getString(key, ""));
+            editor.putString(sharedPreferences.getString(key, ""), PREF_SERVER_IP);
+        } else if (key.equals(PREF_SERVER_PORT)) {
+            findPreference(key).setSummary(sharedPreferences.getString(key, ""));
+            editor.putString(sharedPreferences.getString(key, ""), PREF_SERVER_PORT);
         }
+        editor.apply();
     }
 }
