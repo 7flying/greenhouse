@@ -349,6 +349,24 @@ public class DBManager extends SQLiteOpenHelper {
                 alert.getAlertType().toString()});
     }
 
+    /** Checks if a certain alert is enabled
+     * @param alert - alert to check
+     * @return true/false
+     */
+    public boolean isEnabled(Alert alert) {
+        boolean ret = false;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + AlertEntry.TABLE_NAME + " WHERE " +
+                AlertEntry.A_SENSOR_REF + " = ? AND " + AlertEntry.A_TYPE + " = ?",
+                new String[] { Character.toString(alert.getSensorType().getIdentifier()),
+                        alert.getAlertType().toString() });
+        if (c.moveToFirst()) {
+            ret = Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE)));
+        }
+        c.close();
+        return ret;
+    }
+
     private List<Sensor> getSensorsFromMoniItem(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM MoniSensors WHERE monitemid = ?", new String [] {id});
