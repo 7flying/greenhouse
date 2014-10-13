@@ -8,7 +8,8 @@
     <string name="sensor_icon_descp">Sensor icon</string>
     <string name="credits">By I. Díez</string>
     <string name="repo">Code at GitHub</string>
-    <string name="repo_link">https://github.com/7flying/greenhouse</string>
+    <string name="repo_link"><a href="https://github.com/7flying/greenhouse">7flying/greenhouse</a>
+    </string>
     <!-- Tab names -->
     <string name="tab_status">Status</string>
     <string name="tab_sensors">Sensors</string>

@@ -3,6 +3,8 @@ package com.sevenflying.greenhouseclient.app.about;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 
@@ -18,5 +20,6 @@ public class AboutActivity extends FragmentActivity {
         ActionBar temp = getActionBar();
         if (temp != null)
             temp.setDisplayHomeAsUpEnabled(true);
+        ((TextView) findViewById(R.id.repo_desc)).setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
