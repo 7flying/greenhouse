@@ -51,7 +51,9 @@ public class AlertListFragment extends Fragment implements Updateable {
             // Add previously created alerts if any
             alertList = manager.getAlerts();
             adapter = new AlertAdapter(getActivity(), R.layout.alert_list_row, alertList);
-            listView.setAdapter(adapter);
+            // To prevent weird "java.lang.IllegalArgumentException: Can't have a viewTypeCount < 1"
+            if(alertList.size() > 0)
+                listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             checkLayoutVisibility();
             // Context menu stuff
