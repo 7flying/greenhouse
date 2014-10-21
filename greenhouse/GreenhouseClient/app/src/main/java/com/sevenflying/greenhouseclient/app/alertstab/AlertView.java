@@ -52,7 +52,7 @@ public class AlertView extends LinearLayout {
     }
 
     public void setAlert(Alert alert) {
-        Log.d(Constants.DEBUGTAG, " $ On Alert View set alert");
+        Log.d(Constants.DEBUGTAG, " $ On Alert View set alert: " + alert.toString());
         toggle.setEnabled(true);
         toggle.setChecked(alert.isActive());
         textSensorName.setText(alert.getSensorName());

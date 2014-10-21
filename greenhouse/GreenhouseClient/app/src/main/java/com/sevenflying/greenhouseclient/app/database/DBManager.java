@@ -338,6 +338,7 @@ public class DBManager extends SQLiteOpenHelper {
      * @param enabled - status
      */
     public void setEnabled(Alert alert, boolean enabled) {
+        Log.d(Constants.DEBUGTAG, " $ setEnabled " + alert.toString() + " :" + enabled );
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(AlertEntry.A_ACTIVE, enabled);
@@ -363,6 +364,7 @@ public class DBManager extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             ret = Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE)));
         }
+        Log.d(Constants.DEBUGTAG, " $ isEnabled " + alert.toString() + "? :" + ret );
         c.close();
         return ret;
     }

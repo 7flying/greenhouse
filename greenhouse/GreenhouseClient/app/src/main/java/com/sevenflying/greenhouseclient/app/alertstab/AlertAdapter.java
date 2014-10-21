@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -21,10 +22,12 @@ import java.util.List;
 public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
 
     private List<Alert> alertList;
+    //private boolean[] checkState;
 
     public AlertAdapter(Context context, int resource, List<Alert> list) {
         super(context, resource, list);
         this.alertList = list;
+        //this.checkState = new boolean[list.size()];
     }
 
     public View getView(final int post, View convertView, ViewGroup parent) {
@@ -32,21 +35,35 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
         if(alertView == null)
             alertView = AlertView.inflate(parent);
         // Add listener for each toggle
-       // final ToggleButton button = alertView.getToggle();
         alertView.getToggle().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToggleButton button = (ToggleButton) view;
-                Toast.makeText(getContext(), "Click on item " + post,
-                        Toast.LENGTH_SHORT).show();
                 DBManager manager = new DBManager(getContext());
-                boolean previous = manager.isEnabled(getItem(post));
-                getItem(post).setActive(!previous);
-                manager.setEnabled(getItem(post), !previous);
+                boolean enabled = manager.isEnabled(getItem(post));
+                // Swap value
+                enabled = !enabled;
+                manager.setEnabled(getItem(post), enabled);
+                alertList.get(post).setActive(enabled);
+                getItem(post).setActive(enabled);
+
+                /*
+                boolean temp = ((ToggleButton) view).isChecked();
+                //checkState[post] = temp;
+                alertList.get(post).setActive(temp);
+                getItem(post).setActive(temp);
+                // ToggleButton button = (ToggleButton) view;
+                DBManager manager = new DBManager(getContext());
+                //boolean previous = manager.isEnabled(getItem(post));
+                //getItem(post).setActive(!previous);
+                manager.setEnabled(getItem(post), temp);
+                */
+                Toast.makeText(getContext(), "Click on item " + post +
+                                " : it has: " + ((ToggleButton) view).isChecked(),
+                        Toast.LENGTH_SHORT).show();
                 Log.d(Constants.DEBUGTAG, " $ On Alert Adapter get view, toggle button clicked");
             }
         });
-        //alertView.getToggle().setChecked(getItem(post).isActive());
+       // alertView.getToggle().setChecked(checkState[post]);
         alertView.setAlert(getItem(post));
         return  alertView;
     }
