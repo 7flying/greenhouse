@@ -3,6 +3,7 @@ package com.sevenflying.testing;
 import java.util.List;
 import java.util.Map;
 
+import com.sevenflying.server.Env;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
@@ -10,7 +11,7 @@ import com.sevenflying.server.domain.SensorType;
 public class DBManagerTest {
 
 	public static void main(String [] args) throws Exception {
-		test_2();
+		test_1();
 		System.out.println(" $ Tests finished");
 	}
 
@@ -46,7 +47,7 @@ public class DBManagerTest {
 		System.out.println( "$ Test ends");
 		 */
 		DBManager manager = DBManager.getInstance();
-		manager.connect("F:\\dump\\greenhouse\\db.sqlite");
+		manager.connect(Env.DB_PATH);
 		manager.createDatabase();
 		Sensor s1 = new Sensor("DHT22", "D03", SensorType.TEMPERATURE,60000, true);
 		Sensor s2 = new Sensor("DHT22", "D03", SensorType.HUMIDITY, 60000, true);

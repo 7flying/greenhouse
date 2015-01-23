@@ -13,13 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sevenflying.server.Env;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 
 public class DBManager {
 
-	public static String DBPath = "F:\\dump\\greenhouse\\db.sqlite";
+	public static String DBPath = Env.DB_PATH;//"F:\\dump\\greenhouse\\db.sqlite";
 	private static DBManager manager = null;
 	private Connection conn = null;
 	private static String TIME_FORMAT = "HH:mm:ss";

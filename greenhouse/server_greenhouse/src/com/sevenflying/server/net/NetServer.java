@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.sevenflying.server.Env;
 import com.sevenflying.server.GreenServer;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
@@ -23,7 +24,7 @@ import com.sevenflying.utils.Utils;
 /** Manages the communications. */
 public class NetServer {
 
-	private static String pathToDB = "F:\\dump\\greenhouse\\db.sqlite"; //TODO
+	private static String pathToDB = Env.DB_PATH;
 
 	private static GreenServer greenDaemon = null;
 	
