@@ -1,23 +1,21 @@
 package com.sevenflying.greenhouseclient.app;
 
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.sevenflying.greenhouseclient.app.about.AboutActivity;
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
@@ -26,18 +24,36 @@ import com.sevenflying.greenhouseclient.app.settings.SettingsActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
-import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends ActionBarActivity {//FragmentActivity implements ActionBar.TabListener {
 
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPaAdapter;
-    private ActionBar actionBar;
-    private final int[] tabNames = {R.string.tab_status, R.string.tab_sensors, R.string.tab_alerts};
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
+
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(viewPager);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        // Alarm manager setup
+        Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, myIntent,0 );
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000,30000,
+                pendingIntent);
+    }
+
+/*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +105,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // Listener to tab change event
         viewPager.setCurrentItem(tab.getPosition());
     }
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -167,14 +184,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if(resultCode == Activity.RESULT_OK) {
                 Log.d(Constants.DEBUGTAG, " OnActivity result: CODE_CREATE_NEW_ALERT OK");
                 ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
-                tabsPaAdapter.update(2);
+              //  tabsPaAdapter.update(2);
             }
         } else {
             if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
                 // Callback from MoniItemCreationActivity
                 if(resultCode == Activity.RESULT_OK) {
                     ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
-                    tabsPaAdapter.update(0);
+                    //tabsPaAdapter.update(0);
                 }
 
             } else {
@@ -182,7 +199,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     // Callback from SensorCreationActivity
                     if(resultCode == Activity.RESULT_OK) {
                         ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
-                        tabsPaAdapter.update(1);
+                      //  tabsPaAdapter.update(1);
                     }
                 } else {
                     if(requestCode == Codes.CODE_EDIT_ALERT) {
@@ -190,7 +207,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                         if(resultCode == Activity.RESULT_OK) {
                             Log.d(Constants.DEBUGTAG, " $ Callback of alert edit on main");
                             ActivityResultHandler.handleEditAlert(MainActivity.this, data);
-                            tabsPaAdapter.update(2);
+                        //    tabsPaAdapter.update(2);
                         }
                     }
                 }

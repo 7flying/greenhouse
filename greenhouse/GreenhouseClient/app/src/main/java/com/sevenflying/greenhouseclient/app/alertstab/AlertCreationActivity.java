@@ -3,7 +3,8 @@ package com.sevenflying.greenhouseclient.app.alertstab;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
@@ -30,7 +30,7 @@ import java.util.Map;
 /** Activity for the creation of Alerts.
  * Created by 7flying on 20/07/2014.
  */
-public class AlertCreationActivity extends FragmentActivity {
+public class AlertCreationActivity extends ActionBarActivity {
     private Button buttonCreate;
     private EditText editTextValue;
     private TextView tvSensorUnit;
@@ -45,10 +45,9 @@ public class AlertCreationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar tempBar = getActionBar();
-        if( tempBar != null) {
-            tempBar.setDisplayHomeAsUpEnabled(true);
-        }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_alert_creation);
         formattedSensorMap = new DBManager(getApplicationContext()).getFormattedSensors();
 
@@ -135,8 +134,8 @@ public class AlertCreationActivity extends FragmentActivity {
 
         TextView tvDescription = (TextView) findViewById(R.id.alert_creation_editing);
         if(getIntent().hasExtra("alert-to-edit")) {
-            if(tempBar != null)
-                tempBar.setTitle(getResources().getString(R.string.title_edit_alert));
+            if(getSupportActionBar() != null)
+                getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_alert));
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
             // the equals of sensor takes pinId + type
             String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " +
@@ -151,8 +150,8 @@ public class AlertCreationActivity extends FragmentActivity {
         } else {
             // set description text as "creation"
             tvDescription.setText(getResources().getString(R.string.add_alert));
-            if(tempBar != null)
-                tempBar.setDisplayShowTitleEnabled(true);
+            if(getSupportActionBar() != null)
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
 
         Button buttonCancel = (Button) findViewById(R.id.button_cancel_alert);

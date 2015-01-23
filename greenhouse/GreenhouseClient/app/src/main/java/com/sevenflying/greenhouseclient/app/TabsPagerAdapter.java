@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app;
 
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,6 +14,7 @@ import com.sevenflying.greenhouseclient.app.statustab.StatusFragment;
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
+    private final int[] tabNames = {R.string.tab_status, R.string.tab_sensors, R.string.tab_alerts};
     private FragmentManager fragmentManager;
     private StatusFragment statusFragment;
     private SensorsListFragment sensorsListFragment;
@@ -40,7 +42,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     public int getCount() {
-        return  3;
+        return  tabNames.length;
     }
 
     public void update(int index) {
@@ -54,6 +56,20 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 alertListFragment.update();
                 break;
+        }
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position){
+            case 0:
+                return "Status";
+            case 1:
+                return "Sensors";
+            case 2:
+                return "Alerts";
+            default:
+                return " ";
         }
     }
 }

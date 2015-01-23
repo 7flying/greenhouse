@@ -1,15 +1,12 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
@@ -19,15 +16,12 @@ import com.sevenflying.greenhouseclient.net.HistoricalRecordObtainer;
 /** Activity to show further info about a sensor.
  * Created by 7flying on 13/07/2014.
  */
-public class SensorStatusActivity extends FragmentActivity {
+public class SensorStatusActivity extends ActionBarActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        ActionBar tempBar = getActionBar();
-        if( tempBar != null) {
-           tempBar.setDisplayHomeAsUpEnabled(true);
-           tempBar.setDisplayShowTitleEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         setContentView(R.layout.activity_sensor_status);
         // Views
@@ -59,26 +53,27 @@ public class SensorStatusActivity extends FragmentActivity {
             hro.execute();
         }
 
+        /*
         ColorTemplate ct = new ColorTemplate();
         ct.addDataSetColors(new int[] {
                 R.color.joyful_2
         }, this);
         chart.setColorTemplate(ct);
+        */
 
         // if enabled, the chart will always start at zero on the y-axis
         chart.setStartAtZero(false);
         // disable the drawing of values into the chart
         chart.setDrawYValues(true);
         chart.setDrawXLabels(true);
-        chart.setLineWidth(2f);
-        chart.setCircleSize(4f);
+        //chart.setLineWidth(2f);
+        //chart.setCircleSize(4f);
         chart.setDrawBorder(false);
-        chart.setBorderStyles(new BarLineChartBase.BorderStyle[] {
-                BarLineChartBase.BorderStyle.BOTTOM });
+        //chart.setBorderStyles(new BarLineChartBase.BorderStyle[] { BarLineChartBase.BorderStyle.BOTTOM });
 
         // no description text
         chart.setDescription("");
-        chart.setYLabelCount(6);
+        //chart.setYLabelCount(6);
 
         // enable value highlighting
         chart.setHighlightEnabled(false);

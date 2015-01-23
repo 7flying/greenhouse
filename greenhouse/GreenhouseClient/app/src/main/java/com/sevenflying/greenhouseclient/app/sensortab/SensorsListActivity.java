@@ -2,8 +2,6 @@ package com.sevenflying.greenhouseclient.app.sensortab;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.sevenflying.greenhouseclient.app.R;
 

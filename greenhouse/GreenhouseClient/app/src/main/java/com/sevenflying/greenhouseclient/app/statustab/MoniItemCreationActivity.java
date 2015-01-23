@@ -1,6 +1,5 @@
 package com.sevenflying.greenhouseclient.app.statustab;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -33,7 +32,7 @@ import java.util.List;
 /** This activity is in charge of the creation of MonitoringItems.
  * Created by 7flying on 11/08/2014.
  */
-public class MoniItemCreationActivity extends FragmentActivity {
+public class MoniItemCreationActivity extends ActionBarActivity {
 
     private EditText etName;
     private ImageView imagePreview;
@@ -46,10 +45,9 @@ public class MoniItemCreationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar tempBar = getActionBar();
-        if( tempBar != null) {
-            tempBar.setDisplayHomeAsUpEnabled(true);
-        }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_mon_item_creation);
         buttonCreate = (Button) findViewById(R.id.button_create);
         buttonCreate.setEnabled(false);
@@ -108,8 +106,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
         listViewSensos.setAdapter(adapter);
         TextView textViewTitle = (TextView) findViewById(R.id.title_moni_item_creation);
         if(getIntent().hasExtra("moni-to-edit")) {
-            if(tempBar != null)
-                tempBar.setTitle(getResources().getString(R.string.title_edit_item));
+            getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_item));
             textViewTitle.setText(getResources().getString(R.string.edit_monitoring_item));
             MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
             etName.setText(extra.getName());
@@ -119,8 +116,7 @@ public class MoniItemCreationActivity extends FragmentActivity {
             else
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
         } else {
-            if(tempBar != null)
-                tempBar.setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
             textViewTitle.setText(getResources().getString(R.string.add_monitoring_item));
         }
     }

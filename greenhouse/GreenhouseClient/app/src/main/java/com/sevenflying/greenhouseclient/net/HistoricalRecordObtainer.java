@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.view.View;
@@ -9,6 +10,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -112,11 +115,15 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<Str
                 i--;
             }
         }
-        DataSet set = new DataSet(chartData, "Sensor");
-        ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+        LineDataSet set = new LineDataSet(chartData, "Sensor");
+        set.setColor(Color.GREEN);
+        set.setCircleColor(Color.GREEN);
+        set.setLineWidth(1f);
+        set.setCircleSize(5f);
+        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
         dataSets.add(set);
 
-        ChartData data = new ChartData(xValues, dataSets);
+        LineData data = new LineData(xValues, dataSets);
         chart.setData(data);
 
         layoutProgress.setVisibility(View.GONE);

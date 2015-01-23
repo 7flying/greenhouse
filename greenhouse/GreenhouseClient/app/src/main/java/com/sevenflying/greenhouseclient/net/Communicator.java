@@ -54,7 +54,7 @@ public class Communicator {
      * @param refreshRate - sensor's refresh rate
      * @param isRefreshEnsured - whether the refresh rate has to be ensured
      * @return 0 if everything went right
-     * @throws IOException
+     * @throws java.io.IOException
      * @throws ClassNotFoundException
      */
     public static int createSensor(String name, String analogDig, String pin, String type,

@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -38,6 +37,8 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
         alertView.getToggle().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(Constants.DEBUGTAG, " $[!!] AlertAdapter::onClick Launched: "
+                        + getItem(post).getSensorPinId() + ": " + getItem(post).isActive());
                 DBManager manager = new DBManager(getContext());
                 boolean enabled = manager.isEnabled(getItem(post));
                 // Swap value

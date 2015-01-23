@@ -71,7 +71,7 @@ public class DBManager extends SQLiteOpenHelper {
                 + MoniItemSensorEntry.MS_SENSOR_REF + " INTEGER NOT NULL REFERENCES "
                         + SensorEntry.TABLE_NAME + " (" + SensorEntry._ID + ") ON DELETE CASCADE,"
                 + MoniItemSensorEntry.MS_MONI_REF + " INTEGER NOT NULL REFERENCES "
-                        + MoniItemEntry.TABLE_NAME + " (" +MoniItemEntry._ID +") ON DELETE CASCADE,"
+                        + MoniItemEntry.TABLE_NAME + " (" + MoniItemEntry._ID +") ON DELETE CASCADE,"
                 + "PRIMARY KEY (" + MoniItemSensorEntry.MS_SENSOR_REF + ", "
                         + MoniItemSensorEntry.MS_MONI_REF + ")"
                 + ") "

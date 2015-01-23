@@ -1,9 +1,8 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -17,18 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
 import com.sevenflying.greenhouseclient.net.Communicator;
 
-import java.io.IOError;
-import java.io.IOException;
-
 /** This activity is used to create sensors.
  * Created by 7flying on 19/09/2014.
  */
-public class SensorCreationActivity extends FragmentActivity {
+public class SensorCreationActivity extends ActionBarActivity {
 
     private EditText etName, etPin, etRefreshRate;
     private RadioButton radioAnalog, radioDigital, radioYes, radioNo;
@@ -42,10 +37,8 @@ public class SensorCreationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar tempBar = getActionBar();
-        if(tempBar != null) {
-            tempBar.setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_sensor_creation);
 
         // Name
@@ -144,7 +137,7 @@ public class SensorCreationActivity extends FragmentActivity {
                 String type = sensorTypeArray[spinnerSelectedType].toString();
                 boolean ensureRefresh = radioYes.isChecked();
                 int result = 0;
-                if(getIntent().hasExtra("sensor-to-edit")) {
+                if (getIntent().hasExtra("sensor-to-edit")) {
                     // Handle edit sensor
                 } else {
                     try {
@@ -183,8 +176,7 @@ public class SensorCreationActivity extends FragmentActivity {
         });
         TextView tvDescription = (TextView) findViewById(R.id.title_sensor_add_edit);
         if(getIntent().hasExtra("sensor-to-edit")) {
-            if(tempBar != null)
-                tempBar.setTitle(getResources().getString(R.string.title_sensor_edition));
+            getSupportActionBar().setTitle(getResources().getString(R.string.title_sensor_edition));
             tvDescription.setText(getResources().getString(R.string.sensor_edition));
         } else {
             tvDescription.setText(getResources().getString(R.string.title_sensor_creation));
