@@ -14,17 +14,17 @@ public class Alert implements Serializable {
 	
 	private AlertType type;
 	private double compareValue;
-    private boolean active;
+    private boolean isOn;
     private String sensorPinId;
     private String sensorName;
     private SensorType sensorType;
 
-	public Alert(AlertType type, double compareValue, boolean active, String sensorPinId,
+	public Alert(AlertType type, double compareValue, boolean isOn, String sensorPinId,
            String sensorName, SensorType sensorType)
     {
 		this.type = type;
 		this.compareValue = compareValue;
-        this.active = active;
+        this.isOn = isOn;
         this.sensorPinId = sensorPinId;
         this.sensorName = sensorName;
         this.sensorType = sensorType;
@@ -34,7 +34,7 @@ public class Alert implements Serializable {
 
 	/** Checks if the Alert has to be fired */
 	public boolean isFired(double lastValue) {
-	    if(active) {
+	    if(isOn) {
             switch(type) {
                 case GREATER:
                     return (lastValue > compareValue);
@@ -128,12 +128,12 @@ public class Alert implements Serializable {
 		this.compareValue = compareValue;
 	}
 
-    public boolean isActive() {
-        return active;
+    public boolean isOn() {
+        return isOn;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setOn(boolean on) {
+        this.isOn = on;
     }
 
     public boolean equals(Object al) {
@@ -151,7 +151,7 @@ public class Alert implements Serializable {
                 Base64.DEFAULT) + ":";
         toWrite += Base64.encodeToString(Double.toString(getCompareValue()).getBytes(),
                 Base64.DEFAULT ) +":";
-        toWrite += Base64.encodeToString((isActive() ? "1" : "0").getBytes(),
+        toWrite += Base64.encodeToString((isOn() ? "1" : "0").getBytes(),
                 Base64.DEFAULT) + ":";
         toWrite += Base64.encodeToString(getSensorPinId().getBytes(),Base64.DEFAULT) + ":";
         toWrite += Base64.encodeToString(getSensorName().getBytes(), Base64.DEFAULT) + ":";
@@ -165,7 +165,7 @@ public class Alert implements Serializable {
         return "Alert{" +
                 "type=" + type +
                 ", compareValue=" + compareValue +
-                ", active=" + active +
+                ", isOn=" + isOn +
                 ", sensorPinId='" + sensorPinId + '\'' +
                 ", sensorName='" + sensorName + '\'' +
                 ", sensorType=" + sensorType +

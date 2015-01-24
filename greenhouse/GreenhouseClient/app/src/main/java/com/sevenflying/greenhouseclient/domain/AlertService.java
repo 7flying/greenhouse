@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.MainActivity;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.util.List;
 
@@ -37,11 +39,13 @@ public class AlertService extends IntentService {
     /** Checks if any alert is fired
      */
     private void checkAlerts() {
-
+        Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - launched");
         List<Alert> alerts = manager.getAlerts();
+        Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - there are " + alerts.size() + " alerts");
         int alertCount = alerts.size() - 1;
         for(Alert alert : alerts) {
-            if(alert.isActive()) {
+            if(alert.isOn()) {
+                Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - alert is active");
                 int errors = 0;
                 Exception e = null;
                 double lastValue = -1;

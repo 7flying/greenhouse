@@ -51,10 +51,10 @@ public class AlertView extends LinearLayout {
         textSensorUnit = (TextView) findViewById(R.id.alert_sensor_unit);
     }
 
-    public void setAlert(Alert alert) {
-        Log.d(Constants.DEBUGTAG, " $[!!] AlertView::set alert: " + alert.getSensorPinId() + ": " + alert.isActive());
+    public void setAlert(Alert alert, boolean enabled) {
+        Log.d(Constants.DEBUGTAG, " $[!!] AlertView::set alert: " + alert.getSensorPinId() + ": " + alert.isOn());
         toggle.setEnabled(true);
-        toggle.setChecked(alert.isActive());
+        toggle.setChecked(enabled);
         textSensorName.setText(alert.getSensorName());
         textSensorType.setText(alert.getSensorType().toString().toLowerCase());
         textAlertTypeSymbol.setText(alert.getAlertType().getSymbol());

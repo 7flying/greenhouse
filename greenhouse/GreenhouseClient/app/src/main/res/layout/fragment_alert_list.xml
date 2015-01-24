@@ -19,7 +19,7 @@
         </LinearLayout>
     <ListView
         android:id="@+id/alertsListView"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"/>

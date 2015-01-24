@@ -1,6 +1,5 @@
 package com.sevenflying.greenhouseclient.app;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -184,14 +183,14 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
             if(resultCode == Activity.RESULT_OK) {
                 Log.d(Constants.DEBUGTAG, " OnActivity result: CODE_CREATE_NEW_ALERT OK");
                 ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
-              //  tabsPaAdapter.update(2);
+                tabsPaAdapter.update(2);
             }
         } else {
             if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
                 // Callback from MoniItemCreationActivity
                 if(resultCode == Activity.RESULT_OK) {
                     ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
-                    //tabsPaAdapter.update(0);
+                    tabsPaAdapter.update(0);
                 }
 
             } else {
@@ -199,7 +198,7 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
                     // Callback from SensorCreationActivity
                     if(resultCode == Activity.RESULT_OK) {
                         ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
-                      //  tabsPaAdapter.update(1);
+                        tabsPaAdapter.update(1);
                     }
                 } else {
                     if(requestCode == Codes.CODE_EDIT_ALERT) {
@@ -207,7 +206,7 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
                         if(resultCode == Activity.RESULT_OK) {
                             Log.d(Constants.DEBUGTAG, " $ Callback of alert edit on main");
                             ActivityResultHandler.handleEditAlert(MainActivity.this, data);
-                        //    tabsPaAdapter.update(2);
+                            tabsPaAdapter.update(2);
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package com.sevenflying.greenhouseclient.app.alertstab;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -117,7 +116,7 @@ public class AlertCreationActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 Alert a = new Alert();
-                a.setActive(true);
+                a.setOn(true);
                 a.setSensorType(formattedSensorMap.get(selectedSensor).getType());
                 a.setSensorName(formattedSensorMap.get(selectedSensor).getName());
                 a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
