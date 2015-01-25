@@ -37,18 +37,18 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
         setContentView(R.layout.activity_main);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
+        tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(tabsPaAdapter);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         // Alarm manager setup
         Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, myIntent,0 );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000,30000,
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000, 30000,
                 pendingIntent);
     }
 
@@ -198,7 +198,7 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
                     // Callback from SensorCreationActivity
                     if(resultCode == Activity.RESULT_OK) {
                         ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
-                        tabsPaAdapter.update(1);
+                       tabsPaAdapter.update(1);
                     }
                 } else {
                     if(requestCode == Codes.CODE_EDIT_ALERT) {

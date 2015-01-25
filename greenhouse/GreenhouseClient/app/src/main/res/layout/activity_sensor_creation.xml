@@ -16,7 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:textColor="@color/bright_foreground_inverse_material_dark"/>
         <View
             android:id="@+id/separator_title"
             android:layout_width="match_parent"
@@ -67,6 +68,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:text="@string/sensor_type"
+                android:textColor="@color/bright_foreground_inverse_material_dark"
                 android:paddingLeft="5dp"
                 android:clickable="false"/>
             <Spinner
@@ -104,12 +106,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
+            android:textSize="15dp"
+            android:textColor="@color/bright_foreground_inverse_material_dark"
             android:text="@string/ensure_refresh"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:background="#333333"/>
         <!-- Ensure refresh -->
         <RadioGroup
             android:layout_width="fill_parent"
