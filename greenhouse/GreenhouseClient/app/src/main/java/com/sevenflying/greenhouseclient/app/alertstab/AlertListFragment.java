@@ -73,7 +73,7 @@ public class AlertListFragment extends Fragment implements Updateable {
                                                     .getActivity(), AlertCreationActivity.class);
                                             intent.putExtra("alert-to-edit",
                                                     alertList.get(listPosition));
-                                            startActivityForResult(intent, Codes.CODE_EDIT_ALERT);
+                                            getActivity().startActivityForResult(intent, Codes.CODE_EDIT_ALERT);
                                             break;
                                         case 1: // Delete
                                             manager.removeAlert(alertList.get(listPosition));
@@ -106,6 +106,8 @@ public class AlertListFragment extends Fragment implements Updateable {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(Constants.DEBUGTAG, "$ AlertListFragment::onActivityResult, requestCode:" + requestCode
+                + ", resultCode:" + resultCode + ", data:" + data.toString());
         if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {
@@ -113,16 +115,6 @@ public class AlertListFragment extends Fragment implements Updateable {
                         data, this.getActivity());
                 adapter.notifyDataSetChanged();
                 checkLayoutVisibility();
-            }
-        } else {
-            if(requestCode == Codes.CODE_EDIT_ALERT) {
-                // Callback from AlertCreationActivity on Edit mode
-                if(resultCode == Activity.RESULT_OK) {
-                    Log.d(Constants.DEBUGTAG, " $ Callback of edit alert on list activity");
-                    ActivityResultHandler.handleEditAlert(getActivity().getApplicationContext(),
-                            data);
-                    update();
-                }
             }
         }
     }

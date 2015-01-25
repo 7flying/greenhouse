@@ -180,7 +180,7 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(SensorEntry.S_LAST_VALUE, lastValue);
         values.put(SensorEntry.S_UPDATED_AT, updatedAt);
         db.update(SensorEntry.TABLE_NAME, values, SensorEntry.S_PIN_ID + " = ?",
-                new String[]{ Integer.toString(getSensorID(s.getPinId(),
+                new String[]{Integer.toString(getSensorID(s.getPinId(),
                         String.valueOf(s.getType().getIdentifier())))});
     }
 
@@ -222,7 +222,7 @@ public class DBManager extends SQLiteOpenHelper {
     private Sensor getSensorBy(String bid) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + SensorEntry.TABLE_NAME
-                             + " WHERE " + SensorEntry._ID + " = ? ", new String [] {bid});
+                + " WHERE " + SensorEntry._ID + " = ? ", new String[]{bid});
         Sensor temp = new Sensor();
         if(c.moveToFirst())
             temp = handleSensor(c);
@@ -379,6 +379,19 @@ public class DBManager extends SQLiteOpenHelper {
             Log.e(Constants.DEBUGTAG, " $ setEnabled EXCEPTION");
             e.printStackTrace();
         }
+    }
+
+    public void updateAlertCompareValue(Alert alert) {
+        int sensorID = getSensorID(alert.getSensorPinId(), String.valueOf(
+                alert.getSensorType().getIdentifier()));
+        int alertID = getAlertID(sensorID, alert.getAlertType().toString());
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AlertEntry.A_COMPARE_VALUE, alert.getCompareValue());
+        int result = db.update(AlertEntry.TABLE_NAME, values, AlertEntry._ID + " = ?",
+                new String[]{Integer.toString(alertID)});
+        if (result > 0)
+            Log.d(Constants.DEBUGTAG, " $ updatedAlertCompareValue" );
     }
 
     /** Checks if a certain alert is enabled

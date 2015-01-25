@@ -28,7 +28,6 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
     public AlertAdapter(Context context, int resource, List<Alert> list) {
         super(context, resource, list);
         this.alertList = list;
-        //this.checkState = new boolean[list.size()];
     }
 
     public View getView(final int post, View convertView, ViewGroup parent) {
@@ -44,33 +43,16 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
                 DBManager manager = new DBManager(getContext());
                 boolean previousManagerValue = getItem(post).isOn();
                 manager.setEnabled(getItem(post), !previousManagerValue);
-                /*Log.d(Constants.DEBUGTAG, " $ AlertAdapter::onClick: The manager says: enabled?: "
-                        + previousManagerValue); */
                 Log.d(Constants.DEBUGTAG, " $ AlertAdapter::onClick: The view has: enabled?: "
                         + ((ToggleButton) view).isChecked());
                 Log.d(Constants.DEBUGTAG, " $ AlertAdapter::onClick: The list has: enabled?: "
                         + alertList.get(post).isOn());
                 alertList.get(post).setOn(!previousManagerValue);
                 getItem(post).setOn(!previousManagerValue);
-
-                /*
-                boolean temp = ((ToggleButton) view).isChecked();
-                //checkState[post] = temp;
-                alertList.get(post).setOn(temp);
-                getItem(post).setOn(temp);
-                // ToggleButton button = (ToggleButton) view;
-                DBManager manager = new DBManager(getContext());
-                //boolean previous = manager.isEnabled(getItem(post));
-                //getItem(post).setOn(!previous);
-                manager.setEnabled(getItem(post), temp);
-                */
-                Toast.makeText(getContext(), "Click on item " + post +
-                                " : it has: " + ((ToggleButton) view).isChecked(),
-                        Toast.LENGTH_SHORT).show();
                 Log.d(Constants.DEBUGTAG, " $ On Alert Adapter get view, toggle button clicked");
             }
         });
-       // alertView.getToggle().setChecked(checkState[post]);
+
         DBManager manager = new DBManager(getContext());
         try {
             Log.d(Constants.DEBUGTAG, " $ alertAdapter::getView, item at post: " + post  + " -> " + getItem(post));

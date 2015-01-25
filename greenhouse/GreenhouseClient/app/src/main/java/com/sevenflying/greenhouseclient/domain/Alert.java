@@ -137,12 +137,9 @@ public class Alert implements Serializable {
     }
 
     public boolean equals(Object al) {
-		if(this.type == ((Alert) al).getAlertType() &&
+		return (this.type == ((Alert) al).getAlertType() &&
            this.sensorPinId.equals(((Alert) al ).getSensorPinId()) &&
-           this.sensorType == ((Alert) al).getSensorType())
-			return true;
-		else
-			return false;
+           this.sensorType == ((Alert) al).getSensorType());
 	}
 
     public String toStoreString() {

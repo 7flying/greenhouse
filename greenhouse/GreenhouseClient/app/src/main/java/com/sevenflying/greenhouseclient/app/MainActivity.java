@@ -52,60 +52,6 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
                 pendingIntent);
     }
 
-/*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getActionBar();
-        tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(tabsPaAdapter);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Adding Tabs
-        for(int name : tabNames)
-            actionBar.addTab(actionBar.newTab().setText(name).setTabListener(this));
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int i, float v, int i2) {}
-
-            @Override
-            public void onPageSelected(int i) {
-                actionBar.getTabAt(i).select();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {}
-        });
-
-        // Alarm manager setup
-        Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, myIntent,0 );
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000,30000,
-                pendingIntent);
-    }
-
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        // Listener to tab change event
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -178,10 +124,12 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(Constants.DEBUGTAG, "$ MainActivity::onActivityResult, requestCode:" + requestCode
+                + ", resultCode:" + resultCode + ", data:" + data.toString());
         if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {
-                Log.d(Constants.DEBUGTAG, " OnActivity result: CODE_CREATE_NEW_ALERT OK");
+                Log.d(Constants.DEBUGTAG, " MainActivity::OnActivity result: CODE_CREATE_NEW_ALERT OK");
                 ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
                 tabsPaAdapter.update(2);
             }
@@ -192,7 +140,6 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
                     ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
                     tabsPaAdapter.update(0);
                 }
-
             } else {
                 if(requestCode == Codes.CODE_NEW_SENSOR) {
                     // Callback from SensorCreationActivity
