@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /** Application's database manager.
  * Created by 7flying on 19/09/2014.
  */
@@ -28,7 +27,6 @@ public class DBManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "devGreenhouse.db";
-    private static final String TAG = "DB";
 
     public  DBManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -123,7 +121,7 @@ public class DBManager extends SQLiteOpenHelper {
         public static final String M_IS_WARNING = "iswarning";
     }
 
-    /** Class for the relationship of Sensor <---> MonitoringItem**/
+    /** Class for the relationship of Sensor <---> MonitoringItem **/
     public static abstract class MoniItemSensorEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "MoniSensors";
@@ -134,7 +132,7 @@ public class DBManager extends SQLiteOpenHelper {
     /** Adds a Sensor to the manager. Discarded if repeated.
      * @param s - sensor to add    */
     public synchronized void addSensor(Sensor s) {
-        Log.v(TAG, " $ addSensor " + s.toString());
+        Log.v(Constants.DEBUGTAG, " $ addSensor " + s.toString());
         if(getSensorID(s.getPinId(), String.valueOf(s.getType().getIdentifier())) == -1) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -171,6 +169,11 @@ public class DBManager extends SQLiteOpenHelper {
         return temp;
     }
 
+    /** Updates the last value of a sensor
+     * @param s - sensor to update
+     * @param lastValue - last known value
+     * @param updatedAt - when it was updated
+     */
     public synchronized void updateSensor(Sensor s, double lastValue, String updatedAt) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -218,7 +221,8 @@ public class DBManager extends SQLiteOpenHelper {
 
     public Sensor getSensorBy(String bid) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Sensors WHERE _ID = ? ", new String [] {bid});
+        Cursor c = db.rawQuery("SELECT * FROM " + SensorEntry.TABLE_NAME
+                             + " WHERE " + SensorEntry._ID + " = ? ", new String [] {bid});
         Sensor temp = new Sensor();
         if(c.moveToFirst())
             temp = handleSensor(c);
@@ -229,13 +233,14 @@ public class DBManager extends SQLiteOpenHelper {
 
     private int getSensorID(String pinId, String type) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT _ID FROM Sensors WHERE pinid = ? AND type = ?",
-                new String [] { pinId, type});
+        Cursor c = db.rawQuery("SELECT _ID FROM " + SensorEntry.TABLE_NAME
+                             + " WHERE " + SensorEntry.S_PIN_ID + " = ? AND "
+                             +  SensorEntry.S_TYPE + " = ?",  new String [] { pinId, type});
         int ret = -1;
-        if(c.moveToFirst())
+        if (c.moveToFirst())
            ret = c.getInt(c.getColumnIndex(SensorEntry._ID));
         c.close();
-        Log.d(Constants.DEBUGTAG, " $ sensorId " + ret);
+        Log.d(Constants.DEBUGTAG, " $ sensorId: " + ret);
         return ret;
     }
 
@@ -246,6 +251,20 @@ public class DBManager extends SQLiteOpenHelper {
         for(Sensor s : getSensors())
             ret.put(s.getName() + " (" + s.getPinId() + ") " + s.getType().toString(), s);
         Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map:" + ret.toString());
+        return ret;
+    }
+
+    private int getAlertID(int sensorId, String alertType) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT _ID FROM " + AlertEntry.TABLE_NAME
+                             + " WHERE " + AlertEntry.A_SENSOR_REF + " = ? AND "
+                             + AlertEntry.A_TYPE + " = ?", new String[]{ Integer.toString(sensorId),
+                                                                         alertType});
+        int ret = -1;
+        if (c.moveToFirst())
+            ret = c.getInt(c.getColumnIndex(AlertEntry._ID));
+        c.close();
+        Log.d(Constants.DEBUGTAG, " $ alertId: " + ret);
         return ret;
     }
 
@@ -268,7 +287,7 @@ public class DBManager extends SQLiteOpenHelper {
     /** Removes and alert from the Manager.
      * @param a - Alert to remove
      */
-    public synchronized  void removeAlert(Alert a) {
+    public synchronized void removeAlert(Alert a) {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = AlertEntry.A_SENSOR_REF + " = ? AND " + AlertEntry.A_TYPE + " = ?";
         String[] selectionArgs = {
@@ -286,9 +305,7 @@ public class DBManager extends SQLiteOpenHelper {
      * @param alertType - alert type
      * @return true if it has
      */
-    public boolean hasAlertsCreatedFrom(String pinId, SensorType sensorType,
-                                                     AlertType alertType)
-    {
+    public boolean hasAlertsCreatedFrom(String pinId, SensorType sensorType, AlertType alertType) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Alerts WHERE sensorid = ? AND type = ? ",
                 new String[]{
@@ -303,7 +320,6 @@ public class DBManager extends SQLiteOpenHelper {
         Log.d(Constants.DEBUGTAG, " $ hasAlertsCreatedFrom  ret:" + ret);
        return ret > 0;
     }
-
 
     /** Returns a list of the stored alerts.
      * @return list containing the alerts
@@ -324,6 +340,7 @@ public class DBManager extends SQLiteOpenHelper {
                     temp.setSensorName(s.getName());
                     temp.setSensorPinId(s.getPinId());
                     temp.setSensorType(s.getType());
+                    Log.d(Constants.DEBUGTAG, " $ getAlerts, sensor:" + s.toString());
                     ret.add(temp);
                 }catch(Exception e) { e.printStackTrace();}
             } while(c.moveToNext());
@@ -341,49 +358,66 @@ public class DBManager extends SQLiteOpenHelper {
      * @param enabled - status to put
      */
     public synchronized void setEnabled(Alert alert, boolean enabled) {
-        /*
         Log.d(Constants.DEBUGTAG, " $ setEnabled " + alert.toString() + " : to " + enabled );
+        int sensorID = getSensorID(alert.getSensorPinId(), String.valueOf(
+                                    alert.getSensorType().getIdentifier()));
+        int alertID = getAlertID(sensorID, alert.getAlertType().toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(AlertEntry.A_ACTIVE, enabled);
+        int result = db.update(AlertEntry.TABLE_NAME, values, AlertEntry._ID + " = ?",
+                new String[]{Integer.toString(alertID)});
+        /*
         int result = db.update(AlertEntry.TABLE_NAME, values, AlertEntry.A_SENSOR_REF + " = ? AND "
                 + AlertEntry.A_TYPE + "= ?", new String[] {
                 Integer.toString(getSensorID(alert.getSensorPinId(),
                                              Character.toString(alert.getSensorType().getIdentifier()))),
                 alert.getAlertType().toString()});
-        Log.d(Constants.DEBUGTAG, " $ setEnabled db result: " + result );
-       */
-        removeAlert(alert);
-        alert.setOn(enabled);
-        addAlert(alert);
-
-        /*
-        Log.d(Constants.DEBUGTAG, " $ setEnabled read has:      " + after);
-        if (enabled == after)
-            Log.d(Constants.DEBUGTAG, " $ setEnabled SUCCESSFUL");
-        else
-            Log.e(Constants.DEBUGTAG, " $ setEnabled ERROR");
         */
+        Log.d(Constants.DEBUGTAG, " $ setEnabled db result: " + result );
+        try {
+            boolean after = isEnabled(alert);
+            Log.d(Constants.DEBUGTAG, " $ setEnabled read has:      " + after);
+            if (enabled == after)
+                Log.d(Constants.DEBUGTAG, " $ setEnabled SUCCESSFUL");
+            else
+                Log.e(Constants.DEBUGTAG, " $ setEnabled ERROR");
+        } catch (Exception e) {
+            Log.e(Constants.DEBUGTAG, " $ setEnabled EXCEPTION");
+            e.printStackTrace();
+        }
     }
 
     /** Checks if a certain alert is enabled
      * @param alert - alert to check
      * @return true/false
-
-    public boolean isEnabled(Alert alert) {
+     */
+    public boolean isEnabled(Alert alert) throws Exception{
         boolean ret = false;
+        Log.d(Constants.DEBUGTAG, " $ request isEnabled,  alert:" + alert.toString());
+        int sensorID = getSensorID(alert.getSensorPinId(), String.valueOf(
+                alert.getSensorType().getIdentifier()));
+        int alertID = getAlertID(sensorID, alert.getAlertType().toString());
         SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + AlertEntry.TABLE_NAME + " WHERE "
+                             + AlertEntry._ID + " = ?", new String[]{Integer.toString(alertID)});
+
+        /*
         Cursor c = db.rawQuery("SELECT * FROM " + AlertEntry.TABLE_NAME + " WHERE " +
                 AlertEntry.A_SENSOR_REF + " = ? AND " + AlertEntry.A_TYPE + " = ?",
                 new String[] { Character.toString(alert.getSensorType().getIdentifier()),
                         alert.getAlertType().toString() });
+        */
         if (c.moveToFirst()) {
             ret = Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE)));
+            Log.d(Constants.DEBUGTAG, " $ isEnabled " + alert.toString() + "? :" + ret );
+            c.close();
+        } else{
+            c.close();
+            throw new Exception("Couldn't get the alert's status");
         }
-        Log.d(Constants.DEBUGTAG, " $ isEnabled " + alert.toString() + "? :" + ret );
-        c.close();
         return ret;
-    }*/
+    }
 
     private List<Sensor> getSensorsFromMoniItem(String id) {
         SQLiteDatabase db = this.getReadableDatabase();

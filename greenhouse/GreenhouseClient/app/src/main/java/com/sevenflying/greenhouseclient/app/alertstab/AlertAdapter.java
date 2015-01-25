@@ -72,7 +72,15 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
         });
        // alertView.getToggle().setChecked(checkState[post]);
         DBManager manager = new DBManager(getContext());
-        alertView.setAlert(getItem(post), getItem(post).isOn());
+        try {
+            Log.d(Constants.DEBUGTAG, " $ alertAdapter::getView, item at post: " + post  + " -> " + getItem(post));
+            boolean isOn = manager.isEnabled(getItem(post));
+            alertView.setAlert(getItem(post), isOn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         return  alertView;
     }
 
