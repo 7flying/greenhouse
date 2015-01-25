@@ -219,7 +219,7 @@ public class DBManager extends SQLiteOpenHelper {
         return temp;
     }
 
-    public Sensor getSensorBy(String bid) {
+    private Sensor getSensorBy(String bid) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + SensorEntry.TABLE_NAME
                              + " WHERE " + SensorEntry._ID + " = ? ", new String [] {bid});
@@ -364,16 +364,9 @@ public class DBManager extends SQLiteOpenHelper {
         int alertID = getAlertID(sensorID, alert.getAlertType().toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(AlertEntry.A_ACTIVE, enabled);
+        values.put(AlertEntry.A_ACTIVE, Boolean.toString(enabled));
         int result = db.update(AlertEntry.TABLE_NAME, values, AlertEntry._ID + " = ?",
                 new String[]{Integer.toString(alertID)});
-        /*
-        int result = db.update(AlertEntry.TABLE_NAME, values, AlertEntry.A_SENSOR_REF + " = ? AND "
-                + AlertEntry.A_TYPE + "= ?", new String[] {
-                Integer.toString(getSensorID(alert.getSensorPinId(),
-                                             Character.toString(alert.getSensorType().getIdentifier()))),
-                alert.getAlertType().toString()});
-        */
         Log.d(Constants.DEBUGTAG, " $ setEnabled db result: " + result );
         try {
             boolean after = isEnabled(alert);
@@ -401,19 +394,18 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + AlertEntry.TABLE_NAME + " WHERE "
                              + AlertEntry._ID + " = ?", new String[]{Integer.toString(alertID)});
-
-        /*
-        Cursor c = db.rawQuery("SELECT * FROM " + AlertEntry.TABLE_NAME + " WHERE " +
-                AlertEntry.A_SENSOR_REF + " = ? AND " + AlertEntry.A_TYPE + " = ?",
-                new String[] { Character.toString(alert.getSensorType().getIdentifier()),
-                        alert.getAlertType().toString() });
-        */
         if (c.moveToFirst()) {
-            ret = Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE)));
-            Log.d(Constants.DEBUGTAG, " $ isEnabled " + alert.toString() + "? :" + ret );
+            Alert temp = new Alert();
+            temp.setAlertType(AlertType.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_TYPE))));
+            temp.setCompareValue(c.getDouble(c.getColumnIndex(AlertEntry.A_COMPARE_VALUE)));
+            temp.setOn(Boolean.valueOf(c.getString(c.getColumnIndex(AlertEntry.A_ACTIVE))));
+            Log.d(Constants.DEBUGTAG, " $ isEnabled, ret alert (sensor omitted): " + temp.toString());
+            ret = temp.isOn();
+            Log.d(Constants.DEBUGTAG, " $ isEnabled " + temp.toString() + "? :" + ret );
             c.close();
         } else{
             c.close();
+            Log.e(Constants.DEBUGTAG, " $ isEnabled: Couldn't get the alert's status");
             throw new Exception("Couldn't get the alert's status");
         }
         return ret;
@@ -516,5 +508,4 @@ public class DBManager extends SQLiteOpenHelper {
         db.delete(MoniItemEntry.TABLE_NAME, selection, new String[] { name });
         Log.d(Constants.DEBUGTAG, " $ deteteMoniItem  arg:" + name);
     }
-
 }
