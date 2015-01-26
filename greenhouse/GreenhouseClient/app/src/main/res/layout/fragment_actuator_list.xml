@@ -2,13 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1a6a6a">
-
-    <TextView android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="To  do"
-        android:textSize="20dp"
-        android:layout_centerInParent="true"/>
+    android:orientation="vertical">
+    <ListView
+        android:id="@+id/list_actuators"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"/>
 </RelativeLayout>

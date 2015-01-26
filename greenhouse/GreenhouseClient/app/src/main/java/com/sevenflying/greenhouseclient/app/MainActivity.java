@@ -26,7 +26,7 @@ import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 
-public class MainActivity extends ActionBarActivity {//FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends ActionBarActivity {
 
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPaAdapter;
@@ -113,10 +113,11 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
                         });
                 builder.show();
                 return true;
-            case R.id.action_add_item:
+           /* case R.id.action_add_item:
                 startActivityForResult(new Intent(MainActivity.this,
                         MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
                 return true;
+           */
             default:
                 return super.onOptionsItemSelected(item);
         }

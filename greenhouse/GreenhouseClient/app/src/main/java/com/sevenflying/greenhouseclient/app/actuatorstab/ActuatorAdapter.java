@@ -1,4 +1,4 @@
-package com.sevenflying.greenhouseclient.app.statustab;
+package com.sevenflying.greenhouseclient.app.actuatorstab;
 
 import android.content.Context;
 import android.view.View;

@@ -18,41 +18,28 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
-import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** This fragment shows the status of the items that are monitored
- *  and the actuators that can be applied.
+/** This fragment shows the status of the items that are monitored.
  * Created by 7flying on 25/06/2014.
  */
 public class StatusFragment extends Fragment implements Updateable {
 
     private List<MonitoringItem> monitoringItems;
-    private List<Actuator> actuators;
     private DBManager manager;
-    private ActuatorAdapter actuatorAdapter;
+
     private MonitoringItemAdapter moniAdapter;
-    private ListView moniList, actuatorList;
+    private ListView moniList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
             return null;
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
-            actuatorList = (ListView) view.findViewById(R.id.list_actuators);
             moniList = (ListView) view.findViewById(R.id.list_items);
-
-            actuators = new ArrayList<Actuator>();
-            for(int i = 0 ; i < 3; i++){
-                Actuator a = new Actuator("Water pump " + i, "D0" + i);
-                actuators.add(a);
-            }
-             actuatorAdapter = new ActuatorAdapter(getActivity(),
-                    R.layout.actuator_row, actuators);
-            actuatorList.setAdapter(actuatorAdapter);
 
             monitoringItems = new ArrayList<MonitoringItem>();
             manager = new DBManager(getActivity().getApplicationContext());
@@ -116,7 +103,7 @@ public class StatusFragment extends Fragment implements Updateable {
             if(resultCode == Activity.RESULT_OK) {
                 ActivityResultHandler.handleCreateNewMoniItem(getActivity().getApplicationContext(),
                         data);
-                actuatorAdapter.notifyDataSetChanged();
+                moniAdapter.notifyDataSetChanged();
             }
         } else {
             if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
@@ -135,10 +122,5 @@ public class StatusFragment extends Fragment implements Updateable {
                 monitoringItems);
         moniList.setAdapter(moniAdapter);
         moniAdapter.notifyDataSetChanged();
-        // Actuators
-        // actuatorList = manager.getActuators();
-        actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuators);
-        actuatorList.setAdapter(actuatorAdapter);
-        actuatorAdapter.notifyDataSetChanged();
     }
 }
