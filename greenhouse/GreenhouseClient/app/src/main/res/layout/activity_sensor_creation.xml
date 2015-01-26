@@ -1,150 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="10dp">
-    <LinearLayout
+    android:layout_height="match_parent">
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <!-- Title-->
-        <TextView
-            android:id="@+id/title_sensor_add_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:textSize="15sp"
-            android:textColor="@color/bright_foreground_inverse_material_dark"/>
-        <View
-            android:id="@+id/separator_title"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:background="#333333"/>
-        <!-- Name -->
-        <EditText
-            android:id="@+id/et_sensor_name"
-            android:hint="@string/name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_vertical" />
-        <!-- Type: analog-digital -->
-        <RadioGroup
-            android:id="@+id/rgroupAD"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:layout_weight="2">
-            <RadioButton
-                android:layout_weight="1"
-                android:id="@+id/radio_analog"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/radio_analog"
-                android:checked="true"/>
-            <RadioButton
-                android:layout_weight="1"
-                android:id="@+id/radio_digital"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_digital"/>
-        </RadioGroup>
-        <!-- Sensor type -->
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp">
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:text="@string/sensor_type"
-                android:textColor="@color/bright_foreground_inverse_material_dark"
-                android:paddingLeft="5dp"
-                android:clickable="false"/>
-            <Spinner
-                android:id="@+id/sensor_type_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"/>
-        </LinearLayout>
-        <!-- Pin -->
-        <EditText
-            android:id="@+id/et_pin_number"
-            android:hint="@string/pin"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            android:inputType="number"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_vertical"/>
-        <!-- Refresh rate -->
-        <EditText
-            android:id="@+id/et_refresh_rate"
-            android:hint="@string/refresh_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            android:inputType="numberDecimal"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_vertical"/>
-        <!-- Ensure refresh title-->
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:textSize="15dp"
-            android:textColor="@color/bright_foreground_inverse_material_dark"
-            android:text="@string/ensure_refresh"/>
-        <!-- Ensure refresh -->
-        <RadioGroup
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:layout_weight="2">
-            <RadioButton
-                android:layout_weight="1"
-                android:id="@+id/radio_yes"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/yes"
-                android:checked="true"/>
-            <RadioButton
-                android:layout_weight="1"
-                android:id="@+id/radio_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no"/>
-        </RadioGroup>
-        <!-- Buttons-->
-        <LinearLayout
-            android:layout_marginTop="10dp"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-            <Button android:id="@+id/button_create_sensor"
-                android:text="@string/button_save"
-                android:layout_weight="1"
+            <!-- Title-->
+            <TextView
+                android:id="@+id/title_sensor_add_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:textSize="15sp"
+                android:textColor="@color/bright_foreground_inverse_material_dark"/>
+            <View
+                android:id="@+id/separator_title"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:background="#333333"/>
+            <!-- Name -->
+            <EditText
+                android:id="@+id/et_sensor_name"
+                android:hint="@string/name"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"/>
-            <Button android:id="@+id/button_cancel_sensor"
-                android:text="@string/button_cancel_alarm_creation_delete"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical" />
+            <!-- Type: analog-digital -->
+            <RadioGroup
+                android:id="@+id/rgroupAD"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_weight="2">
+                <RadioButton
+                    android:layout_weight="1"
+                    android:id="@+id/radio_analog"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/radio_analog"
+                    android:checked="true"/>
+                <RadioButton
+                    android:layout_weight="1"
+                    android:id="@+id/radio_digital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_digital"/>
+            </RadioGroup>
+            <!-- Sensor type -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/sensor_type"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:paddingLeft="5dp"
+                    android:clickable="false"/>
+                <Spinner
+                    android:id="@+id/sensor_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+            <!-- Pin -->
+            <EditText
+                android:id="@+id/et_pin_number"
+                android:hint="@string/pin"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"/>
+            <!-- Refresh rate -->
+            <EditText
+                android:id="@+id/et_refresh_rate"
+                android:hint="@string/refresh_rate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:inputType="numberDecimal"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"/>
+            <!-- Ensure refresh title-->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:textSize="15dp"
+                android:textColor="@color/bright_foreground_inverse_material_dark"
+                android:text="@string/ensure_refresh"/>
+            <!-- Ensure refresh -->
+            <RadioGroup
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_weight="2">
+                <RadioButton
+                    android:layout_weight="1"
+                    android:id="@+id/radio_yes"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/yes"
+                    android:checked="true"/>
+                <RadioButton
+                    android:layout_weight="1"
+                    android:id="@+id/radio_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no"/>
+            </RadioGroup>
+
         </LinearLayout>
+        </ScrollView>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <Button android:id="@+id/button_create_sensor"
+            android:textColor="@color/switch_thumb_normal_material_dark"
+            android:text="@string/button_save"
+            android:background="@color/material_deep_teal_200"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
-</ScrollView>
+</RelativeLayout>

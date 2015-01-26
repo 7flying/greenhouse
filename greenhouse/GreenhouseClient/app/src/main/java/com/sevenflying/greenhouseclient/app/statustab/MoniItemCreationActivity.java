@@ -11,6 +11,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,11 +48,13 @@ public class MoniItemCreationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().show();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_mon_item_creation);
         buttonCreate = (Button) findViewById(R.id.button_create);
         buttonCreate.setEnabled(false);
+        buttonCreate.setTextColor(getResources().getColor(
+                R.color.switch_thumb_normal_material_dark));
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +80,15 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         etName.addTextChangedListener(new TextWatcher() {
             // Check data
             public void afterTextChanged(Editable editable) {
-                  buttonCreate.setEnabled(etName.getText().length() > 0);
+                if (etName.getText().length() > 0) {
+                    buttonCreate.setEnabled(true);
+                    buttonCreate.setTextColor(getResources().getColor(
+                            R.color.bright_foreground_inverse_material_dark));
+                } else {
+                    buttonCreate.setEnabled(false);
+                    buttonCreate.setTextColor(getResources().getColor(
+                            R.color.switch_thumb_normal_material_dark));
+                }
             }
 
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
@@ -164,6 +176,22 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_basic_cancel, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /** Generates a unique file name.

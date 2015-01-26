@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity {//FragmentActivity implemen
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(Constants.DEBUGTAG, "$ MainActivity::onActivityResult, requestCode:" + requestCode
-                + ", resultCode:" + resultCode + ", data:" + data.toString());
+                + ", resultCode:" + resultCode);
         if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
             // Callback from AlertCreationActivity
             if(resultCode == Activity.RESULT_OK) {

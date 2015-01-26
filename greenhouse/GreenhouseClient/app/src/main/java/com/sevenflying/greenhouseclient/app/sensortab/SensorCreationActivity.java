@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,7 +39,7 @@ public class SensorCreationActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_sensor_creation);
 
@@ -50,7 +52,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                if(editable.toString() != null)
                    if(editable.length() > 0)
                        validated[0] = true;
-               buttonCreate.setEnabled(validated());
+               setButton(buttonCreate);
             }
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3){}
@@ -74,7 +76,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                     temp = e;
                 }
                 validated[1] = (temp == null);
-                buttonCreate.setEnabled(validated());
+                setButton(buttonCreate);
             }
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3){}
@@ -109,7 +111,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                     temp = e;
                 }
                 validated[2] = (temp == null);
-                buttonCreate.setEnabled(validated());
+                setButton(buttonCreate);
             }
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3){}
@@ -119,17 +121,9 @@ public class SensorCreationActivity extends ActionBarActivity {
         // Ensure refresh
         radioYes = (RadioButton) findViewById(R.id.radio_yes);
         radioNo = (RadioButton) findViewById(R.id.radio_no);
-        // Button cancel
-        Button buttonCancel = (Button) findViewById(R.id.button_cancel_sensor);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         // Button ok
         buttonCreate = (Button) findViewById(R.id.button_create_sensor);
-        buttonCreate.setEnabled(validated());
+        setButton(buttonCreate);
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,7 +178,35 @@ public class SensorCreationActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_basic_cancel, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private boolean validated() {
         return  validated[0] && validated[1] && validated[2];
+    }
+
+    private void setButton(Button b) {
+        if (validated()){
+            buttonCreate.setEnabled(true);
+            buttonCreate.setTextColor(getResources().getColor(
+                    R.color.bright_foreground_inverse_material_dark));
+        } else {
+            buttonCreate.setEnabled(false);
+            buttonCreate.setTextColor(getResources().getColor(
+                    R.color.switch_thumb_normal_material_dark));
+        }
     }
 }

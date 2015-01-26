@@ -2,6 +2,8 @@ package com.sevenflying.greenhouseclient.app.sensortab;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,7 +14,6 @@ import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.HistoricalRecordObtainer;
 
-
 /** Activity to show further info about a sensor.
  * Created by 7flying on 13/07/2014.
  */
@@ -20,7 +21,7 @@ public class SensorStatusActivity extends ActionBarActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         setContentView(R.layout.activity_sensor_status);
@@ -88,4 +89,10 @@ public class SensorStatusActivity extends ActionBarActivity {
         chart.setPinchZoom(false);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_sensor_fragment, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 }

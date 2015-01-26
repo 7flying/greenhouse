@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,7 +47,7 @@ public class AlertCreationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_alert_creation);
         formattedSensorMap = new DBManager(getApplicationContext()).getFormattedSensors();
@@ -102,6 +104,10 @@ public class AlertCreationActivity extends ActionBarActivity {
                     exception = e;
                 }
                 buttonCreate.setEnabled((exception == null));
+                if (exception == null)
+                    buttonCreate.setTextColor(getResources().getColor(R.color.bright_foreground_inverse_material_dark));
+                else
+                    buttonCreate.setTextColor(getResources().getColor(R.color.switch_thumb_normal_material_dark));
             }
 
             @Override
@@ -152,13 +158,21 @@ public class AlertCreationActivity extends ActionBarActivity {
             if(getSupportActionBar() != null)
                 getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
+    }
 
-        Button buttonCancel = (Button) findViewById(R.id.button_cancel_alert);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_basic_cancel, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
                 finish();
-            }
-        });
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

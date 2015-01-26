@@ -2,139 +2,127 @@
 
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
-    <TextView
-        android:id="@+id/alert_creation_editing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:paddingLeft="5dp"/>
-    <View
-        android:id="@+id/separator"
-        android:layout_below="@id/alert_creation_editing"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="#333333"/>
-    <TableLayout
-        android:id="@+id/table"
-        android:layout_below="@id/separator"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:layout_marginTop="10dp">
-
-    <!-- Row select sensor -->
-    <TableRow
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/data"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:paddingLeft="6dp">
+        android:orientation="vertical">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="@string/select_sensor_spinner"
-            android:clickable="false" />
-        <Spinner
-            android:id="@+id/sensor_list_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
-    </TableRow>
-    <!-- Row alert type-->
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:paddingLeft="6dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="@string/alert_type_spinner"
-            android:clickable="false" />
-        <Spinner
-            android:id="@+id/alert_type_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
-    </TableRow>
-    <!-- Row value -->
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:paddingLeft="6dp"
-        android:weightSum="2">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1.2"
-            android:layout_gravity="center_vertical"
-            android:text="@string/alert_fired_on_value"
-            android:clickable="false"/>
-        <EditText
-            android:id="@+id/edit_alert_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:inputType="numberDecimal"
-            android:hint=""/>
-        <TextView
-            android:id="@+id/next_to_edit_alert_value_shows_unit"
+            android:textColor="@color/bright_foreground_inverse_material_dark"
+            android:id="@+id/alert_creation_editing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="0.3"/>
-    </TableRow>
-    <TableRow
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingLeft="5dp"/>
+        <View
+            android:id="@+id/separator"
+            android:textColor="@color/bright_foreground_inverse_material_dark"
+            android:layout_below="@id/alert_creation_editing"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#333333"/>
+        <TableLayout
+            android:id="@+id/table"
+            android:layout_below="@id/separator"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="10dp">
+
+            <!-- Row select sensor -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:paddingLeft="6dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:text="@string/select_sensor_spinner"
+                    android:clickable="false" />
+                <Spinner
+                    android:id="@+id/sensor_list_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"/>
+            </TableRow>
+            <!-- Row alert type-->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:paddingLeft="6dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:text="@string/alert_type_spinner"
+                    android:clickable="false" />
+                <Spinner
+                    android:id="@+id/alert_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"/>
+            </TableRow>
+            <!-- Row value -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:paddingLeft="6dp"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_weight="1.2"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:text="@string/alert_fired_on_value"
+                    android:clickable="false"/>
+                <EditText
+                    android:id="@+id/edit_alert_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:inputType="numberDecimal"
+                    android:hint=""/>
+                <TextView
+                    android:id="@+id/next_to_edit_alert_value_shows_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_weight="0.3"/>
+            </TableRow>
+        </TableLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:paddingLeft="6dp">
+        android:layout_height="wrap_content">
         <Button android:id="@+id/button_create_alert"
+            android:textColor="@color/switch_thumb_normal_material_dark"
             android:text="@string/button_save"
-            android:layout_weight="1"/>
-        <Button android:id="@+id/button_cancel_alert"
-            android:text="@string/button_cancel_alarm_creation_delete"
-            android:layout_weight="1"/>
-    </TableRow>
-    </TableLayout>
-    <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layout_weight="2"
-        android:layout_below="@id/table">
-        <RadioButton
-            android:layout_weight="1"
-            android:id="@+id/radio_on"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text=""
-            android:checked="true"/>
-        <RadioButton
-            android:layout_weight="1"
-            android:id="@+id/radio_off"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""/>
-    </RadioGroup>
-
+            android:background="@color/material_deep_teal_200"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </RelativeLayout>
