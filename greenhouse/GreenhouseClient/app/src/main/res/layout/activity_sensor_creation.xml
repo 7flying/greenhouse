@@ -15,20 +15,6 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-            <!-- Title-->
-            <TextView
-                android:id="@+id/title_sensor_add_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:textSize="15sp"
-                android:textColor="@color/bright_foreground_inverse_material_dark"/>
-            <View
-                android:id="@+id/separator_title"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:background="#333333"/>
             <!-- Name -->
             <EditText
                 android:id="@+id/et_sensor_name"
@@ -46,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:layout_weight="2">
+                android:layout_weight="2"
+                android:layout_marginBottom="5dp">
                 <RadioButton
                     android:layout_weight="1"
                     android:id="@+id/radio_analog"
@@ -104,7 +91,8 @@
                 android:textSize="14sp"
                 android:inputType="numberDecimal"
                 android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="5dp"/>
             <!-- Ensure refresh title-->
             <TextView
                 android:layout_marginTop="10dp"

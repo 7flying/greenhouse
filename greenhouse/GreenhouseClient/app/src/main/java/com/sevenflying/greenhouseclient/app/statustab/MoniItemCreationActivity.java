@@ -116,11 +116,9 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         adapter = new SensorCheckAdapter(getApplicationContext(), R.layout.sensor_check_row,
                 sensorList);
         listViewSensos.setAdapter(adapter);
-        TextView textViewTitle = (TextView) findViewById(R.id.title_moni_item_creation);
         if(getIntent().hasExtra("moni-to-edit")) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_item));
-            textViewTitle.setText(getResources().getString(R.string.edit_monitoring_item));
-            MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
+             MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
             etName.setText(extra.getName());
             etName.setEnabled(false);
             if(extra.getPhotoPath() != null)
@@ -129,7 +127,6 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
         } else {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-            textViewTitle.setText(getResources().getString(R.string.add_monitoring_item));
         }
     }
 

@@ -26,19 +26,10 @@
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
-    <ImageButton
-        android:id="@+id/button_edit"
-        android:src="@drawable/ic_action_edit"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/content_description_image"
-        android:layout_alignParentTop="true" />
     <TextView
         android:id="@+id/tv_attached_sensors"
         android:text="@string/attached_sensors"
+        android:textColor="@color/bright_foreground_inverse_material_dark"
         android:layout_below="@id/layout_image_name"
         android:paddingLeft="5dp"
         android:layout_marginTop="10dp"
@@ -48,6 +39,7 @@
         android:id="@+id/separator_data"
         android:layout_below="@id/tv_attached_sensors"
         android:layout_width="match_parent"
+        android:textColor="@color/bright_foreground_inverse_material_dark"
         android:layout_height="1dp"
         android:layout_marginTop="4dp"
         android:background="#333333"/>

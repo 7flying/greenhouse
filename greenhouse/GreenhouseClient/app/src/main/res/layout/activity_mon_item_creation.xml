@@ -7,7 +7,7 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp">
@@ -15,17 +15,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/title_moni_item_creation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"/>
-            <View
-                android:id="@+id/separator_title"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:background="#333333"/>
             <!-- Name -->
             <EditText
                 android:id="@+id/et_moni_name"
@@ -40,6 +29,7 @@
             <TextView
                 android:id="@+id/title_add_image"
                 android:text="@string/add_image"
+                android:textColor="@color/bright_foreground_inverse_material_dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -108,6 +98,7 @@
         <TextView
             android:id="@+id/title_add_sensors"
             android:text="@string/add_sensors"
+            android:textColor="@color/bright_foreground_inverse_material_dark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

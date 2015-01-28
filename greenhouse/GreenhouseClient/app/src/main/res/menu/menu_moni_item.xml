@@ -6,8 +6,8 @@
         android:icon="@drawable/ic_action_cancel"
         android:title="@string/abc_toolbar_collapse_description"
         app:showAsAction="always"/>
-    <item android:id="@+id/action_refresh"
-        android:title="@string/action_refresh"
-        android:icon="@drawable/ic_action_refresh"
+    <item android:id="@+id/action_edit"
+        android:title="@string/item_edited"
+        android:icon="@drawable/ic_action_edit"
         app:showAsAction="ifRoom"/>
 </menu>

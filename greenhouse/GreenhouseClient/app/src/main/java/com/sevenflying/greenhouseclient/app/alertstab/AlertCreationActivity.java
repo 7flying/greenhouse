@@ -137,8 +137,7 @@ public class AlertCreationActivity extends ActionBarActivity {
             }
         });
 
-        TextView tvDescription = (TextView) findViewById(R.id.alert_creation_editing);
-        if(getIntent().hasExtra("alert-to-edit")) {
+       if(getIntent().hasExtra("alert-to-edit")) {
             if(getSupportActionBar() != null)
                 getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_alert));
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
@@ -150,11 +149,7 @@ public class AlertCreationActivity extends ActionBarActivity {
             sensorListSpinner.setEnabled(false);
             alertTypeSpinner.setSelection(a.getAlertType().getIndex());
             alertTypeSpinner.setEnabled(false);
-            // set description text as "editing"
-            tvDescription.setText(getResources().getString(R.string.edit_alert));
         } else {
-            // set description text as "creation"
-            tvDescription.setText(getResources().getString(R.string.add_alert));
             if(getSupportActionBar() != null)
                 getSupportActionBar().setDisplayShowTitleEnabled(true);
         }

@@ -168,14 +168,9 @@ public class SensorCreationActivity extends ActionBarActivity {
                 finish();
             }
         });
-        TextView tvDescription = (TextView) findViewById(R.id.title_sensor_add_edit);
-        if(getIntent().hasExtra("sensor-to-edit")) {
+        if(getIntent().hasExtra("sensor-to-edit"))
             getSupportActionBar().setTitle(getResources().getString(R.string.title_sensor_edition));
-            tvDescription.setText(getResources().getString(R.string.sensor_edition));
-        } else {
-            tvDescription.setText(getResources().getString(R.string.title_sensor_creation));
-            tvDescription.setText(getResources().getString(R.string.sensor_creation));
-        }
+
     }
 
     @Override

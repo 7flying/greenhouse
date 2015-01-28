@@ -27,7 +27,7 @@ public class SensorStatusActivity extends ActionBarActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         setContentView(R.layout.activity_sensor_status);
@@ -94,6 +94,9 @@ public class SensorStatusActivity extends ActionBarActivity {
             case R.id.action_refresh:
                 getHistoricalData();
                 break;
+            case R.id.action_cancel:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,6 +105,6 @@ public class SensorStatusActivity extends ActionBarActivity {
         HistoricalRecordObtainer hro = new HistoricalRecordObtainer(currentSensor.getPinId(),
                 String.valueOf(currentSensor.getType().getIdentifier()),
                 chart, layoutProgress, layoutChart);
-        hro.execute();
+    //    hro.execute();
     }
 }

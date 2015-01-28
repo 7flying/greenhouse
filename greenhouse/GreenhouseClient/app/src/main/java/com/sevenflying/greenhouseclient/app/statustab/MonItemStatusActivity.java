@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -38,7 +41,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_mon_item_status);
         imageMonitoring = (ImageView) findViewById(R.id.image_monitoring);
@@ -58,17 +61,6 @@ public class MonItemStatusActivity extends ActionBarActivity {
             sensorList.addAll(extraInput.getAttachedSensors());
             adapter.notifyDataSetInvalidated();
         }
-        ImageButton buttonEdit = (ImageButton) findViewById(R.id.button_edit);
-        buttonEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MonItemStatusActivity.this,
-                        MoniItemCreationActivity.class);
-                intent.putExtra("moni-to-edit", extraInput);
-                startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
-            }
-        });
-
         moniAttachedSensors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // Display sensor data on new Activity
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
@@ -106,5 +98,27 @@ public class MonItemStatusActivity extends ActionBarActivity {
                 }
             }
         }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_moni_item, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                Intent intent = new Intent(MonItemStatusActivity.this,
+                        MoniItemCreationActivity.class);
+                intent.putExtra("moni-to-edit", extraInput);
+                startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
+                break;
+            case R.id.action_cancel:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

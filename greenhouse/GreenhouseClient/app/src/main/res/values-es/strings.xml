@@ -78,7 +78,7 @@
     <string name="xml_sensor_seconds_word">secs</string>
     <string name="xml_sensor_sensor_word">sensor</string>
     <string name="xml_sensor_type">Tipo:</string>
-    <string name="xml_sensor_updated_word">Actualziado:</string>
+    <string name="xml_sensor_updated_word">Actualizado:</string>
     <string name="yes">Sí, por favor</string>
     <string name="sensor">Sensor</string>
     <string name="sensor_deleted">Sensor borrado.</string>
