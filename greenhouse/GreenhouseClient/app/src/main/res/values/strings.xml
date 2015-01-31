@@ -24,7 +24,7 @@
     <string name="title_edit_alert">Edit alert</string>
     <string name="title_sensor_status">Sensor\'s info</string>
     <string name="title_sensor_creation">Create sensor</string>
-    <string name="title_sensor_edit">Edit sensor</string>
+    <string name="title_sensor_edition">Edit sensor</string>
     <string name="title_item_status">Item\'s info</string>
     <string name="title_settings">Settings</string>
     <string name="title_about">About</string>
