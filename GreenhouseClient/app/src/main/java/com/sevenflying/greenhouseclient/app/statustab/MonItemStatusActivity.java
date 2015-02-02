@@ -87,7 +87,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
                     adapter.notifyDataSetChanged();
                     moniName.setText(itemEdited.getName());
                     DBManager manager = new DBManager(getApplicationContext());
-                    manager.deleteItem(itemEdited.getName());
+                    manager.deleteItem(itemEdited.getId());
                     manager.addItem(itemEdited);
                     if(itemEdited.getPhotoPath() != null)
                         imageMonitoring.setImageBitmap(BitmapFactory.

@@ -1,5 +1,6 @@
 package com.sevenflying.server.net;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -101,9 +102,12 @@ public class NetServer {
 
 	/** Processes GETSENSORS command. Get the last values of all sensors 
 	 * @return a list with the last values
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 * @throws IOException 
 	 */
 	private void getSensorValues(ObjectInputStream ois, ObjectOutputStream oos)
-	throws Exception
+			throws ClassNotFoundException, SQLException, IOException
 	{
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
