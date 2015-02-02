@@ -120,7 +120,7 @@
     <string name="prefs_insert_server_ip">Insert server\'s ip</string>
     <string name="prefs_serverport">Port</string>
     <string name="prefs_insert_server_port">Insert server\'s port</string>
-    <string name="prefs_server_ip_default">192.168.1.12</string>
+    <string name="prefs_server_ip_default">192.168.1.57</string>
     <string name="prefs_server_port_default">5432</string>
 
 </resources>

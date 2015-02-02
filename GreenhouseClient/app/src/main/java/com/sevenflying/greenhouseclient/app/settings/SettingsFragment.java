@@ -3,6 +3,7 @@ package com.sevenflying.greenhouseclient.app.settings;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
 import com.sevenflying.greenhouseclient.app.R;
 
@@ -20,6 +21,8 @@ public class SettingsFragment extends PreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        PreferenceManager.setDefaultValues(this.getActivity().getApplicationContext(),
+                   R.xml.preferences, false);
       }
 
     @Override
