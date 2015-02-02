@@ -449,9 +449,11 @@ public class DBManager extends SQLiteOpenHelper {
                 temp.setPhotoPath(c.getString(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
                 temp.setWarningEnabled(Boolean.valueOf(c.getString(
                         c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
-                for (Sensor sensor : getSensorsFromMoniItem(Integer.toString(temp.getId())))
+                for (Sensor sensor : getSensorsFromMoniItem(Integer.toString(temp.getId()))) {
                     temp.addSensor(sensor);
-
+                    Log.d(Constants.DEBUGTAG, " $ getMonitoringItems adding sensor: "
+                            + sensor.toString());
+                }
                 ret.add(temp);
             } while(c.moveToNext());
         }
@@ -460,15 +462,17 @@ public class DBManager extends SQLiteOpenHelper {
         return ret;
     }
 
-    private List<Sensor> getSensorsFromMoniItem(String id) {
+    private List<Sensor> getSensorsFromMoniItem(String moniId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + MoniItemSensorEntry.TABLE_NAME + " WHERE "
-                + MoniItemSensorEntry.MS_MONI_REF + " = ?", new String [] {id});
+                + MoniItemSensorEntry.MS_MONI_REF + " = ?", new String [] {moniId});
         List<Sensor> ret = new ArrayList<Sensor>();
         if(c.moveToFirst()) {
             do {
-                Sensor temp = getSensorBy(Integer.toString(c.getInt(c.getColumnIndex(
-                        MoniItemSensorEntry.MS_SENSOR_REF))));
+                String sensorId = Integer.toString(c.getInt(c.getColumnIndex(
+                        MoniItemSensorEntry.MS_SENSOR_REF)));
+                Log.d(Constants.DEBUGTAG, " $ getSensorsFromMoniItem  sensorId: " + sensorId);
+                Sensor temp = getSensorBy(sensorId);
                 Log.d(Constants.DEBUGTAG, " $ getSensorsFromMoniItem  arg:" + temp.toString());
                 ret.add(temp);
             } while(c.moveToNext());
@@ -478,15 +482,27 @@ public class DBManager extends SQLiteOpenHelper {
         return ret;
     }
 
+    private int getMoniItemIdBy(String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + MoniItemEntry.TABLE_NAME + " WHERE "
+            + MoniItemEntry.M_NAME + " = ?", new String[]{name.trim()});
+        int ret = -1;
+        if (c.moveToFirst())
+            ret = c.getInt(c.getColumnIndex(MoniItemEntry._ID));
+        c.close();
+        return ret;
+    }
+
     /** Adds a MonitoringItem to the manager.
      * @param item - item to add     */
     public synchronized void addItem(MonitoringItem item) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MoniItemEntry.M_NAME, item.getName());
+        values.put(MoniItemEntry.M_NAME, item.getName().trim());
         values.put(MoniItemEntry.M_PHOTO_PATH, item.getPhotoPath());
         values.put(MoniItemEntry.M_IS_WARNING, Boolean.toString(item.isWarningEnabled()));
         db.insert(MoniItemEntry.TABLE_NAME, null, values);
+        item.setId(getMoniItemIdBy(item.getName()));
         Log.d(Constants.DEBUGTAG, " $ addItem arg:" + item.toString());
         for(Sensor s : item.getAttachedSensors())
             addSensorToMoni(item, s);

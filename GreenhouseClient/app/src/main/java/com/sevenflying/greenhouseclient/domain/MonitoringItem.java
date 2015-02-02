@@ -113,4 +113,16 @@ public class MonitoringItem implements Serializable {
         return (id == that.id);
     }
 
+    @Override
+    public String toString() {
+        return "MonitoringItem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", attachedSensors=" + attachedSensors +
+                ", icon=" + icon +
+                ", warningIcon=" + warningIcon +
+                ", photoPath='" + photoPath + '\'' +
+                ", isWarningEnabled=" + isWarningEnabled +
+                '}';
+    }
 }
