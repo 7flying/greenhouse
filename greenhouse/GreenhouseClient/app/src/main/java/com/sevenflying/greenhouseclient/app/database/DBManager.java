@@ -129,6 +129,8 @@ public class DBManager extends SQLiteOpenHelper {
         public static final String MS_MONI_REF = "monitemid";
     }
 
+    // -- Sensors ---
+
     /** Adds a Sensor to the manager. Discarded if repeated.
      * @param s - sensor to add    */
     public synchronized void addSensor(Sensor s) {
@@ -209,7 +211,7 @@ public class DBManager extends SQLiteOpenHelper {
     public Sensor getSensorBy(String pinId, String type) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Sensors WHERE pinid = ? AND TYPE = ?",
-                new String [] { pinId, type});
+                new String[]{pinId, type});
 
         Sensor temp = new Sensor();
         if(c.moveToFirst())
@@ -253,6 +255,8 @@ public class DBManager extends SQLiteOpenHelper {
         Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map:" + ret.toString());
         return ret;
     }
+
+    // --- Alerts ---
 
     private int getAlertID(int sensorId, String alertType) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -360,7 +364,7 @@ public class DBManager extends SQLiteOpenHelper {
     public synchronized void setEnabled(Alert alert, boolean enabled) {
         Log.d(Constants.DEBUGTAG, " $ setEnabled " + alert.toString() + " : to " + enabled );
         int sensorID = getSensorID(alert.getSensorPinId(), String.valueOf(
-                                    alert.getSensorType().getIdentifier()));
+                alert.getSensorType().getIdentifier()));
         int alertID = getAlertID(sensorID, alert.getAlertType().toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -381,6 +385,9 @@ public class DBManager extends SQLiteOpenHelper {
         }
     }
 
+    /** Updates the given alert's compare value
+     * @param alert - alert to update with the new compare value
+     */
     public void updateAlertCompareValue(Alert alert) {
         int sensorID = getSensorID(alert.getSensorPinId(), String.valueOf(
                 alert.getSensorType().getIdentifier()));
@@ -391,7 +398,9 @@ public class DBManager extends SQLiteOpenHelper {
         int result = db.update(AlertEntry.TABLE_NAME, values, AlertEntry._ID + " = ?",
                 new String[]{Integer.toString(alertID)});
         if (result > 0)
-            Log.d(Constants.DEBUGTAG, " $ updatedAlertCompareValue" );
+            Log.d(Constants.DEBUGTAG, " $ updated: Alert CompareValue" );
+        else
+            Log.e(Constants.DEBUGTAG, " $ NOT updated: Alert CompareValue" );
     }
 
     /** Checks if a certain alert is enabled
@@ -424,9 +433,37 @@ public class DBManager extends SQLiteOpenHelper {
         return ret;
     }
 
+    // --- Monitoring Items ---
+
+    /** Retrieves all the items.
+     * @return list with all the monitoring items.     */
+    public List<MonitoringItem> getItems() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + MoniItemEntry.TABLE_NAME, new String [] {});
+        List<MonitoringItem> ret = new ArrayList<MonitoringItem>();
+        if(c.moveToFirst()) {
+            do {
+                MonitoringItem temp = new MonitoringItem(c.getString
+                        (c.getColumnIndex(MoniItemEntry.M_NAME)));
+                temp.setId(c.getInt(c.getColumnIndex(MoniItemEntry._ID)));
+                temp.setPhotoPath(c.getString(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
+                temp.setWarningEnabled(Boolean.valueOf(c.getString(
+                        c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
+                for (Sensor sensor : getSensorsFromMoniItem(Integer.toString(temp.getId())))
+                    temp.addSensor(sensor);
+
+                ret.add(temp);
+            } while(c.moveToNext());
+        }
+        c.close();
+        Log.d(Constants.DEBUGTAG, " $ getMonitoringItems  ret:" + ret.size());
+        return ret;
+    }
+
     private List<Sensor> getSensorsFromMoniItem(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM MoniSensors WHERE monitemid = ?", new String [] {id});
+        Cursor c = db.rawQuery("SELECT * FROM " + MoniItemSensorEntry.TABLE_NAME + " WHERE "
+                + MoniItemSensorEntry.MS_MONI_REF + " = ?", new String [] {id});
         List<Sensor> ret = new ArrayList<Sensor>();
         if(c.moveToFirst()) {
             do {
@@ -441,42 +478,6 @@ public class DBManager extends SQLiteOpenHelper {
         return ret;
     }
 
-    /** Retrieves all the items.
-     * @return list with all the monitoring items.     */
-    public List<MonitoringItem> getItems() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Monitems", new String [] {});
-        List<MonitoringItem> ret = new ArrayList<MonitoringItem>();
-        if(c.moveToFirst()) {
-            do {
-                MonitoringItem temp = new MonitoringItem(c.getString
-                        (c.getColumnIndex(MoniItemEntry.M_NAME)));
-                temp.setPhotoPath(c.getString(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
-                temp.setWarningEnabled(Boolean.valueOf(c.getString(
-                        c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
-                String moniId = c.getString(c.getColumnIndex(MoniItemEntry._ID));
-                for(Sensor sensor : getSensorsFromMoniItem(moniId)) {
-                    temp.addSensor(sensor);
-                }
-                ret.add(temp);
-            } while(c.moveToNext());
-        }
-        c.close();
-        Log.d(Constants.DEBUGTAG, " $ getMonitoringItems  ret:" + ret.size());
-        return ret;
-    }
-
-    private String getMoniItemId(String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Monitems WHERE name = ?", new String [] {name});
-        String ret = null;
-        if(c.moveToFirst())
-            ret = Integer.toString(c.getInt(c.getColumnIndex(MoniItemEntry._ID)));
-        c.close();
-        Log.d(Constants.DEBUGTAG, " $ getMoniItemId  ret:" + ret);
-        return ret;
-    }
-
     /** Adds a MonitoringItem to the manager.
      * @param item - item to add     */
     public synchronized void addItem(MonitoringItem item) {
@@ -484,7 +485,7 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(MoniItemEntry.M_NAME, item.getName());
         values.put(MoniItemEntry.M_PHOTO_PATH, item.getPhotoPath());
-        values.put(MoniItemEntry.M_IS_WARNING, item.isWarningEnabled());
+        values.put(MoniItemEntry.M_IS_WARNING, Boolean.toString(item.isWarningEnabled()));
         db.insert(MoniItemEntry.TABLE_NAME, null, values);
         Log.d(Constants.DEBUGTAG, " $ addItem arg:" + item.toString());
         for(Sensor s : item.getAttachedSensors())
@@ -498,7 +499,7 @@ public class DBManager extends SQLiteOpenHelper {
     public synchronized void addSensorToMoni(MonitoringItem item, Sensor sensor) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MoniItemSensorEntry.MS_MONI_REF, getMoniItemId(item.getName()));
+        values.put(MoniItemSensorEntry.MS_MONI_REF, item.getId());
         values.put(MoniItemSensorEntry.MS_SENSOR_REF, getSensorID(sensor.getPinId(),
                 String.valueOf(sensor.getType().getIdentifier())));
         db.insert(MoniItemSensorEntry.TABLE_NAME, null, values);
@@ -509,16 +510,47 @@ public class DBManager extends SQLiteOpenHelper {
      * @param item - to delete
      */
     public synchronized void deleteItem(MonitoringItem item) {
-        deleteItem(item.getName());
+        deleteItem(item.getId());
     }
 
     /** Deletes a monitoring item
-     * @param name - name of the monitoring item to delete
+     * @param id - id of the monitoring item to delete
      */
-    public synchronized void deleteItem(String name) {
+    public synchronized void deleteItem(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String selection = MoniItemEntry.M_NAME + " = ? ";
-        db.delete(MoniItemEntry.TABLE_NAME, selection, new String[] { name });
-        Log.d(Constants.DEBUGTAG, " $ deteteMoniItem  arg:" + name);
+        String selection = MoniItemEntry._ID + " = ? ";
+        db.delete(MoniItemEntry.TABLE_NAME, selection, new String[] {Integer.toString(id)});
+        Log.d(Constants.DEBUGTAG, " $ deteteMoniItem  arg:" + id);
+    }
+
+    /** Sets the warning to the requested status
+     * @param enabled
+     * @param monitoringItem
+     */
+    public void setWarning(boolean enabled, MonitoringItem monitoringItem) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MoniItemEntry.M_IS_WARNING, Boolean.toString(enabled));
+        int result = db.update(MoniItemEntry.TABLE_NAME, values, MoniItemEntry._ID + " = ?",
+                new String[] {Integer.toString(monitoringItem.getId())});
+        if (result > 0)
+            Log.d(Constants.DEBUGTAG, "$ updated: MoniItem warningStatus");
+        else
+            Log.e(Constants.DEBUGTAG, "$ NOT updated: MoniItem warningStatus");
+    }
+
+    /** Checks if a MonitoringItem's warning is enabled
+     * @param item - item to check
+     * @return true or false
+     */
+    public boolean isWarningEnabled(MonitoringItem item) {
+        boolean ret = false;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + MoniItemEntry.TABLE_NAME + " WHERE "
+            + MoniItemEntry._ID + " = ?", new String[] {Integer.toString(item.getId())});
+        if (c.moveToFirst())
+            ret = Boolean.valueOf(c.getString(c.getColumnIndex(MoniItemEntry.M_IS_WARNING)));
+        c.close();
+        return ret;
     }
 }

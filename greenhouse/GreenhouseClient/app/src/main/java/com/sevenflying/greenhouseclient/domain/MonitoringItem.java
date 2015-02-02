@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class MonitoringItem implements Serializable {
 
+    private int id;
     private String name;
     private Map<String, Sensor> attachedSensors; // key: pinId + type
     private int icon, warningIcon;
@@ -25,8 +26,16 @@ public class MonitoringItem implements Serializable {
         attachedSensors = new HashMap<String, Sensor>();
         icon = R.drawable.ic_leaf_green;
         warningIcon = R.drawable.ic_warning_orange;
-        isWarningEnabled = false;
+        isWarningEnabled = true;
         photoPath = null;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public void setName(String name) {
@@ -101,8 +110,7 @@ public class MonitoringItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MonitoringItem that = (MonitoringItem) o;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return true;
+        return (id == that.id);
     }
 
 }

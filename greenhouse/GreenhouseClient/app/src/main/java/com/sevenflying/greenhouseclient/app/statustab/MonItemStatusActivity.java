@@ -33,7 +33,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
 
     private List<Sensor> sensorList;
     private MonitoringItem extraInput = null;
-    private ImageView imageMonitoring;
+    private ImageView imageMonitoring, imageWarning;
     private TextView moniName;
     private SensorAdapter adapter;
 
@@ -45,6 +45,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_mon_item_status);
         imageMonitoring = (ImageView) findViewById(R.id.image_monitoring);
+        imageWarning = (ImageView) findViewById(R.id.image_warning);
         moniName = (TextView) findViewById(R.id.tv_moni_name);
         ListView moniAttachedSensors = (ListView) findViewById(R.id.list_attached_sensors);
         sensorList = new ArrayList<Sensor>();
@@ -57,6 +58,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
             else
                 imageMonitoring.setImageDrawable(getResources()
                         .getDrawable(R.drawable.ic_leaf_green));
+
             moniName.setText(extraInput.getName());
             sensorList.addAll(extraInput.getAttachedSensors());
             adapter.notifyDataSetInvalidated();

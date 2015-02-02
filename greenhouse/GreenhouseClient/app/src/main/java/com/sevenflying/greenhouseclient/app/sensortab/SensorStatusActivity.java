@@ -43,7 +43,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         layoutProgress = (LinearLayout) findViewById(R.id.layout_progress);
         layoutChart = (LinearLayout) findViewById(R.id.layout_chart);
 
-        chart = (LineChart) findViewById(R.id.chart);
+
         // Set data
         if(getIntent().hasExtra("sensor")) {
             currentSensor = (Sensor) getIntent().getSerializableExtra("sensor");
@@ -57,7 +57,7 @@ public class SensorStatusActivity extends ActionBarActivity {
             textSensorPin.setText(currentSensor.getPinId());
             getHistoricalData();
         }
-
+        chart = (LineChart) findViewById(R.id.chart);
         // if enabled, the chart will always start at zero on the y-axis
         chart.setStartAtZero(false);
         // disable the drawing of values into the chart
@@ -105,6 +105,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         HistoricalRecordObtainer hro = new HistoricalRecordObtainer(currentSensor.getPinId(),
                 String.valueOf(currentSensor.getType().getIdentifier()),
                 chart, layoutProgress, layoutChart);
-    //    hro.execute();
+        // TODO: it seems that there is a known crash for "width and height must be > 0 error"
+        // hro.execute();
     }
 }

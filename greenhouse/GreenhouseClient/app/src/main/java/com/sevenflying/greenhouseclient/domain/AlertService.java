@@ -44,6 +44,7 @@ public class AlertService extends IntentService {
         Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - there are " + alerts.size() + " alerts");
         int alertCount = alerts.size() - 1;
         for(Alert alert : alerts) {
+            Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts() - alert: " + alert.toString());
             if(alert.isOn()) {
                 Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - alert is active");
                 int errors = 0;
@@ -53,6 +54,8 @@ public class AlertService extends IntentService {
                     try {
                         lastValue = Communicator.getLastValue(alert.getSensorPinId(),
                                 Character.valueOf(alert.getSensorType().getIdentifier()).toString());
+                        Log.d(Constants.DEBUGTAG,"(AlertService.checkAlerts() - alert's sensor " +
+                            "last value: " + lastValue);
                         e = null;
                     } catch (Exception ex) {
                         e = ex;
@@ -60,6 +63,7 @@ public class AlertService extends IntentService {
                     }
                 } while(e != null && errors < 3);
                 if(alert.isFired(lastValue)) {
+                    Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts() - alert is fired");
                     sendNotification(alert, lastValue, alertCount);
                     setWarning(alert.getSensorPinId(),
                             String.valueOf(alert.getSensorType().getIdentifier()));

@@ -103,19 +103,20 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<Str
 
     @Override
     protected void onPostExecute(List<Map<String, Float>> stringFloatMapList) {
-        ArrayList<Entry> chartData = new ArrayList<Entry>();
+        ArrayList<Entry> yValues = new ArrayList<Entry>();
         ArrayList<String> xValues = new ArrayList<String>();
         // The data has to be ordered in reverse order, from past to present and it's received
         // the other way around
         int i = stringFloatMapList.size() - 1;
         for(Map<String, Float> stringFloatMap : stringFloatMapList) {
             for(String key : stringFloatMap.keySet()) {
+
                 xValues.add((String) stringFloatMapList.get(i).keySet().toArray()[0]);
-                chartData.add(new Entry( stringFloatMap.get(key), i));
+                yValues.add(new Entry(stringFloatMap.get(key), i));
                 i--;
             }
         }
-        LineDataSet set = new LineDataSet(chartData, "Sensor");
+        LineDataSet set = new LineDataSet(yValues, "Sensor");
         set.setColor(Color.GREEN);
         set.setCircleColor(Color.GREEN);
         set.setLineWidth(1f);

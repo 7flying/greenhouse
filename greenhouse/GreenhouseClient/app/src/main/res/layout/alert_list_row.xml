@@ -41,13 +41,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:layout_marginLeft="2dp"/>
+            android:layout_marginLeft="10dp"/>
         <TextView
             android:id="@+id/alert_sensor_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:layout_marginLeft="2dp"/>
+            android:layout_marginLeft="10dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -57,7 +57,7 @@
                 android:id="@+id/button_on_off"
                 android:layout_width="wrap_content"
                 android:layout_height="40sp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:focusable="false"/>
             <!--android:focusable="false" : Great magic!! -->
          </LinearLayout>
