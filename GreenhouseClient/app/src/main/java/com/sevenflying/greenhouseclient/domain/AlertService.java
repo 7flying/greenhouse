@@ -46,6 +46,7 @@ public class AlertService extends IntentService {
         for(Alert alert : alerts) {
             Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts() - alert: " + alert.toString());
             if(alert.isOn()) {
+                // Get the latest value from the server
                 Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - alert is active");
                 int errors = 0;
                 Exception e = null;
@@ -63,12 +64,18 @@ public class AlertService extends IntentService {
                         errors++;
                     }
                 } while(e != null && errors < 3);
-                if(alert.isFired(lastValue)) {
+                boolean setWarning = alert.isFired(lastValue);
+                // update the warning: set active or remove
+                setWarning(setWarning, alert.getSensorPinId(),
+                        String.valueOf(alert.getSensorType().getIdentifier()));
+                if (setWarning) {
                     Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts() - alert is fired");
                     sendNotification(alert, lastValue, alertCount);
-                    setWarning(alert.getSensorPinId(),
-                            String.valueOf(alert.getSensorType().getIdentifier()));
                 }
+            } else {
+                // If the alert has been switched off remove warnings (if present)
+                setWarning(false, alert.getSensorPinId(),
+                        String.valueOf(alert.getSensorType().getIdentifier()));
             }
             alertCount--;
         }
@@ -108,16 +115,15 @@ public class AlertService extends IntentService {
     }
 
     /** Marks all the monitoring items with an alert
+     * @param active -  set the warning active or not
      * @param sensorPinId - pin id of the sensor that fired the alert
      * @param sensorType - type of the sensor that fired the alert
      */
-    private void setWarning(String sensorPinId, String sensorType){
+    private void setWarning(boolean active, String sensorPinId, String sensorType){
         List<MonitoringItem> listItems = manager.getItems();
         for(MonitoringItem item : listItems) {
-            if(!item.isWarningEnabled()) {
-                if(item.getSensorByKey(sensorPinId + sensorType) != null)
-                    item.setWarningEnabled(true);
-            }
+            if(item.getSensorByKey(sensorPinId + sensorType) != null)
+                manager.setWarning(active, item);
         }
     }
 }

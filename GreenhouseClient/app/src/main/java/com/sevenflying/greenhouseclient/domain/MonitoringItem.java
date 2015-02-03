@@ -26,7 +26,7 @@ public class MonitoringItem implements Serializable {
         attachedSensors = new HashMap<String, Sensor>();
         icon = R.drawable.ic_leaf_green;
         warningIcon = R.drawable.ic_warning_orange;
-        isWarningEnabled = true;
+        isWarningEnabled = false;
         photoPath = null;
     }
 
