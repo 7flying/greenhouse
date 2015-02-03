@@ -31,8 +31,10 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     private LinearLayout layoutCharge, layoutNoConnection;
     private Exception exception;
     private Context context;
-    private  DBManager manager;
-
+    private DBManager manager;
+    private Communicator comm;
+    private String host;
+    private int serverPort;
 
     public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layoutCharge,
            LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
@@ -43,9 +45,12 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
         exception = null;
         this.buffer = buffer;
         this.context = context;
+        this.comm = new Communicator(context);
     }
 
     protected void onPreExecute() {
+        serverPort = comm.getServerPort();
+        host = comm.getServer();
         layoutNoConnection.setVisibility(View.GONE);
         layoutCharge.setVisibility(View.VISIBLE);
         manager= new DBManager(context);
@@ -57,8 +62,9 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
 
         List<Sensor> ret = new ArrayList<Sensor>();
         try {
-            InetAddress add = InetAddress.getByName(Constants.serverIP);
-            Socket s = new Socket(add, Constants.serverPort);
+            InetAddress add = InetAddress.getByName(host);
+            Socket s = new Socket(add, serverPort);
+
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             oos.writeObject(Commands.GETSENSORS);

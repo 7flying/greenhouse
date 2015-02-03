@@ -5,10 +5,7 @@ package com.sevenflying.greenhouseclient.net;
  */
 public class Constants {
 
-    public static final String serverIP = "192.168.1.57";
-    public static final int serverPort = 5432;
     public static final String OK = "OK\n";
-
 
     public static final String DEBUGTAG = "GREEN_HOUSE";
 }

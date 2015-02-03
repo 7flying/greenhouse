@@ -104,7 +104,7 @@ public class SensorStatusActivity extends ActionBarActivity {
     private void getHistoricalData() {
         HistoricalRecordObtainer hro = new HistoricalRecordObtainer(currentSensor.getPinId(),
                 String.valueOf(currentSensor.getType().getIdentifier()),
-                chart, layoutProgress, layoutChart);
+                chart, layoutProgress, layoutChart, getApplicationContext());
         // TODO: it seems that there is a known crash for "width and height must be > 0 error"
         // hro.execute();
     }

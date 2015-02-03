@@ -73,12 +73,14 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                         case 1: // Delete
                                             int result = 0;
                                             try {
-                                                result = Communicator.deleteSensor(
+                                                Communicator com = new Communicator(getActivity()
+                                                        .getApplicationContext());
+                                                result = com.deleteSensor(
                                                         sensorList.get(listPosition).getPinId(),
                                                         Character.toString(sensorList.get(
                                                                 listPosition).getType()
                                                                 .getIdentifier()));
-                                            }catch (Exception e) {
+                                            } catch (Exception e) {
                                                 e.printStackTrace();
                                                 result = -1;
                                             }

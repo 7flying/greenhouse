@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Base64;
@@ -7,8 +8,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -35,19 +34,25 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<Str
     // Chart to set the values onto
     private LineChart chart;
     private LinearLayout layoutProgress, layoutChart;
+    private Communicator comm;
+    private String serverIP;
+    private int serverPort;
 
     public HistoricalRecordObtainer(String pinId, String senType, LineChart chart,
-           LinearLayout layoutProgress, LinearLayout layoutChart)
+           LinearLayout layoutProgress, LinearLayout layoutChart, Context context)
     {
         this.pinId = pinId;
         this.senType = senType;
         this.chart = chart;
         this.layoutProgress = layoutProgress;
         this.layoutChart = layoutChart;
+        this.comm = new Communicator(context);
     }
 
     @Override
     protected void onPreExecute() {
+        this.serverIP = comm.getServer();
+        this.serverPort = comm.getServerPort();
         layoutChart.setVisibility(View.GONE);
         layoutProgress.setVisibility(View.VISIBLE);
     }
@@ -56,8 +61,8 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<Str
     protected List<Map<String, Float>> doInBackground(Void... voids) {
         List<Map<String, Float>> ret = new ArrayList<Map<String, Float>>();
         try {
-            InetAddress add = InetAddress.getByName(Constants.serverIP);
-            Socket s = new Socket(add, Constants.serverPort);
+            InetAddress add = InetAddress.getByName(serverIP);
+            Socket s = new Socket(add, serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             oos.writeObject(Commands.HISTORY);

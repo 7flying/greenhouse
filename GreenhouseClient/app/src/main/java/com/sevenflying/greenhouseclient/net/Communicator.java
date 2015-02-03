@@ -1,7 +1,13 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
+
+
+import com.sevenflying.greenhouseclient.app.settings.SettingsFragment;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,6 +21,26 @@ import java.net.UnknownHostException;
  */
 public class Communicator {
 
+    private SharedPreferences prefs;
+    private Context context;
+
+    public Communicator(Context context) {
+        this.context = context;
+        this.prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+    }
+
+    public String getServer() {
+        String ip = prefs.getString(SettingsFragment.PREF_SERVER_IP, "");
+        Log.d(Constants.DEBUGTAG, "$ Communicator - ip: " + ip);
+        return ip;
+    }
+
+    public int getServerPort() {
+        int port = Integer.valueOf(prefs.getString(SettingsFragment.PREF_SERVER_PORT, ""));
+        Log.d(Constants.DEBUGTAG, "$ Communicator - port: " + port);
+        return  port;
+    }
+
     /** Gets the sensor's last value from the server.
      * @param sensorPinId - sensor's pin id
      * @param sensorType - sensor's type
@@ -22,13 +48,15 @@ public class Communicator {
      * @throws java.io.IOException
      * @throws ClassNotFoundException
      */
-    public static double getLastValue(String sensorPinId, String sensorType)
+    public double getLastValue(String sensorPinId, String sensorType)
             throws ClassNotFoundException, IOException
     {
         double lastValue = -3;
         try {
-            InetAddress add = InetAddress.getByName(Constants.serverIP);
-            Socket s = new Socket(add, Constants.serverPort);
+           // InetAddress add = InetAddress.getByName(Constants.serverIP);
+           // Socket s = new Socket(add, Constants.serverPort);
+            InetAddress add = InetAddress.getByName(getServer());
+            Socket s = new Socket(add, getServerPort());
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             oos.writeObject(Commands.CHECK);
@@ -57,7 +85,7 @@ public class Communicator {
      * @throws java.io.IOException
      * @throws ClassNotFoundException
      */
-    public static int createSensor(String name, String analogDig, String pin, String type,
+    public int createSensor(String name, String analogDig, String pin, String type,
         String refreshRate, boolean isRefreshEnsured) throws IOException, ClassNotFoundException
     {
         Log.d("COMMUNICATOR", "At communicator");
@@ -65,7 +93,7 @@ public class Communicator {
             pin = "0" + pin;
         String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
-        SensorCreationTask task = new SensorCreationTask();
+        SensorCreationTask task = new SensorCreationTask(context);
         Integer ret = -1;
         try {
             ret = task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured)
@@ -85,7 +113,7 @@ public class Communicator {
      * @param isRefreshEnsured - whether the refresh rate has to be ensured
      * @return 0 if everything went right
      */
-    public static int modificateSensor(String name, String analogDig, String pin, String type,
+    public int modificateSensor(String name, String analogDig, String pin, String type,
         String refreshRate, boolean isRefreshEnsured)
     {
         if(pin.length() == 1)
@@ -93,7 +121,7 @@ public class Communicator {
         String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
         Integer ret = -1;
-        SensorModificationTask task = new SensorModificationTask();
+        SensorModificationTask task = new SensorModificationTask(context);
         try {
             ret = task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured)
                     .get();
@@ -108,8 +136,8 @@ public class Communicator {
      * @param type - - sensor's type
      * @return -1 if error
      */
-    public static int deleteSensor(String pinID, String type) {
-        SensorRemovalTask task = new SensorRemovalTask();
+    public int deleteSensor(String pinID, String type) {
+        SensorRemovalTask task = new SensorRemovalTask(context);
         Integer ret = -1;
         try {
            ret = task.execute(pinID, type).get();

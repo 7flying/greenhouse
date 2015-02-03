@@ -135,7 +135,8 @@ public class SensorCreationActivity extends ActionBarActivity {
                     // Handle edit sensor
                 } else {
                     try {
-                        result = Communicator.createSensor(
+                        Communicator comm = new Communicator(getApplicationContext());
+                        result = comm.createSensor(
                                 etName.getText().toString(),
                                 analogDig,
                                 etPin.getText().toString(),

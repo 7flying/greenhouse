@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.io.ObjectInputStream;
@@ -12,6 +13,20 @@ import java.net.Socket;
  */
 public class SensorRemovalTask extends AsyncTask<String, Void, Integer> {
 
+    private Communicator comm;
+    private String serverIP;
+    private int serverPort;
+
+    public SensorRemovalTask(Context context) {
+        this.comm = new Communicator(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        this.serverPort = comm.getServerPort();
+        this.serverIP = comm.getServer();
+    }
+
     @Override
     protected Integer doInBackground(String... strings) {
         // String pinId: 0
@@ -20,8 +35,8 @@ public class SensorRemovalTask extends AsyncTask<String, Void, Integer> {
             return -1;
         Integer ret = -1;
         try {
-            InetAddress add = InetAddress.getByName(Constants.serverIP);
-            Socket s = new Socket(add, Constants.serverPort);
+            InetAddress add = InetAddress.getByName(serverIP);
+            Socket s = new Socket(add, serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             oos.writeObject(Commands.DELETE);
