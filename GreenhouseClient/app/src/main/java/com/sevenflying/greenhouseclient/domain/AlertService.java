@@ -81,7 +81,7 @@ public class AlertService extends IntentService {
         }
     }
 
-    /**Sends an "alert is fired" notification
+    /** Sends an "alert is fired" notification
      * @param alert - alert that is fired
      * @param lastValue - last value of the sensor that fired the alert
      * @param notifyId - notification id, different values trigger different notifications, the same

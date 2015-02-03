@@ -89,7 +89,7 @@ public class StatusFragment extends Fragment implements Updateable {
                             });
                     AlertDialog dialog = builder.create();
                     dialog.show();
-                    return false;
+                    return true;
                 }
             });
             return view;
