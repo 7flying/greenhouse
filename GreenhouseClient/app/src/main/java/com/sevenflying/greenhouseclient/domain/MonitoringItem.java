@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class MonitoringItem implements Serializable {
 
-    private int id;
+    private int id = -1;
     private String name;
     private Map<String, Sensor> attachedSensors; // key: pinId + type
     private int icon, warningIcon;
@@ -53,6 +53,10 @@ public class MonitoringItem implements Serializable {
 
     public List<Sensor> getAttachedSensors(){
         return new ArrayList<Sensor>(attachedSensors.values());
+    }
+
+    public void clearSensors() {
+        attachedSensors.clear();
     }
 
     public boolean hasSensorAttached(String key) {

@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
-
 import com.sevenflying.greenhouseclient.app.settings.SettingsFragment;
 
 import java.io.IOException;
@@ -30,13 +29,13 @@ public class Communicator {
     }
 
     public String getServer() {
-        String ip = prefs.getString(SettingsFragment.PREF_SERVER_IP, "");
+        String ip = prefs.getString(SettingsFragment.PREF_SERVER_IP, "192.168.1.57");
         Log.d(Constants.DEBUGTAG, "$ Communicator - ip: " + ip);
         return ip;
     }
 
     public int getServerPort() {
-        int port = Integer.valueOf(prefs.getString(SettingsFragment.PREF_SERVER_PORT, ""));
+        int port = Integer.valueOf(prefs.getString(SettingsFragment.PREF_SERVER_PORT, "5432"));
         Log.d(Constants.DEBUGTAG, "$ Communicator - port: " + port);
         return  port;
     }

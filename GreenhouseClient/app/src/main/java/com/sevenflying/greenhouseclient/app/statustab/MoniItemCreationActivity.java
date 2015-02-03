@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +42,8 @@ public class MoniItemCreationActivity extends ActionBarActivity {
     private ImageView imagePreview;
     private String photoPath = null;
     private Button buttonCreate;
-    private List<Sensor> sensorList;
     private SensorCheckAdapter adapter;
+    private MonitoringItem current;
     private static final int REQUEST_IMAGE_CAPTURE = 1, PICK_IMAGE = 2;
 
     @Override
@@ -58,20 +60,25 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MonitoringItem monitoringItem = new MonitoringItem(etName.getText().toString());
+                // Overwrite current Item (edition) or create a new one
+                if (current == null)
+                    current = new MonitoringItem(etName.getText().toString().trim());
+                else
+                    current.setName(etName.getText().toString().trim());
                 // Set image
-                monitoringItem.setPhotoPath(photoPath);
+                current.setPhotoPath(photoPath);
                 // Sensors
+                current.clearSensors();
                 for (int i = 0; i < adapter.getCount(); i++) {
                     if (adapter.isChecked(adapter.getItem(i))) {
-                        monitoringItem.addSensor(adapter.getItem(i));
+                       current.addSensor(adapter.getItem(i));
                     }
                 }
                 Intent returnIntent = new Intent();
                 if (etName.isEnabled())
-                    returnIntent.putExtra("moni-item", monitoringItem);
+                    returnIntent.putExtra("moni-item", current);
                 else
-                    returnIntent.putExtra("moni-item-result", monitoringItem);
+                    returnIntent.putExtra("moni-item-result", current);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -111,18 +118,19 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 photoPath = null;
             }
         });
-        ListView listViewSensos = (ListView) findViewById(R.id.list_check_sensors);
-        sensorList =  new DBManager(getApplicationContext()).getSensors();
+        ListView listViewSensors = (ListView) findViewById(R.id.list_check_sensors);
+        List<Sensor> sensorList =  new DBManager(getApplicationContext()).getSensors();
         adapter = new SensorCheckAdapter(getApplicationContext(), R.layout.sensor_check_row,
                 sensorList);
-        listViewSensos.setAdapter(adapter);
+        listViewSensors.setAdapter(adapter);
         if(getIntent().hasExtra("moni-to-edit")) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_item));
-             MonitoringItem extra = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
-            etName.setText(extra.getName());
+            current = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
+            Log.d(Constants.DEBUGTAG, " $ MonItemCreation extraItem: " + current.toString());
+            etName.setText(current.getName());
             etName.setEnabled(false);
-            if(extra.getPhotoPath() != null)
-                imagePreview.setImageBitmap(BitmapFactory.decodeFile(extra.getPhotoPath()));
+            if(current.getPhotoPath() != null)
+                imagePreview.setImageBitmap(BitmapFactory.decodeFile(current.getPhotoPath()));
             else
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
         } else {

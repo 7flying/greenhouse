@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,8 @@ public class MonItemStatusActivity extends ActionBarActivity {
         moniAttachedSensors.setAdapter(adapter);
         if(getIntent().hasExtra("moni-item")) {
             extraInput = (MonitoringItem) getIntent().getSerializableExtra("moni-item");
+            Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem onCreate: "
+                    + extraInput.toString());
             if(extraInput.getPhotoPath() != null)
                 imageMonitoring.setImageBitmap(BitmapFactory.decodeFile(extraInput.getPhotoPath()));
             else
@@ -76,26 +80,31 @@ public class MonItemStatusActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
+            Log.d(Constants.DEBUGTAG, " $ MonItemStatus callBack from EDIT_MONI_ITEM");
             // Callback from MoniItemCreation
             if(resultCode == RESULT_OK) {
                 if(data.hasExtra("moni-item-result")) {
                     MonitoringItem itemEdited = (MonitoringItem) data
                             .getSerializableExtra("moni-item-result");
-
-                    sensorList.clear();
-                    sensorList.addAll(itemEdited.getAttachedSensors());
-                    adapter.notifyDataSetChanged();
-                    moniName.setText(itemEdited.getName());
+                    Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem callback EDIT_MONI_ITEM: "
+                            + itemEdited.toString());
                     DBManager manager = new DBManager(getApplicationContext());
                     manager.deleteItem(itemEdited.getId());
                     manager.addItem(itemEdited);
+                    sensorList.clear();
+                    Log.d(Constants.DEBUGTAG, " $ MonItemStatus EDIT_MONI_ITEM get sensors from DB:"
+                        + " " + manager.getMoniItemById(itemEdited.getId()));
+                    sensorList.addAll(manager.getMoniItemById(itemEdited.getId())
+                            .getAttachedSensors());
+                    adapter.notifyDataSetChanged();
+                    moniName.setText(itemEdited.getName());
                     if(itemEdited.getPhotoPath() != null)
                         imageMonitoring.setImageBitmap(BitmapFactory.
                                 decodeFile(itemEdited.getPhotoPath()));
                     else
                         imageMonitoring.setImageDrawable(getResources()
                                 .getDrawable(R.drawable.ic_leaf_green));
-                    Toast.makeText(getApplicationContext(), R.string.item_edited, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), /*R.string.item_edited*/R.string.hello_world, Toast.LENGTH_SHORT)
                             .show();
                 }
             }

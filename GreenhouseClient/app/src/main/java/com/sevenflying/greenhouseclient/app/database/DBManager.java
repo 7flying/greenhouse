@@ -493,6 +493,32 @@ public class DBManager extends SQLiteOpenHelper {
         return ret;
     }
 
+    /** Returns a monitoring item given its id.
+     * @param id - monitoring item's id
+     * @return item
+     */
+    public MonitoringItem getMoniItemById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + MoniItemEntry.TABLE_NAME + " WHERE "
+                + MoniItemEntry._ID + " = ?", new String [] {Integer.toString(id)});
+        MonitoringItem ret = null;
+        if(c.moveToFirst()) {
+            ret = new MonitoringItem(c.getString
+                    (c.getColumnIndex(MoniItemEntry.M_NAME)));
+            ret.setId(c.getInt(c.getColumnIndex(MoniItemEntry._ID)));
+            ret.setPhotoPath(c.getString(c.getColumnIndex(MoniItemEntry.M_PHOTO_PATH)));
+            ret.setWarningEnabled(Boolean.valueOf(c.getString(
+                    c.getColumnIndex(MoniItemEntry.M_IS_WARNING))));
+            for (Sensor sensor : getSensorsFromMoniItem(Integer.toString(ret.getId()))) {
+                ret.addSensor(sensor);
+                Log.d(Constants.DEBUGTAG, " $ getMonitoringItems adding sensor: "
+                        + sensor.toString());
+            }
+        }
+        c.close();
+        return ret;
+    }
+
     /** Adds a MonitoringItem to the manager.
      * @param item - item to add     */
     public synchronized void addItem(MonitoringItem item) {
