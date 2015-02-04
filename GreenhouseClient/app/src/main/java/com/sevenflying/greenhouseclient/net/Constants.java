@@ -6,6 +6,10 @@ package com.sevenflying.greenhouseclient.net;
 public class Constants {
 
     public static final String OK = "OK\n";
+    // Error codes
+    public static final String INTERNAL_SERVER_ERROR = "500";
+    public static final String DUPLICATED_SENSOR = "501";
+    public static final String INCORRECT_NUMBER_OF_PARAMS = "400";
 
     public static final String DEBUGTAG = "GREEN_HOUSE";
 }

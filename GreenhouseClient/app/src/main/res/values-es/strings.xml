@@ -33,6 +33,10 @@
     <string name="edit_alert_context_menu">Editar</string>
     <string name="edit_monitoring_item">EDITAR ITEM</string>
     <string name="ensure_refresh">¿Garantizar el ratio de refresco?</string>
+    <string name="error_duplicated_sensor">Error, este sensor está duplicado. Borre el antiguo.
+        </string>
+    <string name="error_internal_server">Error creando un sensor.</string>
+    <string name="error_incorrect_params">Error, no hay datos suficientes.</string>
     <string name="from_camera">Sacar foto</string>
     <string name="from_default">Icono por defecto</string>
     <string name="from_gallery">Elegir de la galería</string>

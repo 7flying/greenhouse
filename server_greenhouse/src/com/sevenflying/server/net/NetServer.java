@@ -18,9 +18,9 @@ import com.sevenflying.server.GreenServer;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
+import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 import com.sevenflying.utils.Utils;
-
 
 /** Manages the communications. */
 public class NetServer {
@@ -269,21 +269,24 @@ public class NetServer {
 					SensorType.valueOf(temp[2].toUpperCase()),
 					Long.valueOf(temp[3]),
 					Boolean.valueOf(temp[4])));
-				manager.disconnect();
 				
-			} catch (NumberFormatException | SQLException |
-			 ClassNotFoundException e)
-			{
+			} catch (DuplicatedSensorException ex) {
+				errorCode = Constants.DUPLICATED_SENSOR;
+				manager.disconnect();
+			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
 				e.printStackTrace(); 
-				errorCode = "Internal Server Error";
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
+			} finally {
+				manager.disconnect();
 			}
 		} else {
-			errorCode = "Error with the number of params.";
+			// Incorrect number of parameters
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
 		if(errorCode != null) 
 			oos.writeObject(errorCode);
 		else
-			oos.writeObject("OK\n");
+			oos.writeObject(Constants.OK);
 		oos.flush();	
 
 		oos.close();
@@ -322,15 +325,15 @@ public class NetServer {
 				ClassNotFoundException e)
 			{
 				e.printStackTrace(); 
-				errorCode = "Internal Server Error";
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
 			}
 		} else {
-			errorCode = "Error with the number of params.";
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
 		if(errorCode != null) 
 			oos.writeObject(errorCode);
 		else
-			oos.writeObject("OK\n");
+			oos.writeObject(Constants.OK);
 		oos.flush();	
 
 		oos.close();
@@ -358,12 +361,12 @@ public class NetServer {
 		if(index == 4) {
 			greenDaemon.setPowerSaving(temp[0], temp[1], Boolean.valueOf(temp[2])); // TODO handle error codes here
 		} else {
-			errorCode = "Error with the number of params.";
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
 		if(errorCode != null) 
 			oos.writeObject(errorCode);
 		else
-			oos.writeObject("OK\n");
+			oos.writeObject(Constants.OK);
 		oos.flush();	
 
 		oos.close();
@@ -396,15 +399,15 @@ public class NetServer {
 				manager.disconnect();
 			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
 				e.printStackTrace(); 
-				errorCode = "Internal Server Error";
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
 			}
 		} else {
-			errorCode = "Error with the number of params.";
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
 		if(errorCode != null) 
 			oos.writeObject(errorCode);
 		else
-			oos.writeObject("OK\n");
+			oos.writeObject(Constants.OK);
 		oos.flush();	
 
 		oos.close();

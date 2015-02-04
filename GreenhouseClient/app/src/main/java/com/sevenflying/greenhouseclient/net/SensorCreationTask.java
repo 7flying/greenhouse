@@ -13,7 +13,7 @@ import java.net.Socket;
 /** Requests a Sensor creation on the server using a background task.
  * Created by 7flying on 23/09/2014.
  */
-public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
+public class SensorCreationTask  extends AsyncTask <String, Void, String> {
 
     private Communicator comm;
     private String serverIP;
@@ -30,7 +30,7 @@ public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(String... strings) {
+    protected String doInBackground(String... strings) {
         // String name : 0
         // String analogDig : 1
         // String pin: 2
@@ -38,8 +38,8 @@ public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
         // String refreshRate: 4
         // String isRefreshEnsured: 5
         if(strings.length != 6)
-            return -1;
-        Integer ret = -1;
+            return null;
+        String ret = null;
         try {
             InetAddress add = InetAddress.getByName(serverIP);
             Socket s = new Socket(add, serverPort);
@@ -55,7 +55,9 @@ public class SensorCreationTask  extends AsyncTask <String, Void, Integer> {
 
             String response = (String) ois.readObject();
             if(response.equals(Constants.OK))
-                ret = 0;
+                ret = Constants.OK;
+            else
+                ret = response;
             Log.d("SENSOR CREATION TASK", "Response received");
             s.close();
             oos.close();

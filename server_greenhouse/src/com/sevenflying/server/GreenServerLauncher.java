@@ -6,10 +6,11 @@ import com.sevenflying.server.communicator.BlossomController;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
+import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 
 public class GreenServerLauncher {
 
-	public static void main(String [] args) throws ClassNotFoundException, SQLException {
+	public static void main(String [] args) throws ClassNotFoundException, SQLException, DuplicatedSensorException {
 		DBManager manager = DBManager.getInstance();
 		manager.connect(DBManager.DBPath);
 		manager.createDatabase();

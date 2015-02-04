@@ -80,11 +80,11 @@ public class Communicator {
      * @param type - sensor's type
      * @param refreshRate - sensor's refresh rate
      * @param isRefreshEnsured - whether the refresh rate has to be ensured
-     * @return 0 if everything went right
+     * @return status code
      * @throws java.io.IOException
      * @throws ClassNotFoundException
      */
-    public int createSensor(String name, String analogDig, String pin, String type,
+    public String createSensor(String name, String analogDig, String pin, String type,
         String refreshRate, boolean isRefreshEnsured) throws IOException, ClassNotFoundException
     {
         Log.d("COMMUNICATOR", "At communicator");
@@ -93,12 +93,12 @@ public class Communicator {
         String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
         SensorCreationTask task = new SensorCreationTask(context);
-        Integer ret = -1;
+        String ret = null;
         try {
             ret = task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured)
                     .get();
         } catch (Exception e) {
-            ret = -1;
+            ret = null;
         }
         return ret;
     }

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.sevenflying.server.Env;
 import com.sevenflying.server.domain.Sensor;
+import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 
@@ -88,8 +89,11 @@ public class DBManager {
 	
 	/** Inserts the given sensor into the database
 	 * @param sensor - to insert
-	 * @throws SQLException	 */
-	public synchronized void insertSensor(Sensor sensor) throws SQLException {
+	 * @throws SQLException	 
+	 * @throws DuplicatedSensorException */
+	public synchronized void insertSensor(Sensor sensor) throws SQLException, DuplicatedSensorException {
+		if (getSensorDBid(sensor) != -1)
+			throw new DuplicatedSensorException();
 		PreparedStatement pre = conn.prepareStatement("INSERT into Sensors (name, pinid, type, refresh) values (?,?,?,?);");
 		pre.setString(1, sensor.getName());
 		pre.setString(2, sensor.getPinId());

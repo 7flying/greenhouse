@@ -89,8 +89,12 @@
     <string name="edit_alert_context_menu">Edit</string>
     <string name="delete_alert_context_menu">Delete</string>
     <string name="what_to_add">What to add?</string>
-    <!-- Notifications -->
+    <!-- Notifications & errors-->
     <string name="logic_alert_on_sensor">Alert on sensor</string>
+    <string name="error_duplicated_sensor">Error, this sensor is duplicated. Please delete the
+        old one.</string>
+    <string name="error_internal_server">Error creating sensor.</string>
+    <string name="error_incorrect_params">Error, not enough data.</string>
     <!-- Toasts -->
     <string name="alert_created">Alert created.</string>
     <string name="alert_edited">Alert edited.</string>
