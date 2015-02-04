@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.SensorsValueUpdater;
@@ -68,7 +69,12 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                 public void onClick(DialogInterface dialogInterface, int position) {
                                     switch (position) {
                                         case 0: // Edit
-                                            // TODO
+                                            Intent intent = new Intent(SensorsListFragment.this
+                                                .getActivity(), SensorCreationActivity.class);
+                                            intent.putExtra("sensor-to-edit",
+                                                    sensorList.get(listPosition));
+                                            getActivity().startActivityForResult(intent,
+                                                    Codes.CODE_EDIT_SENSOR);
                                             break;
                                         case 1: // Delete
                                             int result = 0;

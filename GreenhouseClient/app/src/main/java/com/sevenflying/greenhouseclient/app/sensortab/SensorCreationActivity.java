@@ -32,13 +32,14 @@ import com.sevenflying.greenhouseclient.net.SensorCreationTask;
 public class SensorCreationActivity extends ActionBarActivity {
 
     private EditText etName, etPin, etRefreshRate;
-    private RadioButton radioAnalog, radioDigital, radioYes, radioNo;
+    private RadioButton radioAnalog, radioDigital, radioYes;
     private Button buttonCreate;
     private boolean [] validated = { false, false, false };
     private int spinnerSelectedType = 0;
     private SensorType [] sensorTypeArray = { SensorType.HUMIDITY, SensorType.LIGHT,
                                               SensorType.TEMPERATURE
     };
+    private Spinner sensorTypeSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class SensorCreationActivity extends ActionBarActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3){}
         });
         // Type
-        Spinner sensorTypeSpinner = (Spinner) findViewById(R.id.sensor_type_spinner);
+        sensorTypeSpinner = (Spinner) findViewById(R.id.sensor_type_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.sensor_type, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -124,7 +125,6 @@ public class SensorCreationActivity extends ActionBarActivity {
         });
         // Ensure refresh
         radioYes = (RadioButton) findViewById(R.id.radio_yes);
-        radioNo = (RadioButton) findViewById(R.id.radio_no);
         // Button ok
         buttonCreate = (Button) findViewById(R.id.button_create_sensor);
         setButton(buttonCreate);
@@ -137,6 +137,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                 String result = null;
                 if (getIntent().hasExtra("sensor-to-edit")) {
                     // Handle edit sensor
+                    // TODO
                 } else {
                     try {
                         Communicator comm = new Communicator(getApplicationContext());
@@ -192,9 +193,32 @@ public class SensorCreationActivity extends ActionBarActivity {
 
             }
         });
-        if(getIntent().hasExtra("sensor-to-edit"))
+        if(getIntent().hasExtra("sensor-to-edit")) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_sensor_edition));
-
+            Sensor extraSensor = (Sensor) getIntent().getSerializableExtra("sensor-to-edit");
+            radioAnalog.setChecked(extraSensor.getPinId().charAt(0) == 'A');
+            radioAnalog.setEnabled(false);
+            radioDigital.setEnabled(false);
+            switch (extraSensor.getType()) {
+                case HUMIDITY:
+                    sensorTypeSpinner.setSelection(0);
+                    spinnerSelectedType = 0;
+                    break;
+                case LIGHT:
+                    sensorTypeSpinner.setSelection(2);
+                    spinnerSelectedType = 2;
+                    break;
+                case TEMPERATURE:
+                    sensorTypeSpinner.setSelection(1);
+                    spinnerSelectedType = 1;
+                    break;
+            }
+            sensorTypeSpinner.setEnabled(false);
+            etPin.setText(extraSensor.getPinId().substring(1));
+            etPin.setEnabled(false);
+            etName.setText(extraSensor.getName());
+            etRefreshRate.setText(Long.toString(extraSensor.getRefreshRate() / 1000));
+        }
     }
 
     @Override

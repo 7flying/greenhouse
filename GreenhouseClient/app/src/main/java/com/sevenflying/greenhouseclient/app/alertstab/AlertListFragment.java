@@ -73,7 +73,8 @@ public class AlertListFragment extends Fragment implements Updateable {
                                                     .getActivity(), AlertCreationActivity.class);
                                             intent.putExtra("alert-to-edit",
                                                     alertList.get(listPosition));
-                                            getActivity().startActivityForResult(intent, Codes.CODE_EDIT_ALERT);
+                                            getActivity().startActivityForResult(intent,
+                                                    Codes.CODE_EDIT_ALERT);
                                             break;
                                         case 1: // Delete
                                             manager.removeAlert(alertList.get(listPosition));

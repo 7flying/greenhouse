@@ -137,7 +137,7 @@ public class AlertCreationActivity extends ActionBarActivity {
             }
         });
 
-       if(getIntent().hasExtra("alert-to-edit")) {
+       if (getIntent().hasExtra("alert-to-edit")) {
             if(getSupportActionBar() != null)
                 getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_alert));
             Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
