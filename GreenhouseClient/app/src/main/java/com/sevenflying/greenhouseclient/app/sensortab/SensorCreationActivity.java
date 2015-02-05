@@ -108,7 +108,9 @@ public class SensorCreationActivity extends ActionBarActivity {
                 validated[2] = false;
                 Exception temp = null;
                 try {
-                    Double.valueOf(editable.toString());
+                    double ref = Double.valueOf(editable.toString());
+                    if (ref <= 0)
+                        temp = new Exception();
                 }catch (Exception e){
                     temp = e;
                 }

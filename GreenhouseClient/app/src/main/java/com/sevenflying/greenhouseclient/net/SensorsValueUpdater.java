@@ -114,21 +114,24 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
 
+
         for(Sensor s : result) {
             Log.d(Constants.DEBUGTAG, " $ SensorsValueUpdater sensor:-> " + s.toString());
-
-            if(!buffer.contains(s)) {
+            if(!dbSensors.contains(s))
+                manager.addSensor(s);
+            else
+                manager.editSensor(s);
+            /*if(!buffer.contains(s)) {
                 buffer.add(s);
-                if(!dbSensors.contains(s))
-                    manager.addSensor(s);
-                manager.updateSensor(s, s.getValue(), s.getUpdatedAt());
-                adapter.notifyDataSetChanged();
             } else {
-                int updatedIndex = buffer.indexOf(s);
-                buffer.get(updatedIndex).setName(s.getName());
-                buffer.get(updatedIndex).setRefreshRate(s.getRefreshRate());
-            }
+                manager.editSensor(s);
+            }*/
+            manager.updateSensor(s, s.getValue(), s.getUpdatedAt());
+
         }
+        buffer.clear();
+        buffer.addAll(manager.getSensors());
+        adapter.notifyDataSetChanged();
         layoutCharge.setVisibility(View.GONE);
     }
 

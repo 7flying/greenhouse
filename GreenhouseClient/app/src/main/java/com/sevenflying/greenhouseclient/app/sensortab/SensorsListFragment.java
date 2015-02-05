@@ -135,9 +135,4 @@ public class SensorsListFragment extends Fragment implements Updateable {
     public void update() {
         updateSensors();
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
 }

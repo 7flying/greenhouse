@@ -160,7 +160,11 @@ public class MainActivity extends ActionBarActivity {
                             // Callback from SensorCreationActivity
                             if (resultCode == Activity.RESULT_OK) {
                                 ActivityResultHandler.handleEditSensor(getApplicationContext(), data);
-                                tabsPaAdapter.update(1);
+                                if (tabsPaAdapter !=  null)
+                                    tabsPaAdapter.update(1);
+                                else
+                                    Log.e(Constants.DEBUGTAG, "$ MainActivity::onActivityResult "
+                                            + "EDIT_SENSOR, has NULL tabsPagerAdapter");
                             }
                         }
                     }
