@@ -86,6 +86,8 @@
     <string name="yes">Sí, por favor</string>
     <string name="sensor">Sensor</string>
     <string name="sensor_deleted">Sensor borrado.</string>
-    <string name="sensor_error_delete">Error borrando sensor.</string>
+    <string name="sensor_error_delete">Error borrando el sensor.</string>
+    <string name="sensor_modified">Sensor modificado.</string>
+    <string name="sensor_modif_error">Error modificando el sensor.</string>
 
 </resources>

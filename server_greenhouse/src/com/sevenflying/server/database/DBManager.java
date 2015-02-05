@@ -126,19 +126,23 @@ public class DBManager {
 	 * @throws SQLException
 	 */
 	public synchronized void updateSensor(Sensor sensor) throws SQLException {
+		System.out.println(" $$ db sensor:" + sensor.toString());
 		PreparedStatement pre = conn.prepareStatement("UPDATE Sensors SET name = ?, refresh = ? WHERE id = ?;");
 		int id = getSensorDBid(sensor);
+		System.out.println(" $$ SENSOR DB ID: " + id);
 		if(id != -1) {
 			pre.setString(1, sensor.getName());
 			pre.setDouble(2, sensor.getRefreshRate());
 			pre.setInt(3, id);
-			pre.executeUpdate();
+			int ret = pre.executeUpdate();
+			System.out.println(" $$ UPDATED ROWS: " + ret);
 			pre.close();
 		}
 	}
 	
 	/** Gets the db id of a sensor */
 	private int getSensorDBid(Sensor sensor) throws SQLException {
+		System.out.println(" $$ requested : " + sensor.getPinId() + ", " + sensor.getType().getIdentifier());
 		return getSensorBDid(sensor.getPinId(), Character.toString(sensor.getType().getIdentifier()));
 	}
 	

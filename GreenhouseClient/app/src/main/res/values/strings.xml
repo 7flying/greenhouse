@@ -103,7 +103,9 @@
     <string name="item_deleted">Item deleted.</string>
     <string name="item_edited">Item edited.</string>
     <string name="sensor_created">Sensor created.</string>
-    <string name="sensor_error">Error creating sensor.</string>
+    <string name="sensor_creation_error">Error creating the sensor.</string>
+    <string name="sensor_modified">Sensor edited.</string>
+    <string name="sensor_modif_error">Error modifying the sensor.</string>
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>

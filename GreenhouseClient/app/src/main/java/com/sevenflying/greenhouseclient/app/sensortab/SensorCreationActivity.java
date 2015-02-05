@@ -16,15 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
-import com.sevenflying.greenhouseclient.net.SensorCreationTask;
 
 /** This activity is used to create sensors.
  * Created by 7flying on 19/09/2014.
@@ -135,12 +132,24 @@ public class SensorCreationActivity extends ActionBarActivity {
                 String type = sensorTypeArray[spinnerSelectedType].toString();
                 boolean ensureRefresh = radioYes.isChecked();
                 String result = null;
-                if (getIntent().hasExtra("sensor-to-edit")) {
+                Communicator comm = new Communicator(getApplicationContext());
+                if (!etPin.isEnabled()) {
                     // Handle edit sensor
-                    // TODO
+                    try {
+                        result = comm.editSensor(
+                                etName.getText().toString(),
+                                analogDig,
+                                etPin.getText().toString(),
+                                type,
+                                etRefreshRate.getText().toString(),
+                                ensureRefresh
+                        );
+                    }catch (Exception e) {
+                        result = null;
+                    }
+
                 } else {
                     try {
-                        Communicator comm = new Communicator(getApplicationContext());
                         result = comm.createSensor(
                                 etName.getText().toString(),
                                 analogDig,
@@ -150,45 +159,49 @@ public class SensorCreationActivity extends ActionBarActivity {
                                 ensureRefresh
                         );
                     }catch (Exception e) {
-                        e.printStackTrace();
                         result = null;
                     }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            SensorCreationActivity.this);
-                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }});
-                    switch (result) {
-                        case Constants.OK:
-                            Sensor temp = new Sensor();
-                            temp.setName(etName.getText().toString());
-                            temp.setPinId(analogDig + etPin.getText().toString());
-                            temp.setType(SensorType.valueOf(type.toUpperCase()));
-                            temp.setRefreshRate(Long.valueOf(etRefreshRate.getText().toString()));
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        SensorCreationActivity.this);
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }});
+                switch (result) {
+                    case Constants.OK:
+                        Sensor temp = new Sensor();
+                        temp.setName(etName.getText().toString());
+                        temp.setPinId(analogDig + etPin.getText().toString());
+                        temp.setType(SensorType.valueOf(type.toUpperCase()));
+                        temp.setRefreshRate(Long.valueOf(etRefreshRate.getText().toString()));
 
-                            // Return sensor to previous activity
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("sensor", temp);
-                            setResult(RESULT_OK, returnIntent);
-                            finish();
-                            break;
-                        case Constants.DUPLICATED_SENSOR:
+                        // Return sensor to previous activity
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("sensor", temp);
+                        setResult(RESULT_OK, returnIntent);
+                        finish();
+                        break;
+                    case Constants.DUPLICATED_SENSOR:
+                        builder.setMessage(SensorCreationActivity.this.getResources()
+                                .getString(R.string.error_duplicated_sensor));
+                        builder.show();
+                        break;
+                    case Constants.INCORRECT_NUMBER_OF_PARAMS:
+                        builder.setMessage(SensorCreationActivity.this.getResources()
+                                .getString(R.string.error_incorrect_params));
+                        builder.show();
+                        break;
+                    case Constants.INTERNAL_SERVER_ERROR: default:
+                        if (etPin.isEnabled())
                             builder.setMessage(SensorCreationActivity.this.getResources()
-                                    .getString(R.string.error_duplicated_sensor));
-                            builder.show();
-                            break;
-                        case Constants.INCORRECT_NUMBER_OF_PARAMS:
+                                    .getString(R.string.sensor_creation_error));
+                        else
                             builder.setMessage(SensorCreationActivity.this.getResources()
-                                    .getString(R.string.error_incorrect_params));
-                            builder.show();
-                            break;
-                        case Constants.INTERNAL_SERVER_ERROR: default:
-                            builder.setMessage(SensorCreationActivity.this.getResources()
-                                    .getString(R.string.sensor_error));
-                            break;
+                                    .getString(R.string.sensor_edition));
 
-                    }
+                        break;
+
                 }
 
             }
@@ -197,20 +210,21 @@ public class SensorCreationActivity extends ActionBarActivity {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_sensor_edition));
             Sensor extraSensor = (Sensor) getIntent().getSerializableExtra("sensor-to-edit");
             radioAnalog.setChecked(extraSensor.getPinId().charAt(0) == 'A');
-            radioAnalog.setEnabled(false);
-            radioDigital.setEnabled(false);
+            radioAnalog.setEnabled(radioAnalog.isChecked());
+            radioDigital.setChecked(!radioAnalog.isChecked());
+            radioDigital.setEnabled(radioDigital.isChecked());
             switch (extraSensor.getType()) {
                 case HUMIDITY:
                     sensorTypeSpinner.setSelection(0);
                     spinnerSelectedType = 0;
                     break;
                 case LIGHT:
-                    sensorTypeSpinner.setSelection(2);
-                    spinnerSelectedType = 2;
-                    break;
-                case TEMPERATURE:
                     sensorTypeSpinner.setSelection(1);
                     spinnerSelectedType = 1;
+                    break;
+                case TEMPERATURE:
+                    sensorTypeSpinner.setSelection(2);
+                    spinnerSelectedType = 2;
                     break;
             }
             sensorTypeSpinner.setEnabled(false);

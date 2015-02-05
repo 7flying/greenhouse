@@ -250,6 +250,7 @@ public class NetServer {
 	throws Exception
 	{
 		String raw = (String) ois.readObject();
+		System.out.println(" $ params: " + raw);
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[5];
 		int index = 0;
@@ -302,6 +303,7 @@ public class NetServer {
 	throws Exception
 	{
 		String raw = (String) ois.readObject();
+		System.out.println(" $ params: " + raw);
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[5];
 		int index = 0;
@@ -317,7 +319,7 @@ public class NetServer {
 				manager.updateSensor(new Sensor(
 					new String(Base64.decodeBase64(temp[0])),
 					temp[1],
-					SensorType.valueOf(temp[2]),
+					SensorType.valueOf(temp[2].toUpperCase()),
 					Long.valueOf(temp[3]),
 					Boolean.valueOf(temp[4])));
 				manager.disconnect();

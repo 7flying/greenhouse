@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sevenflying.greenhouseclient.app.ActivityResultHandler;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
@@ -29,6 +31,7 @@ import java.util.List;
 public class SensorsListFragment extends Fragment implements Updateable {
 
 	private List<Sensor> sensorList;
+    private ListView listView;
     private LinearLayout layoutProgress;
     private LinearLayout layoutNoConnection;
     private SensorAdapter adapter;
@@ -42,7 +45,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
             setMenuVisibility(true);
             setHasOptionsMenu(true);
 			View view = inflater.inflate(R.layout.fragment_sensors_list, container, false);
-			ListView listView = (ListView) view.findViewById(R.id.sensorsListView);
+			listView = (ListView) view.findViewById(R.id.sensorsListView);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             layoutNoConnection = (LinearLayout) view.findViewById(R.id.linear_layout_connection);
             manager = new DBManager(getActivity().getApplicationContext());
@@ -119,14 +122,22 @@ public class SensorsListFragment extends Fragment implements Updateable {
 		}
     }
 
-    public void updateSensors(){
+    public void updateSensors() {
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);
         updater.execute();
+        adapter = new SensorAdapter(getActivity(), R.layout.sensor_list_row, sensorList);
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void update() {
         updateSensors();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 }

@@ -4,6 +4,7 @@ package com.sevenflying.greenhouseclient.net;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -70,7 +71,7 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
             oos.writeObject(Commands.GETSENSORS);
             oos.flush();
             int numSensors = Integer.parseInt((String) ois.readObject());
-            while(numSensors > 0) {
+            while (numSensors > 0) {
                 String ss = (String) ois.readObject();
                 if(ss != null) {
                     Sensor sensor = new Sensor();
@@ -114,12 +115,18 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
             layoutNoConnection.setVisibility(View.VISIBLE);
 
         for(Sensor s : result) {
+            Log.d(Constants.DEBUGTAG, " $ SensorsValueUpdater sensor:-> " + s.toString());
+
             if(!buffer.contains(s)) {
                 buffer.add(s);
                 if(!dbSensors.contains(s))
                     manager.addSensor(s);
                 manager.updateSensor(s, s.getValue(), s.getUpdatedAt());
                 adapter.notifyDataSetChanged();
+            } else {
+                int updatedIndex = buffer.indexOf(s);
+                buffer.get(updatedIndex).setName(s.getName());
+                buffer.get(updatedIndex).setRefreshRate(s.getRefreshRate());
             }
         }
         layoutCharge.setVisibility(View.GONE);

@@ -152,9 +152,16 @@ public class MainActivity extends ActionBarActivity {
                     if(requestCode == Codes.CODE_EDIT_ALERT) {
                         // Callback from AlertCreationActivity on Edit mode
                         if(resultCode == Activity.RESULT_OK) {
-                            Log.d(Constants.DEBUGTAG, " $ Callback of alert edit on main");
                             ActivityResultHandler.handleEditAlert(MainActivity.this, data);
                             tabsPaAdapter.update(2);
+                        }
+                    } else {
+                        if (requestCode == Codes.CODE_EDIT_SENSOR) {
+                            // Callback from SensorCreationActivity
+                            if (resultCode == Activity.RESULT_OK) {
+                                ActivityResultHandler.handleEditSensor(getApplicationContext(), data);
+                                tabsPaAdapter.update(1);
+                            }
                         }
                     }
                 }

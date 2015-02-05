@@ -105,21 +105,6 @@ public class AlertListFragment extends Fragment implements Updateable {
             layoutNoAlerts.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(Constants.DEBUGTAG, "$ AlertListFragment::onActivityResult, requestCode:" + requestCode
-                + ", resultCode:" + resultCode + ", data:" + data.toString());
-        if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
-            // Callback from AlertCreationActivity
-            if(resultCode == Activity.RESULT_OK) {
-                ActivityResultHandler.handleCreateNewAlert(getActivity().getApplicationContext(),
-                        data, this.getActivity());
-                adapter.notifyDataSetChanged();
-                checkLayoutVisibility();
-            }
-        }
-    }
-
     public void update() {
         manager = new DBManager(getActivity().getApplicationContext());
         alertList = manager.getAlerts();

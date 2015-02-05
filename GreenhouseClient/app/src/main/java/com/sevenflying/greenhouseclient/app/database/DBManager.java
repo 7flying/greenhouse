@@ -45,6 +45,11 @@ public class DBManager extends SQLiteOpenHelper {
                         + SensorEntry.S_UPDATED_AT + " TEXT "
                         + " )"
         );
+
+        sqLiteDatabase.execSQL("CREATE UNIQUE INDEX " + SensorIndex.INDEX_NAME + " ON "
+                        + SensorEntry.TABLE_NAME + "(" + SensorEntry.S_PIN_ID + ", "
+                        + SensorEntry.S_TYPE  +" )");
+
         sqLiteDatabase.execSQL(
                         "CREATE TABLE " + AlertEntry.TABLE_NAME + " ( "
                         + AlertEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
@@ -78,6 +83,8 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
+        String indexStatement = "DELETE INDEX IF EXISTS ";
+        sqLiteDatabase.execSQL(indexStatement + SensorIndex.INDEX_NAME);
         String statement = "DELETE TABLE IF EXISTS ";
         sqLiteDatabase.execSQL(statement + MoniItemSensorEntry.TABLE_NAME);
         sqLiteDatabase.execSQL(statement + MoniItemEntry.TABLE_NAME);
@@ -100,6 +107,12 @@ public class DBManager extends SQLiteOpenHelper {
         public static final String S_REFRESH = "refreshrate";
         public static final String S_LAST_VALUE = "lastvalue";
         public static final String S_UPDATED_AT = "updatedat";
+    }
+
+    /** Index on sensors' unique (S_PIN_ID, S_TYPE) */
+    public static abstract class SensorIndex {
+
+        public static  final String INDEX_NAME = "indxSensor";
     }
 
     /** Class representing an Alert on the DB **/
@@ -181,9 +194,24 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(SensorEntry.S_LAST_VALUE, lastValue);
         values.put(SensorEntry.S_UPDATED_AT, updatedAt);
-        db.update(SensorEntry.TABLE_NAME, values, SensorEntry.S_PIN_ID + " = ?",
+        db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?",
                 new String[]{Integer.toString(getSensorID(s.getPinId(),
                         String.valueOf(s.getType().getIdentifier())))});
+    }
+
+    public void editSensor(Sensor s) {
+        String id = Integer.toString(getSensorID(s.getPinId(),
+                    String.valueOf(s.getType().getIdentifier())));
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SensorEntry.S_NAME, s.getName());
+        values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
+        int rowsAffected = db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?", new String[]{id});
+        Log.d(Constants.DEBUGTAG, " $ editSensor - rows affected: " + rowsAffected);
+        Sensor updated = getSensorBy(id);
+        Log.d(Constants.DEBUGTAG, " $ editSensor - before: " + s.toString());
+        Log.d(Constants.DEBUGTAG, " $ editSensor - after: " + updated.toString());
+
     }
 
     /** Returns all the sensors at the manager.
@@ -201,24 +229,6 @@ public class DBManager extends SQLiteOpenHelper {
         c.close();
         Log.d(Constants.DEBUGTAG, " $ getSensors size:" + ret.size());
         return ret;
-    }
-
-    /** Returns a sensor given its pinId and type
-     * @param pinId - pin id from the Sensor
-     * @param type - sensor's type
-     * @return Sensor
-     */
-    public Sensor getSensorBy(String pinId, String type) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Sensors WHERE pinid = ? AND TYPE = ?",
-                new String[]{pinId, type});
-
-        Sensor temp = new Sensor();
-        if(c.moveToFirst())
-            temp = handleSensor(c);
-        c.close();
-
-        return temp;
     }
 
     private Sensor getSensorBy(String bid) {

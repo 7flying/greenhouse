@@ -11,7 +11,7 @@ import java.net.Socket;
 /** Requests to update the description of a sensor using a background task. PinID and type
  * Created by 7flying on 24/09/2014.
  */
-public class SensorModificationTask extends AsyncTask<String, Void, Integer> {
+public class SensorModificationTask extends AsyncTask<String, Void, String> {
 
     private Communicator comm;
     private String serverIP;
@@ -28,7 +28,7 @@ public class SensorModificationTask extends AsyncTask<String, Void, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(String... strings) {
+    protected String doInBackground(String... strings) {
         // String name : 0
         // String analogDig : 1
         // String pin: 2
@@ -36,8 +36,8 @@ public class SensorModificationTask extends AsyncTask<String, Void, Integer> {
         // String refreshRate: 4
         // String isRefreshEnsured: 5
         if(strings.length != 6)
-            return -1;
-        Integer ret = -1;
+            return Constants.INCORRECT_NUMBER_OF_PARAMS;
+        String ret = null;
         try {
             InetAddress add = InetAddress.getByName(serverIP);
             Socket s = new Socket(add, serverPort);
@@ -50,8 +50,8 @@ public class SensorModificationTask extends AsyncTask<String, Void, Integer> {
             oos.writeObject(send);
             oos.flush();
             String response = (String) ois.readObject();
-            if(response.equals(Constants.OK))
-                ret = 0;
+            if (response.equals(Constants.OK))
+                ret = Constants.OK;
             s.close();
             oos.close();
             ois.close();

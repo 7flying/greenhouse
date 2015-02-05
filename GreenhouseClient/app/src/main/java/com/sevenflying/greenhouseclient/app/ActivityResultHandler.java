@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
+import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 /** Manages the results when we ask an activity for a result.
@@ -16,7 +17,7 @@ import com.sevenflying.greenhouseclient.net.Constants;
  */
 public class ActivityResultHandler {
 
-    /** Handles the creation of a new Alert
+    /** Handles the callback from the creation of a new Alert
      * @param context
      * @param data
      * @param activity
@@ -26,7 +27,7 @@ public class ActivityResultHandler {
         Alert a = (Alert) data.getSerializableExtra("alert");
         Log.d(Constants.DEBUGTAG, " handleCreateNewAlert: arg " + a.toString());
         // Check if an alert of the same type on the sensor is created
-        if(manager.hasAlertsCreatedFrom(a.getSensorPinId(), a.getSensorType(), a.getAlertType())) {
+        if (manager.hasAlertsCreatedFrom(a.getSensorPinId(), a.getSensorType(), a.getAlertType())) {
             Log.d(Constants.DEBUGTAG, " handleCreateNewAlert: FAIL message ");
             // Display message telling to the user that he/she cannot create two alerts
             // of the same type on the same sensor
@@ -44,7 +45,7 @@ public class ActivityResultHandler {
                     Toast.LENGTH_SHORT).show();
         }
     }
-    /** Handles the creation of a new MonitoringItem
+    /** Handles the callback from the creation of a new MonitoringItem
      * @param context
      * @param data
      */
@@ -55,14 +56,14 @@ public class ActivityResultHandler {
         Toast.makeText(context, context.getString(R.string.item_created), Toast.LENGTH_SHORT)
                 .show();
     }
-    /** Handles the creation of a new Sensor.
+    /** Handles the callback from the creation of a new Sensor.
      * @param context
      */
     public static void handleCreateNewSensor(Context context) {
         Toast.makeText(context, context.getString(R.string.sensor_created), Toast.LENGTH_SHORT)
                 .show();
     }
-    /** Handles the edition of an Alert
+    /** Handles the callback from the edition of an Alert
      * @param context
      * @param data
      */
@@ -71,12 +72,21 @@ public class ActivityResultHandler {
         Log.d(Constants.DEBUGTAG, " $ Calling edit alert to ->" + a.toString());
         DBManager manager = new DBManager(context);
         manager.updateAlertCompareValue(a);
-        /*
-        manager.removeAlert(a);
-        Log.d(Constants.DEBUGTAG, " $ Calling add alert on handle edit");
-        manager.addAlert(a);
-        */
+
         Toast.makeText(context, context.getResources().getString(R.string.alert_edited),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /** Handles the callback from the edition of a sensor
+     * @param context
+     * @param data
+     */
+    public static void handleEditSensor(Context context, Intent data) {
+        Sensor s = (Sensor) data.getSerializableExtra("sensor");
+        Log.d(Constants.DEBUGTAG, " $ Calling edit sensor to ->" + s.toString());
+        DBManager manager = new DBManager(context);
+        manager.editSensor(s);
+        Toast.makeText(context, context.getResources().getString(R.string.sensor_modified),
                 Toast.LENGTH_SHORT).show();
     }
 }

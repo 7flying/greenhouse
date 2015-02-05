@@ -112,20 +112,20 @@ public class Communicator {
      * @param isRefreshEnsured - whether the refresh rate has to be ensured
      * @return 0 if everything went right
      */
-    public int modificateSensor(String name, String analogDig, String pin, String type,
+    public String editSensor(String name, String analogDig, String pin, String type,
         String refreshRate, boolean isRefreshEnsured)
     {
         if(pin.length() == 1)
             pin = "0" + pin;
         String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
-        Integer ret = -1;
+        String ret = null;
         SensorModificationTask task = new SensorModificationTask(context);
         try {
             ret = task.execute(nameEncoded, analogDig, pin, type, refreshRate, stringRefreshEnsured)
                     .get();
         } catch (Exception e) {
-            ret = -1;
+            ret = null;
         }
         return ret;
     }
