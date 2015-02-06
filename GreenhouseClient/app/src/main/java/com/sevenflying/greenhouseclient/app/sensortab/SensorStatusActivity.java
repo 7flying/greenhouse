@@ -21,9 +21,9 @@ import com.sevenflying.greenhouseclient.net.HistoricalRecordObtainer;
 public class SensorStatusActivity extends ActionBarActivity {
 
     private Sensor currentSensor;
-    LinearLayout layoutProgress;
-    LinearLayout layoutChart;
-    LineChart chart;
+    private LinearLayout layoutProgress;
+    private LinearLayout layoutChart;
+    private LineChart chart;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -31,6 +31,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         setContentView(R.layout.activity_sensor_status);
+
         // Views
         ImageView imageView = (ImageView) findViewById(R.id.image_sensor);
         TextView textSensorValue = (TextView) findViewById(R.id.text_sensor_value);
@@ -46,13 +47,14 @@ public class SensorStatusActivity extends ActionBarActivity {
 
         // Set data
         if(getIntent().hasExtra("sensor")) {
+            GreenhouseUtils utils = new GreenhouseUtils(this);
             currentSensor = (Sensor) getIntent().getSerializableExtra("sensor");
             imageView.setImageResource(currentSensor.getDrawableId());
             textSensorValue.setText(GreenhouseUtils.suppressZeros(currentSensor.getValue()));
             textSensorUnit.setText(currentSensor.getType().getUnit());
             textSensorUpdatedAt.setText(currentSensor.getUpdatedAt());
             textSensorName.setText(currentSensor.getName());
-            textSensorType.setText(currentSensor.getType().toString());
+            textSensorType.setText(utils.getI18nSensorType(currentSensor.getType()));
             textSensorRefresh.setText(Double.toString(currentSensor.getRefreshRate() / 1000d) );
             textSensorPin.setText(currentSensor.getPinId());
             getHistoricalData();

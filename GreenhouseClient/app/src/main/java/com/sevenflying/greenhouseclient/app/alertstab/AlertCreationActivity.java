@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
@@ -27,6 +28,7 @@ import com.sevenflying.greenhouseclient.net.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** Activity for the creation of Alerts.
  * Created by 7flying on 20/07/2014.
@@ -50,8 +52,20 @@ public class AlertCreationActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_alert_creation);
+        // the getFormattedSensors doesn't return the type of the sensor, add it
         formattedSensorMap = new DBManager(getApplicationContext()).getFormattedSensors();
-
+        List<String> keys = new ArrayList<String>(formattedSensorMap.keySet());
+        GreenhouseUtils utils = new GreenhouseUtils(getBaseContext());
+        for (String key : keys) {
+            Log.d(Constants.DEBUGTAG, " $ Parse key: " + key);
+            Sensor temp = formattedSensorMap.remove(key);
+            int ind = key.lastIndexOf('-');
+            if (ind > 0) {
+                String newKey = key.substring(0, ind) + "- " + utils.getI18nSensorType(temp.getType());
+                Log.d(Constants.DEBUGTAG, " $ New key: " + newKey);
+                formattedSensorMap.put(newKey, temp);
+            }
+        }
         // Text View sensor's unit
         tvSensorUnit = (TextView) findViewById(R.id.next_to_edit_alert_value_shows_unit);
 
@@ -85,7 +99,7 @@ public class AlertCreationActivity extends ActionBarActivity {
         alertTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    AlertCreationActivity.this.selectedAlert = i; // The resource order doesn't change
+                    AlertCreationActivity.this.selectedAlert = i; //The resource order doesn't change
             }
             public void onNothingSelected(AdapterView<?> adapterView){}
         });

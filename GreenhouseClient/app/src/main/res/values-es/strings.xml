@@ -89,5 +89,18 @@
     <string name="sensor_error_delete">Error borrando el sensor.</string>
     <string name="sensor_modified">Sensor modificado.</string>
     <string name="sensor_modif_error">Error modificando el sensor.</string>
-
+    <string name="what_to_add">¿Qué quieres crear?</string>
+    <string name="action_add_item">Añadir item</string>
+    <string name="action_new_alert">Nueva alerta</string>
+    <string name="item_edited">Item modificado.</string>
+    <string name="item_deleted">Item borrado.</string>
+    <string name="item_created">Item creado.</string>
+    <string name="item">Item</string>
+    <string name="sensor_created">Sensor creado.</string>
+    <string name="sensor_creation_error">Error creando el sensor.</string>
+    <string name="title_edit_alert">Editar alerta</string>
+    <string name="title_edit_item">Editar item</string>
+    <string name="humidity">Humedad</string>
+    <string name="light">Luz</string>
+    <string name="temperature">Temperatura</string>
 </resources>

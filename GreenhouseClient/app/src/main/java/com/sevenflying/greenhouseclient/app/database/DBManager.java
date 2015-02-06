@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.database;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
@@ -27,9 +29,11 @@ public class DBManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "devGreenhouse.db";
+    private Context context;
 
     public  DBManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -260,9 +264,13 @@ public class DBManager extends SQLiteOpenHelper {
      * @return  map holding a sensor with its formatted representation  */
     public  Map<String, Sensor> getFormattedSensors() {
         Map<String, Sensor> ret = new HashMap<String, Sensor>();
-        for(Sensor s : getSensors())
-            ret.put(s.getName() + " (" + s.getPinId() + ") " + s.getType().toString(), s);
-        Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map:" + ret.toString());
+        List<Sensor> sensors = getSensors();
+        Log.d(Constants.DEBUGTAG, " $ getFormattedSensors: num: " + sensors.size());
+        for (Sensor s : sensors) {
+            Log.d(Constants.DEBUGTAG, " $ getFormattedSensors: sensor:" + s.toString());
+            ret.put(s.getName() + " (" + s.getPinId() + ") -" + s.getType().toString(), s);
+        }
+        Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map: " + ret.toString());
         return ret;
     }
 

@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,6 +15,7 @@ import com.sevenflying.greenhouseclient.app.statustab.StatusFragment;
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
+    private Activity reference;
     private final int[] tabNames = {R.string.tab_status, R.string.tab_sensors, R.string.tab_alerts, R.string.tab_actuators };
     private FragmentManager fragmentManager;
     private StatusFragment statusFragment;
@@ -21,9 +23,10 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     private AlertListFragment alertListFragment;
     private ActuatorListFragment actuatorListFragment;
 
-    public TabsPagerAdapter(FragmentManager fm) {
-        super(fm);
-        fragmentManager = fm;
+    public TabsPagerAdapter(Activity reference, FragmentManager fragmentManager) {
+        super(fragmentManager);
+        this.reference = reference;
+        this.fragmentManager = fragmentManager;
     }
 
     public Fragment getItem(int index) {
@@ -70,15 +73,15 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-                return "Status";
+                return reference.getResources().getString(R.string.tab_status);
             case 1:
-                return "Sensors";
+                return reference.getResources().getString(R.string.tab_sensors);
             case 2:
-                return "Alerts";
+                return reference.getResources().getString(R.string.tab_alerts);
             case 3:
-                return "Actuators";
+                return reference.getResources().getString(R.string.tab_actuators);
             default:
-                return " ";
+                return "Tab";
         }
     }
 }

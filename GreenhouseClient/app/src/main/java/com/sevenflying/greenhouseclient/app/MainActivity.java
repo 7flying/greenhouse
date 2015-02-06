@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        tabsPaAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+        tabsPaAdapter = new TabsPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(tabsPaAdapter);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);

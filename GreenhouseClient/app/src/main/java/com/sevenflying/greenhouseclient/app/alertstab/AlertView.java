@@ -25,6 +25,7 @@ public class AlertView extends LinearLayout {
     private TextView textAlertTypeSymbol;
     private TextView textCompareValue;
     private TextView textSensorUnit;
+    private Context context;
 
     public static  AlertView inflate(ViewGroup parent) {
        return (AlertView) LayoutInflater.from(parent.getContext())
@@ -42,6 +43,8 @@ public class AlertView extends LinearLayout {
     public AlertView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.setOrientation(HORIZONTAL);
+        if (this.context == null)
+            this.context = context;
         LayoutInflater.from(context).inflate(R.layout.alert_list_row, this, true);
         toggle = (ToggleButton) findViewById(R.id.button_on_off);
         textSensorName = (TextView) findViewById(R.id.alert_sensor_name);
@@ -56,7 +59,11 @@ public class AlertView extends LinearLayout {
         toggle.setEnabled(true);
         toggle.setChecked(enabled);
         textSensorName.setText(alert.getSensorName());
-        textSensorType.setText(alert.getSensorType().toString().toLowerCase());
+        if (context != null) {
+            GreenhouseUtils utils = new GreenhouseUtils(context);
+            textSensorType.setText(utils.getI18nSensorType(alert.getSensorType()));
+        } else
+            textSensorType.setText(alert.getSensorType().toString().toLowerCase());
         textAlertTypeSymbol.setText(alert.getAlertType().getSymbol());
         textCompareValue.setText(GreenhouseUtils.suppressZeros(alert.getCompareValue()));
         textSensorUnit.setText(alert.getSensorType().getUnit());
