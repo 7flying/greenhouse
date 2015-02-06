@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.sevenflying.greenhouseclient.app.actuatorstab.ActuatorActivity;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
@@ -637,23 +638,62 @@ public class DBManager extends SQLiteOpenHelper {
     // --- Actuators ---
 
     /** Adds an Actuator to the DB
-     * @param actuator
+     * @param actuator - actuator to add
      */
-    public void addActuator(Actuator actuator) {
-        //TODO
+    public boolean addActuator(Actuator actuator) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues vals = new ContentValues();
+        vals.put(ActuatorEntry.AC_PIN, actuator.getPinId());
+        vals.put(ActuatorEntry.AC_NAME, actuator.getName());
+        if (actuator.hasControlSensor()) {
+            vals.put(ActuatorEntry.AC_SENSOR_REF,
+                    getSensorID(actuator.getControlSensor().getPinId(),
+                            String.valueOf(actuator.getControlSensor().getType().getIdentifier())));
+            vals.put(ActuatorEntry.AC_COMPARE_TYPE, actuator.getCompareType().toString());
+            vals.put(ActuatorEntry.AC_COMPARE_VALUE, actuator.getCompareValue());
+        }
+        if (db.insert(ActuatorEntry.TABLE_NAME, null, vals) == -1) {
+            Log.e(Constants.DEBUGTAG, " $ addActuator ERROR adding: " + actuator.toString());
+            return false;
+        } else {
+            Log.e(Constants.DEBUGTAG, " $ addActuator added: " + actuator.toString());
+            return true;
+        }
     }
 
     /** Updates an Actuator
-     * @param actuator
+     * @param actuator - actuator to update
      */
-    public void updateActuator(Actuator actuator) {
-        //TODO
+    public boolean updateActuator(Actuator actuator) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues vals = new ContentValues();
+        vals.put(ActuatorEntry.AC_NAME, actuator.getName());
+        if (actuator.hasControlSensor()) {
+            vals.put(ActuatorEntry.AC_SENSOR_REF,
+                    getSensorID(actuator.getControlSensor().getPinId(),
+                            String.valueOf(actuator.getControlSensor().getType().getIdentifier())));
+            vals.put(ActuatorEntry.AC_COMPARE_TYPE, actuator.getCompareType().toString());
+            vals.put(ActuatorEntry.AC_COMPARE_VALUE, actuator.getCompareValue());
+        }
+        int result = db.update(ActuatorEntry.TABLE_NAME, vals, ActuatorEntry.AC_PIN + " = ?",
+                new String[] {String.valueOf(getSensorID(actuator.getControlSensor().getPinId(),
+                        String.valueOf(actuator.getControlSensor().getType().getIdentifier())))});
+        if (result > 0) {
+            Log.d(Constants.DEBUGTAG, " $ updateActuator: oks");
+            return true;
+        } else {
+            Log.e(Constants.DEBUGTAG, " $ updateActuator: NOT updated");
+            return false;
+        }
     }
 
     /** Deletes an Actuator
-     * @param actuator
+     * @param actuator - actuator to update
      */
     public void deleteActuator(Actuator actuator) {
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        String select = ActuatorEntry.AC_PIN + " = ? ";
+        db.delete(ActuatorEntry.TABLE_NAME, select, new String[] {actuator.getPinId()});
+        Log.e(Constants.DEBUGTAG, " $ addActuator deleted: " + actuator.toString());
     }
 }

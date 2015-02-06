@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 
-
 /** ActuatorView class.
  * Created by 7flying on 11/08/2014.
  */

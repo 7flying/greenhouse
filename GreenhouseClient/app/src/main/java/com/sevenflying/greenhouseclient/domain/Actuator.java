@@ -57,8 +57,8 @@ public class Actuator implements Serializable {
 
     /** Checks whether the Actuator has a control sensor or not.
      * @return boolean     */
-    public boolean hasControlAlert() {
-        return !(controlSensor == null);
+    public boolean hasControlSensor() {
+        return controlSensor != null;
     }
 
     public AlertType getCompareType() {
@@ -88,5 +88,17 @@ public class Actuator implements Serializable {
     public void launch() {
         // TODO get last value from alert sensor and if alert is not fired launch
         // TODO otherwise show warning
+    }
+
+    @Override
+    public String toString() {
+        return "Actuator{" +
+                "name='" + name + '\'' +
+                ", pinId='" + pinId + '\'' +
+                ", controlSensor=" + controlSensor +
+                ", compareType=" + compareType +
+                ", compareValue=" + compareValue +
+                ", icon=" + icon +
+                '}';
     }
 }
