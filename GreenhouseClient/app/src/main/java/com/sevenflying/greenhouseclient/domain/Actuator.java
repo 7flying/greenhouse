@@ -11,14 +11,28 @@ public class Actuator implements Serializable {
 
     private String name;
     private String pinId;
-    private Alert controlAlert;
+    private Sensor controlSensor;
+    private AlertType compareType;
+    private double compareValue;
     private int icon;
 
     public  Actuator(String name, String pinId) {
         this.name = name;
         this.pinId = pinId;
-        this.controlAlert = null;
+        this.controlSensor = null;
+        this.compareType = null;
+        this.compareType = null;
         icon = R.drawable.ic_launch_orange;
+    }
+
+    public Actuator(String name, String pinId, Sensor controlSensor, AlertType compareType,
+                    double compareValue)
+    {
+        this.name = name;
+        this.pinId = pinId;
+        this.controlSensor = controlSensor;
+        this.compareType = compareType;
+        this.compareValue = compareValue;
     }
 
     public String getName() {
@@ -41,10 +55,34 @@ public class Actuator implements Serializable {
         return icon;
     }
 
-    /** Checks whether the Actuator has a control alert or not.
+    /** Checks whether the Actuator has a control sensor or not.
      * @return boolean     */
     public boolean hasControlAlert() {
-        return !(controlAlert == null);
+        return !(controlSensor == null);
+    }
+
+    public AlertType getCompareType() {
+        return compareType;
+    }
+
+    public void setCompareType(AlertType compareType) {
+        this.compareType = compareType;
+    }
+
+    public Sensor getControlSensor() {
+        return controlSensor;
+    }
+
+    public void setControlSensor(Sensor controlSensor) {
+        this.controlSensor = controlSensor;
+    }
+
+    public double getCompareValue() {
+        return compareValue;
+    }
+
+    public void setCompareValue(double compareValue) {
+        this.compareValue = compareValue;
     }
 
     public void launch() {

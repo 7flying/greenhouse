@@ -1,6 +1,5 @@
 package com.sevenflying.greenhouseclient.app.database;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
+import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
@@ -28,12 +27,10 @@ import java.util.Map;
 public class DBManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "devGreenhouse.db";
-    private Context context;
+    private static final String DATABASE_NAME = Constants.DB_NAME;
 
     public  DBManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
     }
 
     @Override
@@ -50,6 +47,17 @@ public class DBManager extends SQLiteOpenHelper {
                         + " )"
         );
 
+        sqLiteDatabase.execSQL(
+                        "CREATE TABLE " + ActuatorEntry.TABLE_NAME + " ( "
+                        + ActuatorEntry.AC_NAME + " TEXT NOT NULL, "
+                        + ActuatorEntry.AC_PIN  + " TEXT NOT NULL PRIMARY KEY, "
+                        + ActuatorEntry.AC_SENSOR_REF + " INTEGER REFERENCES "
+                            + SensorEntry.TABLE_NAME + "("+ SensorEntry._ID +") ON DELETE CASCADE, "
+                        + ActuatorEntry.AC_COMPARE_TYPE + " TEXT, "
+                        + ActuatorEntry.AC_COMPARE_VALUE + " REAL"
+                        + " )"
+        );
+
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX " + SensorIndex.INDEX_NAME + " ON "
                         + SensorEntry.TABLE_NAME + "(" + SensorEntry.S_PIN_ID + ", "
                         + SensorEntry.S_TYPE  +" )");
@@ -58,7 +66,7 @@ public class DBManager extends SQLiteOpenHelper {
                         "CREATE TABLE " + AlertEntry.TABLE_NAME + " ( "
                         + AlertEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                         + AlertEntry.A_SENSOR_REF + " INTEGER NOT NULL REFERENCES "
-                          + SensorEntry.TABLE_NAME + "("+ SensorEntry._ID +") ON DELETE CASCADE,"
+                          + SensorEntry.TABLE_NAME + "(" + SensorEntry._ID +") ON DELETE CASCADE,"
                         + AlertEntry.A_TYPE + " TEXT NOT NULL,"
                         + AlertEntry.A_COMPARE_VALUE + " REAL NOT NULL,"
                         + AlertEntry.A_ACTIVE + " TEXT NOT NULL"
@@ -93,7 +101,9 @@ public class DBManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(statement + MoniItemSensorEntry.TABLE_NAME);
         sqLiteDatabase.execSQL(statement + MoniItemEntry.TABLE_NAME);
         sqLiteDatabase.execSQL(statement + AlertEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL(statement + ActuatorEntry.TABLE_NAME);
         sqLiteDatabase.execSQL(statement + SensorEntry.TABLE_NAME);
+
     }
 
     @Override
@@ -144,6 +154,16 @@ public class DBManager extends SQLiteOpenHelper {
         public static final String TABLE_NAME = "MoniSensors";
         public static final String MS_SENSOR_REF = "sensorid";
         public static final String MS_MONI_REF = "monitemid";
+    }
+
+    /** Class representing an Actuator on the DB */
+    public static abstract class ActuatorEntry implements BaseColumns {
+        public static final String TABLE_NAME = "Actuators";
+        public static final String AC_NAME = "name";
+        public static final String AC_PIN = "pinid";
+        public static final String AC_SENSOR_REF = "sensorid";
+        public static final String AC_COMPARE_TYPE = "comparetype";
+        public static final String AC_COMPARE_VALUE = "comparevalue";
     }
 
     // -- Sensors ---
@@ -612,5 +632,28 @@ public class DBManager extends SQLiteOpenHelper {
             ret = Boolean.valueOf(c.getString(c.getColumnIndex(MoniItemEntry.M_IS_WARNING)));
         c.close();
         return ret;
+    }
+
+    // --- Actuators ---
+
+    /** Adds an Actuator to the DB
+     * @param actuator
+     */
+    public void addActuator(Actuator actuator) {
+        //TODO
+    }
+
+    /** Updates an Actuator
+     * @param actuator
+     */
+    public void updateActuator(Actuator actuator) {
+        //TODO
+    }
+
+    /** Deletes an Actuator
+     * @param actuator
+     */
+    public void deleteActuator(Actuator actuator) {
+
     }
 }

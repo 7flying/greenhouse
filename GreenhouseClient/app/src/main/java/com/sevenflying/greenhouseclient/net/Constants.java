@@ -12,4 +12,6 @@ public class Constants {
     public static final String INCORRECT_NUMBER_OF_PARAMS = "400";
 
     public static final String DEBUGTAG = "GREEN_HOUSE";
+
+    public static final String DB_NAME = "devGreenhouse.db";
 }
