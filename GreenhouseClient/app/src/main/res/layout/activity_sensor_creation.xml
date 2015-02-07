@@ -107,7 +107,7 @@
                     android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/refresh_rate"
+                    android:text="@string/refresh_rate_seconds"
                     android:textColor="@color/bright_foreground_inverse_material_dark"
                     android:paddingLeft="5dp"
                     android:clickable="false"/>

@@ -76,10 +76,15 @@
     <string name="radio_digital">Digital</string>
     <string name="pin">PIN</string>
     <string name="sensor_type">Sensor type</string>
-    <string name="refresh_rate">Refresh rate (seconds)</string>
+    <string name="refresh_rate">Refresh rate</string>
+    <string name="refresh_rate_seconds">Refresh rate (seconds)</string>
     <string name="ensure_refresh">Ensure refresh rate?</string>
     <string name="yes">Yes, please</string>
     <string name="no">Nope, don\'t worry</string>
+    <!-- activity actuator creation -->
+    <string name="add_control_sensor">Add a control sensor?</string>
+    <string name="control_type">Control type</string>
+    <string name="control_value">Control value</string>
     <!-- Main activity -->
     <string name="alert_creation_no">There isn\'t any sensor to attach the alert,
         please create a new sensor first.</string>

@@ -103,4 +103,7 @@
     <string name="humidity">Humedad</string>
     <string name="light">Luz</string>
     <string name="temperature">Temperatura</string>
+    <string name="add_control_sensor">¿Añadir un sensor de control?</string>
+    <string name="control_type">Tipo de control</string>
+    <string name="control_value">Valor de control</string>
 </resources>
