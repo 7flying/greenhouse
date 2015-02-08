@@ -156,6 +156,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         }
     }
 
+    /* TODO unused
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // The user has taken a photo
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
@@ -182,7 +183,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             }
         }
     }
-
+    */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_basic_cancel, menu);

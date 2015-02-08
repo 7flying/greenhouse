@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -79,11 +78,11 @@ public class MonItemStatusActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
+        if (requestCode == Codes.CODE_EDIT_MONI_ITEM) {
             Log.d(Constants.DEBUGTAG, " $ MonItemStatus callBack from EDIT_MONI_ITEM");
             // Callback from MoniItemCreation
-            if(resultCode == RESULT_OK) {
-                if(data.hasExtra("moni-item-result")) {
+            if (resultCode == RESULT_OK) {
+                if (data.hasExtra("moni-item-result")) {
                     MonitoringItem itemEdited = (MonitoringItem) data
                             .getSerializableExtra("moni-item-result");
                     Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem callback EDIT_MONI_ITEM: "
@@ -104,7 +103,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
                     else
                         imageMonitoring.setImageDrawable(getResources()
                                 .getDrawable(R.drawable.ic_leaf_green));
-                    Toast.makeText(getApplicationContext(), /*R.string.item_edited*/R.string.hello_world, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), R.string.item_edited, Toast.LENGTH_SHORT)
                             .show();
                 }
             }

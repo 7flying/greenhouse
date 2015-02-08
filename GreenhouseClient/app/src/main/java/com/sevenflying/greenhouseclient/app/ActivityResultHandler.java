@@ -56,6 +56,23 @@ public class ActivityResultHandler {
         Toast.makeText(context, context.getString(R.string.item_created), Toast.LENGTH_SHORT)
                 .show();
     }
+
+    /** Handles the callback from the edition of a MonitoringItem
+     * @param context
+     * @param data
+     */
+    public static void handleEditMoniItem(Context context, Intent data) {
+        MonitoringItem itemEdited = (MonitoringItem) data
+                .getSerializableExtra("moni-item-result");
+        Log.d(Constants.DEBUGTAG, " $ MainAct extraItem callback EDIT_MONI_ITEM: "
+                + itemEdited.toString());
+        DBManager manager = new DBManager(context);
+        manager.deleteItem(itemEdited.getId());
+        manager.addItem(itemEdited);
+
+        Toast.makeText(context, R.string.item_edited, Toast.LENGTH_SHORT).show();
+    }
+
     /** Handles the callback from the creation of a new Sensor.
      * @param context
      */

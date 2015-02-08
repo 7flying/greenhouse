@@ -74,7 +74,7 @@ public class StatusFragment extends Fragment implements Updateable {
                                             MonitoringItem extraInput = monitoringItems
                                                     .get(listPosition);
                                             intent.putExtra("moni-to-edit", extraInput);
-                                            startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
+                                            getActivity().startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
                                             break;
                                         case 1: // Delete
                                             manager.deleteItem(monitoringItems.get(listPosition));
@@ -93,24 +93,6 @@ public class StatusFragment extends Fragment implements Updateable {
                 }
             });
             return view;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
-            // Callback from MoniItemCreationActivity
-            if(resultCode == Activity.RESULT_OK) {
-                ActivityResultHandler.handleCreateNewMoniItem(getActivity().getApplicationContext(),
-                        data);
-                moniAdapter.notifyDataSetChanged();
-            }
-        } else {
-            if(requestCode == Codes.CODE_EDIT_MONI_ITEM) {
-                if(resultCode == Activity.RESULT_OK) {
-                    // TODO
-                }
-            }
         }
     }
 

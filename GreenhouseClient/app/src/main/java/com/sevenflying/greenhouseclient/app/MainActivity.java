@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -13,9 +14,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.sevenflying.greenhouseclient.app.about.AboutActivity;
+import com.sevenflying.greenhouseclient.app.actuatorstab.ActuatorCreationActivity;
 import com.sevenflying.greenhouseclient.app.alertstab.AlertCreationActivity;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
@@ -23,6 +26,7 @@ import com.sevenflying.greenhouseclient.app.settings.SettingsActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
+import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 
@@ -108,6 +112,11 @@ public class MainActivity extends ActionBarActivity {
                                         startActivityForResult(new Intent(MainActivity.this,
                                                 SensorCreationActivity.class), Codes.CODE_NEW_SENSOR);
                                         break;
+                                    case 3: // Actuator
+                                        startActivityForResult(new Intent(MainActivity.this,
+                                                ActuatorCreationActivity.class),
+                                                Codes.CODE_NEW_ACTUATOR);
+                                        break;
                                 }
                             }
                         });
@@ -127,49 +136,59 @@ public class MainActivity extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(Constants.DEBUGTAG, "$ MainActivity::onActivityResult, requestCode:" + requestCode
                 + ", resultCode:" + resultCode);
-        if(requestCode ==  Codes.CODE_CREATE_NEW_ALERT) {
-            // Callback from AlertCreationActivity
-            if(resultCode == Activity.RESULT_OK) {
-                Log.d(Constants.DEBUGTAG, " MainActivity::OnActivity result: CODE_CREATE_NEW_ALERT OK");
-                ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
-                tabsPaAdapter.update(2);
-            }
-        } else {
-            if(requestCode == Codes.CODE_NEW_MONI_ITEM) {
+        switch (requestCode) {
+            case Codes.CODE_CREATE_NEW_ALERT:
+                // Callback from AlertCreationActivity
+                if(resultCode == Activity.RESULT_OK) {
+                    Log.d(Constants.DEBUGTAG, " MainActivity::OnActivity result: CODE_CREATE_NEW_ALERT OK");
+                    ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
+                    tabsPaAdapter.update(2);
+                }
+                break;
+            case Codes.CODE_EDIT_ALERT:
+                // Callback from AlertCreationActivity on Edit mode
+                if(resultCode == Activity.RESULT_OK) {
+                    ActivityResultHandler.handleEditAlert(MainActivity.this, data);
+                    tabsPaAdapter.update(2);
+                }
+                break;
+            case Codes.CODE_NEW_SENSOR:
+                // Callback from SensorCreationActivity
+                if(resultCode == Activity.RESULT_OK) {
+                    ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
+                    tabsPaAdapter.update(1);
+                }
+                break;
+            case Codes.CODE_EDIT_SENSOR:
+                // Callback from SensorCreationActivity
+                if (resultCode == Activity.RESULT_OK) {
+                    ActivityResultHandler.handleEditSensor(getApplicationContext(), data);
+                    if (tabsPaAdapter !=  null)
+                        tabsPaAdapter.update(1);
+                    else
+                        Log.e(Constants.DEBUGTAG, "$ MainActivity::onActivityResult "
+                                + "EDIT_SENSOR, has NULL tabsPagerAdapter");
+                }
+                break;
+            case Codes.CODE_NEW_MONI_ITEM:
                 // Callback from MoniItemCreationActivity
                 if(resultCode == Activity.RESULT_OK) {
                     ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
                     tabsPaAdapter.update(0);
                 }
-            } else {
-                if(requestCode == Codes.CODE_NEW_SENSOR) {
-                    // Callback from SensorCreationActivity
-                    if(resultCode == Activity.RESULT_OK) {
-                        ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
-                       tabsPaAdapter.update(1);
-                    }
-                } else {
-                    if(requestCode == Codes.CODE_EDIT_ALERT) {
-                        // Callback from AlertCreationActivity on Edit mode
-                        if(resultCode == Activity.RESULT_OK) {
-                            ActivityResultHandler.handleEditAlert(MainActivity.this, data);
-                            tabsPaAdapter.update(2);
-                        }
-                    } else {
-                        if (requestCode == Codes.CODE_EDIT_SENSOR) {
-                            // Callback from SensorCreationActivity
-                            if (resultCode == Activity.RESULT_OK) {
-                                ActivityResultHandler.handleEditSensor(getApplicationContext(), data);
-                                if (tabsPaAdapter !=  null)
-                                    tabsPaAdapter.update(1);
-                                else
-                                    Log.e(Constants.DEBUGTAG, "$ MainActivity::onActivityResult "
-                                            + "EDIT_SENSOR, has NULL tabsPagerAdapter");
-                            }
-                        }
-                    }
+                break;
+            case Codes.CODE_EDIT_MONI_ITEM:
+                if (resultCode == RESULT_OK) {
+                    ActivityResultHandler.handleEditMoniItem(getApplicationContext(), data);
+                    tabsPaAdapter.update(0);
                 }
-            }
+                break;
+            case Codes.CODE_NEW_ACTUATOR:
+                break;
+            case Codes.CODE_EDIT_ACTUATOR:
+                break;
+            default:
+                break;
         }
     }
 }
