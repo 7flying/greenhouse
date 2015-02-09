@@ -696,4 +696,34 @@ public class DBManager extends SQLiteOpenHelper {
         db.delete(ActuatorEntry.TABLE_NAME, select, new String[] {actuator.getPinId()});
         Log.e(Constants.DEBUGTAG, " $ addActuator deleted: " + actuator.toString());
     }
+
+    /** Obtains all the actuators in the db
+     * @return - list of actuators
+     */
+    public List<Actuator> getAllActuators() {
+        List<Actuator> ret = new ArrayList<Actuator>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ActuatorEntry.TABLE_NAME, new String[]{});
+        if (cursor.moveToFirst()) {
+            do {
+                Actuator actTemp = new Actuator(
+                        cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_NAME)),
+                        cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_PIN)));
+                if (cursor.getColumnIndex(ActuatorEntry.AC_SENSOR_REF) != -1) {
+                    // The column exists, there is a control sensor for this actuator
+                    int sensorId = cursor.getInt(cursor.getColumnIndex(
+                            ActuatorEntry.AC_SENSOR_REF));
+                    Sensor s = getSensorBy(Integer.toString(sensorId));
+                    actTemp.setControlSensor(s);
+                    actTemp.setCompareType(AlertType.valueOf(cursor.getString(
+                            cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE))));
+                    actTemp.setCompareValue(cursor.getDouble(
+                            cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
+                }
+                ret.add(actTemp);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return ret;
+    }
 }

@@ -4,6 +4,8 @@ public enum AlertType {
 
 	GREATER,GREATER_EQUAL, EQUAL, LESS, LESS_EQUAL; // Do not change the order
 
+    public static final AlertType[] alertTypes = { AlertType.GREATER, AlertType.GREATER_EQUAL,
+        AlertType.EQUAL, AlertType.LESS, AlertType.LESS_EQUAL };
 
     public String getSymbol() {
         switch (this) {

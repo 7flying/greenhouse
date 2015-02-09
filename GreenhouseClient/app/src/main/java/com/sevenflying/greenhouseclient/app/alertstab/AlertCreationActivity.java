@@ -39,10 +39,6 @@ public class AlertCreationActivity extends ActionBarActivity {
     private TextView tvSensorUnit;
     private String selectedSensor = null;
     private int selectedAlert = -1;
-    private final AlertType [] alertTypes = {   AlertType.GREATER, AlertType.GREATER_EQUAL,
-                                                AlertType.EQUAL, AlertType.LESS,
-                                                AlertType.LESS_EQUAL
-    };  // Do not change the order
     private Map<String, Sensor> formattedSensorMap;
 
     @Override
@@ -141,7 +137,7 @@ public class AlertCreationActivity extends ActionBarActivity {
                 a.setSensorName(formattedSensorMap.get(selectedSensor).getName());
                 a.setSensorPinId(formattedSensorMap.get(selectedSensor).getPinId());
                 a.setCompareValue(Double.parseDouble(editTextValue.getText().toString()));
-                a.setAlertType(alertTypes[selectedAlert]);
+                a.setAlertType(AlertType.alertTypes[selectedAlert]);
                 Log.d(Constants.DEBUGTAG, " $ OK on AlertCreationAct. arg:" + a.toString());
                 // Return alert to previous activity
                 Intent returnIntent = new Intent();

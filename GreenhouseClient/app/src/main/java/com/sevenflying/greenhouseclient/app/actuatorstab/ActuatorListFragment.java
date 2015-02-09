@@ -1,17 +1,22 @@
 package com.sevenflying.greenhouseclient.app.actuatorstab;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
+import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /** Shows the actuator list.
@@ -19,26 +24,65 @@ import java.util.List;
  */
 public class ActuatorListFragment extends Fragment implements Updateable {
 
-    private List<Actuator> actuators;
+    private List<Actuator> actuatorList;
     private ActuatorAdapter actuatorAdapter;
-    private ListView actuatorList;
+    private ListView actuatorListView;
+    private DBManager manager;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater,  ViewGroup container, final Bundle savedInstanceState)
     {
         if (container == null)
             return null;
         else {
             View view = inflater.inflate(R.layout.fragment_actuator_list, container, false);
-            actuatorList = (ListView) view.findViewById(R.id.list_actuators);
-            actuators = new ArrayList<Actuator>();
-            for(int i = 0 ; i < 3; i++){
-                Actuator a = new Actuator("Water pump " + i, "D0" + i);
-                actuators.add(a);
-            }
-            actuatorAdapter = new ActuatorAdapter(getActivity(),
-                    R.layout.actuator_row, actuators);
-            actuatorList.setAdapter(actuatorAdapter);
+            actuatorListView = (ListView) view.findViewById(R.id.list_actuators);
+            manager = new DBManager(getActivity().getApplicationContext());
+            actuatorList = manager.getAllActuators();
+            actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuatorList);
+            actuatorListView.setAdapter(actuatorAdapter);
+            actuatorAdapter.notifyDataSetChanged();
+            // Click for further data display
+            actuatorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Display actuator data
+                    Intent intent = new Intent(ActuatorListFragment.this.getActivity(),
+                            ActuatorStatusActivity.class);
+                    intent.putExtra("actuator", actuatorList.get(position));
+                    startActivity(intent);
+                }
+            });
+            // Context menu on long click
+            actuatorListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.actuator))
+                        .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0: // edit
+                                        // TODO edit actuator
+                                        break;
+                                    case 1: // delete
+                                        manager.deleteActuator(actuatorList.get(position));
+                                        actuatorList.remove(position);
+                                        actuatorAdapter.notifyDataSetChanged();
+                                        Toast.makeText(ActuatorListFragment.this.getActivity(),
+                                                getResources().getString(R.string.actuator_deleted),
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    return true;
+                }
+            });
+
             return view;
         }
     }
@@ -46,8 +90,8 @@ public class ActuatorListFragment extends Fragment implements Updateable {
     @Override
     public void update() {
         // actuatorList = manager.getActuators();
-        actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuators);
-        actuatorList.setAdapter(actuatorAdapter);
+        actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuatorList);
+        actuatorListView.setAdapter(actuatorAdapter);
         actuatorAdapter.notifyDataSetChanged();
     }
 }

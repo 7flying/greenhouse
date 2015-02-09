@@ -75,6 +75,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
+        <activity android:name=".actuatorstab.ActuatorActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/actuators">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
+        </activity>
+        <activity android:name=".actuatorstab.ActuatorCreationActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_add_actuator">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
+        </activity>
+        <activity android:name=".actuatorstab.ActuatorStatusActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_actuator_info">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
+        </activity>
         <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
             android:enabled="true"/>
         <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>

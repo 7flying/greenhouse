@@ -28,6 +28,9 @@
     <string name="title_item_status">Item\'s info</string>
     <string name="title_settings">Settings</string>
     <string name="title_about">About</string>
+    <string name="title_add_actuator">Add actuator</string>
+    <string name="title_edit_actuator">Edit actuator</string>
+    <string name="title_actuator_info">Actuator\'s info</string>
     <!-- xmls layout-->
     <!-- activity_sensor_status-->
     <string name="content_image_sensor_desc">Sensor image</string>
@@ -81,6 +84,11 @@
     <string name="ensure_refresh">Ensure refresh rate?</string>
     <string name="yes">Yes, please</string>
     <string name="no">Nope, don\'t worry</string>
+    <!-- actuators general -->
+    <string name="actuator">Actuator</string>
+    <string name="actuator_created">Actuator created.</string>
+    <string name="actuator_deleted">Actuator deleted.</string>
+    <string name="actuator_modified">Actuator modified.</string>
     <!-- activity actuator creation -->
     <string name="add_control_sensor">Add a control sensor?</string>
     <string name="control_type">Control type</string>

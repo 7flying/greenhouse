@@ -7,28 +7,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="10dp">
-        <LinearLayout
+        <TableLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <!-- name -->
-            <EditText
-                android:id="@+id/et_name"
-                android:textSize="14dp"
-                android:hint="@string/name"
+            <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp">
+                <EditText
+                    android:id="@+id/et_name"
+                    android:textSize="14dp"
+                    android:hint="@string/name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"/>
+            </TableRow>
             <!-- pin -->
-            <LinearLayout
+            <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,14 +55,14 @@
                     android:textSize="14sp"
                     android:inputType="number"
                     android:gravity="center_vertical"/>
-            </LinearLayout>
+            </TableRow>
             <!-- control sensor? -->
             <TextView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:textSize="15dp"
+                android:layout_marginLeft="15dp"
+                android:textSize="16sp"
                 android:textColor="@color/bright_foreground_inverse_material_dark"
                 android:text="@string/add_control_sensor"/>
             <RadioGroup
@@ -86,70 +92,88 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="5dp">
-                <!-- Sensor choose -->
-                <LinearLayout
+                <TableLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="match_parent"
+                    android:layout_height="fill_parent">
+                    <!-- Sensor choose -->
+                     <TableRow android:layout_width="fill_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center_horizontal"
+                         android:layout_margin="10dp">
+                         <TextView
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:textSize="16sp"
+                             android:layout_gravity="center_vertical"
+                             android:textColor="@color/bright_foreground_inverse_material_dark"
+                             android:text="@string/sensor"
+                             android:clickable="false"
+                             android:layout_weight="1"/>
+                         <Spinner
+                             android:id="@+id/sensor_chooser"
+                             android:layout_weight="1"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_gravity="center_vertical"/>
+                     </TableRow>
+                    <!-- control type -->
+                    <TableRow android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/bright_foreground_inverse_material_dark"
-                        android:text="@string/sensor"
-                        android:clickable="false" />
-                    <Spinner
-                        android:id="@+id/sensor_chooser"
-                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="10dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/bright_foreground_inverse_material_dark"
+                            android:text="@string/control_type"
+                            android:clickable="false"
+                            android:layout_weight="1"/>
+                        <Spinner
+                            android:id="@+id/sensort_type_chooser"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"/>
+                    </TableRow>
+                    <!-- control value -->
+                    <TableRow android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
-                <!-- control type -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/bright_foreground_inverse_material_dark"
-                        android:text="@string/control_type"
-                        android:clickable="false" />
-                    <Spinner
-                        android:id="@+id/sensort_type_chooser"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
-                <!-- control value -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/control_value"
-                        android:textColor="@color/bright_foreground_inverse_material_dark"
-                        android:clickable="false"/>
-                    <EditText
-                        android:id="@+id/et_control_value"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginTop="10dp"
-                        android:textSize="14sp"
-                        android:inputType="number"
-                        android:gravity="center_vertical"/>
-                </LinearLayout>
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/control_value"
+                            android:textColor="@color/bright_foreground_inverse_material_dark"
+                            android:clickable="false"/>
+                        <EditText
+                            android:id="@+id/et_control_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginTop="10dp"
+                            android:textSize="14sp"
+                            android:inputType="number"
+                            android:gravity="center_vertical"/>
+                        <TextView
+                            android:id="@+id/et_control_unit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:layout_marginTop="10dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/bright_foreground_inverse_material_dark"/>
+                    </TableRow>
+                </TableLayout>
             </LinearLayout>
-        </LinearLayout>
+        </TableLayout>
     </ScrollView>
     <LinearLayout
         android:layout_alignParentBottom="true"
