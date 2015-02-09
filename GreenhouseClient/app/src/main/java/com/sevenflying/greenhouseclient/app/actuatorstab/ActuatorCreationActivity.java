@@ -83,6 +83,8 @@ public class ActuatorCreationActivity extends ActionBarActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
+        RadioButton radioAnalog = (RadioButton) findViewById(R.id.radio_analog);
+        RadioButton radioDigital = (RadioButton) findViewById(R.id.radio_digital);
         final LinearLayout layoutOpSensor = (LinearLayout) findViewById(
                 R.id.layout_optional_control_sensor);
         radioYes = (RadioButton) findViewById(R.id.radio_yes);
@@ -154,6 +156,15 @@ public class ActuatorCreationActivity extends ActionBarActivity {
     }
 
     private void checkSaveButton() {
-        createButton.setEnabled(validated[0] && validated[1] && validated[2]);
+        if (radioYes.isChecked())
+            createButton.setEnabled(validated[0] && validated[1] && validated[2]);
+        else
+            createButton.setEnabled(validated[0] && validated[1]);
+        if (createButton.isEnabled())
+            createButton.setTextColor(getResources().getColor(
+                    R.color.bright_foreground_inverse_material_dark));
+        else
+            createButton.setTextColor(getResources().getColor(
+                    R.color.switch_thumb_normal_material_dark));
     }
 }

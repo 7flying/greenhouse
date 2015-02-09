@@ -36,29 +36,53 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="10dp">
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:text="@string/pin"
                     android:textColor="@color/bright_foreground_inverse_material_dark"
-                    android:paddingLeft="5dp"
                     android:clickable="false"/>
                 <EditText
                     android:id="@+id/et_pin_number"
                     android:hint="@string/pin"
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginTop="10dp"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:inputType="number"
-                    android:gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"/>
+            </TableRow>
+            <TableRow android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp">
+                <!-- Type: analog-digital -->
+                <RadioGroup
+                    android:id="@+id/rgroupAD"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="2">
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:id="@+id/radio_analog"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/radio_analog"
+                        android:checked="true"/>
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:id="@+id/radio_digital"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/radio_digital"/>
+                </RadioGroup>
             </TableRow>
             <!-- control sensor? -->
             <TextView
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -70,7 +94,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:layout_weight="2"
                 android:paddingLeft="10dp">
                 <RadioButton
                     android:layout_weight="1"
@@ -159,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginTop="10dp"
-                            android:textSize="14sp"
+                            android:textSize="16sp"
                             android:inputType="number"
                             android:gravity="center_vertical"/>
                         <TextView
@@ -168,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
                             android:layout_marginTop="10dp"
-                            android:textSize="14sp"
+                            android:textSize="16sp"
                             android:textColor="@color/bright_foreground_inverse_material_dark"/>
                     </TableRow>
                 </TableLayout>
