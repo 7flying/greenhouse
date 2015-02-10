@@ -85,11 +85,6 @@ public class Actuator implements Serializable {
         this.compareValue = compareValue;
     }
 
-    public void launch() {
-        // TODO get last value from alert sensor and if alert is not fired launch
-        // TODO otherwise show warning
-    }
-
     @Override
     public String toString() {
         return "Actuator{" +

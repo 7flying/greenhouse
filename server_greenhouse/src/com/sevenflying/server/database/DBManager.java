@@ -14,11 +14,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.sevenflying.server.Env;
+import com.sevenflying.server.domain.Actuator;
+import com.sevenflying.server.domain.ActuatorType;
+import com.sevenflying.server.domain.CompareType;
 import com.sevenflying.server.domain.Sensor;
+import com.sevenflying.server.domain.exceptions.DuplicatedActuatorException;
 import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
+import com.sevenflying.server.domain.exceptions.NoSuchSensorException;
 
+/** DB manager.
+ * @author flying
+ */
 public class DBManager {
 
 	public static String DBPath = Env.DB_PATH;
@@ -61,6 +69,15 @@ public class DBManager {
 					+ "PRIMARY KEY (id, idsensor)"
 					+ ");");
 			
+			sta.executeUpdate("DROP TABLE IF EXISTS Actuators;");
+			sta.executeUpdate("CREATE TABLE Actuators ("
+					+ "pinid TEXT NOT NULL PRIMARY KEY,"
+					+ "name TEXT NOT NULL,"
+					+ "type char(1) NOT NULL,"
+					+ "idSensor INTEGER references Sensors(id)"
+						+ " ON DELETE CASCADE,"
+					+ "compareType TEXT,"
+					+ "compareValue REAL)");
 			sta.close();
 			System.out.println("$ Db created.");
 		} catch(SQLException e) {
@@ -116,6 +133,31 @@ public class DBManager {
 	}
 	
 	// -- Sensors --
+	
+	/** Returns a sensor given its db id.
+	 * @param dbId - id of the sensor
+	 * @return sensor
+	 * @throws SQLException
+	 */
+	public Sensor getSensor(int dbId) throws SQLException {
+		Sensor ret = null;
+		if (dbId != -1) {
+			PreparedStatement pre = conn.prepareStatement("SELECT * FROM Sensors"
+					+ " WHERE id = ?");
+			pre.setInt(1, dbId);
+			ResultSet result = pre.executeQuery();
+			if (result.next()) {
+				ret = new Sensor();
+				ret.setName(result.getString(2));
+				ret.setPinId(result.getString(3));
+				ret.setType(result.getString(4).charAt(0));
+				ret.setRefreshRate(result.getLong(5));
+			}
+			result.close();
+			pre.close();
+		}
+		return ret;
+	}
 	
 	/** Inserts the given sensor into the database
 	 * @param sensor - to insert
@@ -297,7 +339,7 @@ public class DBManager {
 		List<Sensor> ret = new ArrayList<Sensor>();
 		Statement sta = conn.createStatement();
 		ResultSet result = sta.executeQuery("SELECT * FROM Sensors;");
-		while(result.next()){
+		while (result.next()){
 			Sensor s = new Sensor();
 			s.setName(result.getString(2));
 			s.setPinId(result.getString(3));
@@ -339,4 +381,145 @@ public class DBManager {
 	
 	// -- Actuators --
 	
+	/** Checks if an actuator is created ir not.
+	 * @param actuator
+	 * @return
+	 * @throws SQLException
+	 */
+	private boolean isActuatorCreated(Actuator actuator) throws SQLException {
+		PreparedStatement pre = conn.prepareStatement("SELECT COUNT(*) FROM"
+				+ " Actuators WHERE pinid = ?;");
+		pre.setString(1, actuator.getPinId());
+		ResultSet result = pre.executeQuery();
+		int r = result.getInt(1);
+		result.close();
+		pre.close();
+		return r == 1;
+	}
+	
+	/** Retrieves all the actuators from the database
+	 * @return
+	 * @throws SQLException 
+	 */
+	public List<Actuator> getActuators() throws SQLException {
+		List<Actuator> ret = new ArrayList<Actuator>();
+		Statement sta = conn.createStatement();
+		ResultSet result = sta.executeQuery("SELECT * FROM Actuators;");
+		while (result.next()) {
+			Actuator act = new Actuator();
+			act.setPinId(result.getString(1));
+			act.setName(result.getString(2));
+			act.setType(ActuatorType.valueOf(result.getString(3)));
+			if (result.getString(5) != null) {
+				Sensor sensor = getSensor(result.getInt(4));
+				if (sensor != null)
+					act.setControlSensor(sensor);
+				act.setCompareType(CompareType.valueOf(result.getString(5)));
+				act.setCompareValue(result.getDouble(6));
+			}
+			ret.add(act);
+		}
+		result.close();
+		sta.close();
+		return ret;
+	}
+	
+	/** Inserts an actuator in the DB.
+	 * @param actuator - actuator to insert
+	 * @throws SQLException  - if something bad happens
+	 * @throws DuplicatedActuatorException - when there is already an Actuator
+	 * with the same pinid
+	 * @throws NoSuchSensorException 
+	 */
+	public synchronized void insertActuator(Actuator actuator)
+	throws DuplicatedActuatorException, SQLException, NoSuchSensorException
+	{
+		if (isActuatorCreated(actuator))
+			throw new DuplicatedActuatorException();
+		else {
+			int idSensor = -1;
+			PreparedStatement pre = null;
+			if (actuator.hasControlSensor()) {
+				idSensor = getSensorBDid(actuator.getControlSensor().getPinId(),
+							Character.toString(actuator
+								.getControlSensor().getType()
+								.getIdentifier()));
+				if (idSensor == -1)
+					throw new NoSuchSensorException();
+				pre = conn.prepareStatement("INSERT into "
+						+ "Actuators (pinid, name, type, idSensor, "
+						+ "compareType, compareValue) "
+						+ "values (?, ?, ?, ?, ?, ?);");
+				
+			} else
+				pre = conn.prepareStatement("INSERT into "
+						+ "Actuators (pinid, name, type) values (?, ?, ?);");
+			pre.setString(1, actuator.getPinId());
+			pre.setString(2, actuator.getName());
+			pre.setString(3, actuator.getType().toString());
+			if (actuator.hasControlSensor()) {
+				pre.setInt(4, idSensor);
+				pre.setString(5, actuator.getCompareType().toString());
+				pre.setDouble(6, actuator.getCompareValue());
+			}
+			pre.executeUpdate();
+			pre.close();
+		}
+	}
+	
+	/** Deletes an actuator from the db.
+	 * @param actuator - actuator to delete
+	 * @throws SQLException
+	 */
+	public synchronized void deleteActuator(Actuator actuator)
+	throws SQLException
+	{
+		if (isActuatorCreated(actuator)) {
+			PreparedStatement pre = conn.prepareStatement("DELETE FROM Actuators"
+					+ " WHERE pinid = ?;");
+			pre.setString(1, actuator.getPinId());
+			pre.executeUpdate();
+			pre.close();
+		}
+	}
+	
+	/** Updates an actuator from the db.
+	 * @param actuator - actuator to update
+	 * @throws SQLException 
+	 * @throws NoSuchSensorException 
+	 */
+	public synchronized void updateActuator(Actuator actuator)
+	throws SQLException, NoSuchSensorException
+	{
+		if (isActuatorCreated(actuator)) {
+			PreparedStatement pre = null;
+			int idPos = -1, sensorId = -1;
+			if (actuator.hasControlSensor()) {
+				sensorId = getSensorBDid(actuator.getControlSensor()
+						.getPinId(), Character.toString(actuator
+								.getControlSensor().getType()
+								.getIdentifier()));
+				if (sensorId == -1)
+					throw new NoSuchSensorException();
+				pre = conn.prepareStatement("UPDATE Actuators SET type = ?,"
+						+ "name = ?, idSensor = ?, compareType = ?,"
+						+ "compareValue = ? WHERE pinid = ?;");
+				idPos = 6;
+			} else {
+				pre = conn.prepareStatement("UPDATE Actuators SET type = ?,"
+						+ "name = ? WHERE pinid = ?;");
+				idPos = 3;
+			}
+			pre.setString(1, actuator.getType().toString());
+			pre.setString(2, actuator.getName());
+			if (actuator.hasControlSensor()) {
+				pre.setInt(3, sensorId);
+				pre.setString(4, actuator.getCompareType().toString());
+				pre.setDouble(5, actuator.getCompareValue());
+			}
+			pre.setString(idPos, actuator.getPinId());
+			pre.executeUpdate();
+			pre.close();
+		}
+	}
 }
