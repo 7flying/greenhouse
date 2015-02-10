@@ -40,13 +40,17 @@ public class BlossomController implements PortEvent {
 	}
 
 	public void addSensor(Sensor sensor) {
-		if(!sensorMap.containsKey(sensor.getType().getIdentifier() + sensor.getPinId()))
-			sensorMap.put(sensor.getType().getIdentifier() + sensor.getPinId(), sensor);
+		if(!sensorMap.containsKey(sensor.getType().getIdentifier()
+				+ sensor.getPinId()))
+			sensorMap.put(sensor.getType().getIdentifier()
+					+ sensor.getPinId(), sensor);
 	}
 
 	public void addActuator(Actuator actuator) {
-		if(!actuatorMap.containsKey(actuator.getType().getIdentifier() + actuator.getPinId()))
-			actuatorMap.put(actuator.getType().getIdentifier() + actuator.getPinId(), actuator);
+		if(!actuatorMap.containsKey(actuator.getType().getIdentifier()
+				+ actuator.getPinId()))
+			actuatorMap.put(actuator.getType().getIdentifier()
+					+ actuator.getPinId(), actuator);
 	}
 
 	public Sensor getSensor(String key) {
@@ -102,7 +106,8 @@ public class BlossomController implements PortEvent {
 			// first 4 chars -> Type + id
 			if(sensorMap.containsKey(data.substring(0, 4))) {
 				// pos 4 char -> X
-				sensorMap.get(data.substring(0, 4)).update(Double.parseDouble(data.substring(5)));
+				sensorMap.get(data.substring(0, 4)).update(
+						Double.parseDouble(data.substring(5)));
 			}
 		} else {
 			System.out.println("$ Error at " + data);

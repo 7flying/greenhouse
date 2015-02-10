@@ -21,7 +21,7 @@ import com.sevenflying.server.domain.exceptions.NoDataException;
 
 public class DBManager {
 
-	public static String DBPath = Env.DB_PATH;//"F:\\dump\\greenhouse\\db.sqlite";
+	public static String DBPath = Env.DB_PATH;
 	private static DBManager manager = null;
 	private Connection conn = null;
 	private static String TIME_FORMAT = "HH:mm:ss";
@@ -42,8 +42,10 @@ public class DBManager {
 			sta.executeUpdate("CREATE TABLE Sensors ("
 					+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 					+ "name TEXT NOT NULL,"
-					+ "pinid TEXT NOT NULL," // cannot be unique since a sensor may give two different type of readings (temp+humi)
-											 // a 'real' sensor may count as two different db sensors with the same pinid
+		// Pinid cannot be unique since a sensor may give two different type of
+		// readings (temp+humi). A 'real' sensor may count as two different
+		// db sensors with the same pinid
+					+ "pinid TEXT NOT NULL,"
 					+ "type char(1) NOT NULL,"
 					+ "refresh INTEGER NOT NULL check (refresh > 0)"
 					+ ");");
@@ -51,7 +53,8 @@ public class DBManager {
 			sta.executeUpdate("DROP TABLE IF EXISTS Readings;");
 			sta.executeUpdate("CREATE TABLE Readings ("
 					+ "id INTEGER NOT NULL,"
-					+ "idsensor INTEGER NOT NULL references Sensors(id) ON DELETE CASCADE,"
+					+ "idsensor INTEGER NOT NULL references Sensors(id)"
+						+ " ON DELETE CASCADE,"
 					+ "value REAL NOT NULL,"
 					+ "time TEXT NOT NULL,"
 					+ "date TEXT NOT NULL,"
@@ -66,11 +69,15 @@ public class DBManager {
 		}
 	}
 	
+	// -- Admin --
+	
 	/** Connects to the given db
 	 * @param pathToDB - path of the database
 	 * @throws ClassNotFoundException
 	 * @throws SQLException	 */
-	public void connect(String pathToDB) throws ClassNotFoundException, SQLException {
+	public void connect(String pathToDB) throws ClassNotFoundException,
+	SQLException
+	{
 		Class.forName("org.sqlite.JDBC");
 		conn = DriverManager.getConnection("jdbc:sqlite:" + pathToDB);
 		// General settings
@@ -85,80 +92,6 @@ public class DBManager {
 	public void disconnect() throws SQLException {
 		if(conn != null)
 			conn.close();
-	}
-	
-	/** Inserts the given sensor into the database
-	 * @param sensor - to insert
-	 * @throws SQLException	 
-	 * @throws DuplicatedSensorException */
-	public synchronized void insertSensor(Sensor sensor) throws SQLException, DuplicatedSensorException {
-		if (getSensorDBid(sensor) != -1)
-			throw new DuplicatedSensorException();
-		PreparedStatement pre = conn.prepareStatement("INSERT into Sensors (name, pinid, type, refresh) values (?,?,?,?);");
-		pre.setString(1, sensor.getName());
-		pre.setString(2, sensor.getPinId());
-		pre.setString(3, Character.toString(sensor.getType().getIdentifier()));
-		pre.setDouble(4, sensor.getRefreshRate());
-		pre.executeUpdate();
-		pre.close();
-	}
-	
-	/** Deletes the given sensor from the db.
-	 * @param sensor - to delete
-	 * @throws SQLException
-	 */
-	public synchronized void deleteSensor(Sensor sensor) throws SQLException {
-		deleteSensor(sensor.getPinId(), Character.toString(sensor.getType().getIdentifier()));
-	}
-	
-	public synchronized void deleteSensor(String pinId, String type) throws SQLException {
-		PreparedStatement pre = conn.prepareStatement("DELETE FROM Sensors WHERE id = ?;");
-		int id = getSensorBDid(pinId, type);
-		if (id != -1) {
-			pre.setInt(1, id);
-			pre.executeUpdate();
-			pre.close();
-		}
-	}
-	
-	/** Updates the sensor.
-	 * @param sensor - to update
-	 * @throws SQLException
-	 */
-	public synchronized void updateSensor(Sensor sensor) throws SQLException {
-		System.out.println(" $$ db sensor:" + sensor.toString());
-		PreparedStatement pre = conn.prepareStatement("UPDATE Sensors SET name = ?, refresh = ? WHERE id = ?;");
-		int id = getSensorDBid(sensor);
-		System.out.println(" $$ SENSOR DB ID: " + id);
-		if(id != -1) {
-			pre.setString(1, sensor.getName());
-			pre.setDouble(2, sensor.getRefreshRate());
-			pre.setInt(3, id);
-			int ret = pre.executeUpdate();
-			System.out.println(" $$ UPDATED ROWS: " + ret);
-			pre.close();
-		}
-	}
-	
-	/** Gets the db id of a sensor */
-	private int getSensorDBid(Sensor sensor) throws SQLException {
-		System.out.println(" $$ requested : " + sensor.getPinId() + ", " + sensor.getType().getIdentifier());
-		return getSensorBDid(sensor.getPinId(), Character.toString(sensor.getType().getIdentifier()));
-	}
-	
-	/** Gets the db id of a sensor */
-	private int getSensorBDid(String pinId, String type) throws SQLException {
-		PreparedStatement pre = conn.prepareStatement("SELECT id FROM Sensors WHERE pinid = ? AND type = ?");
-		pre.setString(1, pinId);
-		pre.setString(2, type);
-		ResultSet result = pre.executeQuery();
-		int ret = -1;
-		if (result.next()) {
-			ret = result.getInt(1);
-		}
-		result.close();
-		pre.close();
-		return ret;
 	}
 	
 	/** Gets the maximum id of a table */
@@ -176,18 +109,111 @@ public class DBManager {
 	
 	/** Returns current time-date */
 	private String[] getTimeDate() {
-		return new String [] { new SimpleDateFormat(TIME_FORMAT).format(new GregorianCalendar().getTime()), new SimpleDateFormat(DATE_FORMAT).format(new GregorianCalendar().getTime()) };
+		return new String [] { new SimpleDateFormat(TIME_FORMAT)
+			.format(new GregorianCalendar().getTime()),
+					new SimpleDateFormat(DATE_FORMAT)
+						.format(new GregorianCalendar().getTime()) };
+	}
+	
+	// -- Sensors --
+	
+	/** Inserts the given sensor into the database
+	 * @param sensor - to insert
+	 * @throws SQLException	 
+	 * @throws DuplicatedSensorException */
+	public synchronized void insertSensor(Sensor sensor) throws SQLException,
+	DuplicatedSensorException
+	{
+		if (getSensorDBid(sensor) != -1)
+			throw new DuplicatedSensorException();
+		PreparedStatement pre = conn.prepareStatement("INSERT into Sensors"
+				+ " (name, pinid, type, refresh) values (?,?,?,?);");
+		pre.setString(1, sensor.getName());
+		pre.setString(2, sensor.getPinId());
+		pre.setString(3, Character.toString(sensor.getType().getIdentifier()));
+		pre.setDouble(4, sensor.getRefreshRate());
+		pre.executeUpdate();
+		pre.close();
+	}
+	
+	/** Deletes the given sensor from the db.
+	 * @param sensor - to delete
+	 * @throws SQLException
+	 */
+	public synchronized void deleteSensor(Sensor sensor) throws SQLException {
+		deleteSensor(sensor.getPinId(), Character.toString(
+				sensor.getType().getIdentifier()));
+	}
+	
+	public synchronized void deleteSensor(String pinId, String type)
+	throws SQLException
+	{
+		PreparedStatement pre = conn.prepareStatement("DELETE FROM Sensors "
+				+ "WHERE id = ?;");
+		int id = getSensorBDid(pinId, type);
+		if (id != -1) {
+			pre.setInt(1, id);
+			pre.executeUpdate();
+			pre.close();
+		}
+	}
+	
+	/** Updates the sensor.
+	 * @param sensor - to update
+	 * @throws SQLException
+	 */
+	public synchronized void updateSensor(Sensor sensor) throws SQLException {
+		System.out.println(" $$ db sensor:" + sensor.toString());
+		PreparedStatement pre = conn.prepareStatement("UPDATE Sensors "
+				+ "SET name = ?, refresh = ? WHERE id = ?;");
+		int id = getSensorDBid(sensor);
+		System.out.println(" $$ SENSOR DB ID: " + id);
+		if(id != -1) {
+			pre.setString(1, sensor.getName());
+			pre.setDouble(2, sensor.getRefreshRate());
+			pre.setInt(3, id);
+			int ret = pre.executeUpdate();
+			System.out.println(" $$ UPDATED ROWS: " + ret);
+			pre.close();
+		}
+	}
+	
+	/** Gets the db id of a sensor */
+	private int getSensorDBid(Sensor sensor) throws SQLException {
+		System.out.println(" $$ requested : " + sensor.getPinId() + ", "
+				+ sensor.getType().getIdentifier());
+		return getSensorBDid(sensor.getPinId(),
+				Character.toString(sensor.getType().getIdentifier()));
+	}
+	
+	/** Gets the db id of a sensor */
+	private int getSensorBDid(String pinId, String type) throws SQLException {
+		PreparedStatement pre = conn.prepareStatement("SELECT id FROM Sensors"
+				+ " WHERE pinid = ? AND type = ?");
+		pre.setString(1, pinId);
+		pre.setString(2, type);
+		ResultSet result = pre.executeQuery();
+		int ret = -1;
+		if (result.next()) {
+			ret = result.getInt(1);
+		}
+		result.close();
+		pre.close();
+		return ret;
 	}
 	
 	/** Inserts a new reading from a sensor into the db
 	 * @param sensor - sensor that made the reading
 	 * @param value - reading
 	 * @throws SQLException 	 */
-	public synchronized void insertReading(Sensor sensor, double value) throws SQLException {
+	public synchronized void insertReading(Sensor sensor, double value)
+	throws SQLException
+	{
 		int idSensor = getSensorDBid(sensor);
 		int maxId = getMaxId(READINGS_TABLE_NAME);
 		if(idSensor != -1 && maxId != -1) {
-			PreparedStatement pre = conn.prepareStatement("INSERT into Readings values (?, ?, ?, ?, ?);");
+			PreparedStatement pre = conn.prepareStatement("INSERT into Readings"
+					+ " values (?, ?, ?, ?, ?);");
 			pre.setInt(1, maxId + 1);
 			pre.setInt(2, idSensor);
 			pre.setDouble(3, value);
@@ -204,11 +230,16 @@ public class DBManager {
 	 * @param sensor - sensor to take the stored last reading from
 	 * @return last reading
 	 * @throws SQLException
-	 * @throws GreenhouseDatabaseException - when there aren't readings from a sensor
+	 * @throws GreenhouseDatabaseException - when there aren't readings
+	 *  from a sensor
 	 */
-	public double getLastReading(Sensor sensor) throws SQLException, NoDataException {
+	public double getLastReading(Sensor sensor) throws SQLException,
+	NoDataException
+	{
 		int idSensor = getSensorDBid(sensor);
-		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings WHERE idsensor = ? and id = (SELECT max(id) FROM Readings WHERE idsensor = ?);");
+		PreparedStatement pre = conn.prepareStatement("SELECT value FROM"
+				+ " Readings WHERE idsensor = ? and id = "
+				+ "(SELECT max(id) FROM Readings WHERE idsensor = ?);");
 		pre.setInt(1, idSensor);
 		pre.setInt(2, idSensor);
 		ResultSet result = pre.executeQuery();
@@ -231,11 +262,16 @@ public class DBManager {
 	 * @param type - sensor's type
 	 * @return last reading
 	 * @throws SQLException
-	 * @throws GreenhouseDatabaseException - when there aren't readings from a sensor
+	 * @throws GreenhouseDatabaseException - when there aren't readings
+	 *  from a sensor
 	 */
-	public double getLastReading(String pinId, String type) throws SQLException, NoDataException {
+	public double getLastReading(String pinId, String type) throws SQLException,
+	NoDataException
+	{
 		int id = getSensorBDid(pinId, type);
-		PreparedStatement pre = conn.prepareStatement("SELECT value FROM Readings WHERE idsensor = ? and id = (SELECT max(id) FROM Readings WHERE idsensor = ?);");
+		PreparedStatement pre = conn.prepareStatement("SELECT value FROM"
+				+ "Readings WHERE idsensor = ? and id = "
+				+ "(SELECT max(id) FROM Readings WHERE idsensor = ?);");
 		pre.setInt(1, id);
 		pre.setInt(2, id);
 		ResultSet result = pre.executeQuery();
@@ -279,21 +315,28 @@ public class DBManager {
 	 * @return list with maps with date-value
 	 * @throws SQLException 
 	 */
-	public List<Map<String, Double>> getLastXFromSensor(int lastX, String pinId, String type) throws SQLException {
+	public List<Map<String, Double>> getLastXFromSensor(int lastX, String pinId,
+			String type) throws SQLException
+	{
 		List<Map<String, Double>> ret = new ArrayList<Map<String, Double>>();
 		int id = getSensorBDid(pinId, type);
-		PreparedStatement pre = conn.prepareStatement("SELECT time, date, value FROM Readings WHERE idsensor = ? ORDER BY id DESC LIMIT ?;");
+		PreparedStatement pre = conn.prepareStatement("SELECT time, date, value"
+				+ " FROM Readings WHERE idsensor = ?"
+				+ " ORDER BY id DESC LIMIT ?;");
 		pre.setInt(1, id);
 		pre.setInt(2, lastX);
 		ResultSet result = pre.executeQuery();
 		while(result.next()) {
 			Map<String, Double> map = new HashMap<String, Double>();
-			map.put(result.getString(1) + " - " + result.getString(2), result.getDouble(3));
+			map.put(result.getString(1) + " - " + result.getString(2),
+					result.getDouble(3));
 			ret.add(map);
 		}
 		result.close();
 		pre.close();
 		return ret;
 	}
+	
+	// -- Actuators --
 	
 }

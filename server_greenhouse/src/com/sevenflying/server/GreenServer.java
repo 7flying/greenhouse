@@ -5,7 +5,8 @@ import java.util.Set;
 
 import com.sevenflying.server.communicator.BlossomController;
 
-/** Server that continuously gathers data from the sensors and logs it into the db */
+/** Server that continuously gathers data from the sensors and
+ * logs it into the db */
 public class GreenServer extends Thread {
 
 	private BlossomController controller;
@@ -28,13 +29,18 @@ public class GreenServer extends Thread {
 			synchronized(controller) {
 				sensorKeys = controller.getSensorMap().keySet();
 				for(String key : sensorKeys) {
-					// If the sensor is not in power saving mode and the refresh rate (wait time) comes, gather data
+					// If the sensor is not in power saving mode and the
+					// refresh rate (wait time) comes, gather data
 					if(controller.getSensor(key) != null) {
 						if(!controller.getSensor(key).isPowerSavingOn()) {
-							if(System.currentTimeMillis() - timeMap.get(key) >= controller.getSensor(key).getRefreshRate()) {
-								System.out.println("$ Requesting update of: " + key);
+							if(System.currentTimeMillis() - timeMap.get(key) >=
+									controller.getSensor(key).getRefreshRate())
+							{
+								System.out.println("$ Requesting update of: "
+										+ key);
 								controller.requestUpdate(key);
-								timeMap.put(key, new Long(System.currentTimeMillis()));
+								timeMap.put(key, new Long(
+										System.currentTimeMillis()));
 							}
 						}
 					} else {
@@ -56,7 +62,11 @@ public class GreenServer extends Thread {
 	 * @param pinId
 	 * @param isPowerSaving
 	 */
-	public void setPowerSaving(String sensorType, String pinId, boolean isPowerSaving) {
-		controller.getSensor(sensorType + pinId).setPowerSavingMode(isPowerSaving); // TODO return -1 or 0 to warn client
+	public void setPowerSaving(String sensorType, String pinId,
+	boolean isPowerSaving)
+	{
+		// TODO return -1 or 0 to warn client
+		controller.getSensor(sensorType + pinId)
+			.setPowerSavingMode(isPowerSaving); 
 	}
 }

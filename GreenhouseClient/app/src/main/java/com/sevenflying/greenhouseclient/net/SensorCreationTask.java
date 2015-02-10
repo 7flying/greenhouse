@@ -45,7 +45,7 @@ public class SensorCreationTask  extends AsyncTask <String, Void, String> {
             Socket s = new Socket(add, serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(Commands.NEW);
+            oos.writeObject(Commands.NEW_SENSOR);
             oos.flush();
             Log.d("SENSOR CREATION TASK", "New Sent");
             String send = strings[0] + ":" + strings[1] + strings[2] + ":" + strings[3] + ":" +

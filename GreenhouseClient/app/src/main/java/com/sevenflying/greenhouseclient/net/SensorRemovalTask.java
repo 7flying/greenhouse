@@ -39,7 +39,7 @@ public class SensorRemovalTask extends AsyncTask<String, Void, Integer> {
             Socket s = new Socket(add, serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(Commands.DELETE);
+            oos.writeObject(Commands.DELETE_SENSOR);
             oos.flush();
             String send = strings[0] + ":" + strings[1];
             oos.writeObject(send);

@@ -43,7 +43,7 @@ public class SensorModificationTask extends AsyncTask<String, Void, String> {
             Socket s = new Socket(add, serverPort);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            oos.writeObject(Commands.UPDATE);
+            oos.writeObject(Commands.UPDATE_SENSOR);
             oos.flush();
             String send = strings[0] + ":" + strings[1] + strings[2] + ":" + strings[3] + ":" +
                     strings[4] + ":" + strings[5];

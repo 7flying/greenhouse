@@ -73,17 +73,26 @@ public class NetServer {
 					case Constants.CHECK:	
 						getSensorLastValue(ois, oos);
 						break;
-					case Constants.NEW:
+					case Constants.NEW_SENSOR:
 						createSensor(ois, oos);
 						break;
-					case Constants.DELETE:
+					case Constants.DELETE_SENSOR:
 						deleteSensor(ois, oos);
 						break;
-					case Constants.UPDATE:
+					case Constants.UPDATE_SENSOR:
 						updateSensor(ois, oos);
 						break;
 					case Constants.POWSAV:
 						setPowerSaving(ois, oos);
+						break;
+					case Constants.NEW_ACTUATOR:
+						createActuator(ois, oos);
+						break;
+					case Constants.DELETE_ACTUATOR:
+						deleteActuator(ois, oos);
+						break;
+					case Constants.UPDATE_ACTUATOR:
+						updateActuator(ois, oos);
 						break;
 					default:
 						System.out.println("$$ Command " + command + " UNKNOWN");
@@ -260,7 +269,7 @@ public class NetServer {
 			index++;
 		}
 		String errorCode = null;
-		if(index == 5) {
+		if (index == 5) {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);				
@@ -274,7 +283,9 @@ public class NetServer {
 			} catch (DuplicatedSensorException ex) {
 				errorCode = Constants.DUPLICATED_SENSOR;
 				manager.disconnect();
-			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+			} catch (NumberFormatException | SQLException
+					| ClassNotFoundException e)
+			{
 				e.printStackTrace(); 
 				errorCode = Constants.INTERNAL_SERVER_ERROR;
 			} finally {
@@ -360,8 +371,9 @@ public class NetServer {
 			index++;
 		}
 		String errorCode = null;
-		if(index == 4) {
-			greenDaemon.setPowerSaving(temp[0], temp[1], Boolean.valueOf(temp[2])); // TODO handle error codes here
+		if (index == 4) {
+			greenDaemon.setPowerSaving(temp[0], temp[1],
+					Boolean.valueOf(temp[2])); // TODO handle error codes here
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
@@ -376,6 +388,7 @@ public class NetServer {
 	}
 	
 	/** Processes DELETE command. Deletes the given sensor and its readings.
+	 * Expects sensor's pinid and type
 	 * @param ois
 	 * @param oos
 	 * @throws Exception
@@ -399,7 +412,9 @@ public class NetServer {
 				manager.connect(pathToDB);				
 				manager.deleteSensor(temp[0], temp[1]);
 				manager.disconnect();
-			} catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+			} catch (NumberFormatException | SQLException
+					| ClassNotFoundException e)
+			{
 				e.printStackTrace(); 
 				errorCode = Constants.INTERNAL_SERVER_ERROR;
 			}
@@ -414,6 +429,39 @@ public class NetServer {
 
 		oos.close();
 		ois.close();
+	}
+	
+	/** Handles the creation of an actuator.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void createActuator(ObjectInputStream ois, ObjectOutputStream oos)
+	  throws Exception
+	{
+		// TODO
+	}
+	
+	/** Handles the deletion of an actuator.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void deleteActuator(ObjectInputStream ois, ObjectOutputStream oos)
+	 throws Exception
+	{
+		// TODO
+	}
+	
+	/** Handles the update of an actuator.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void updateActuator(ObjectInputStream ois, ObjectOutputStream oos)
+	 throws Exception
+	{
+		// TODO
 	}
 
 	public static void main(String [] args) throws Exception {

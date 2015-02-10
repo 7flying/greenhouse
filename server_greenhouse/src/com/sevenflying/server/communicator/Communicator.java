@@ -50,16 +50,20 @@ public class Communicator implements SerialPortEventListener {
 	/** Searches ports and stores the serial ports in the portname - port hashmap */
 	@SuppressWarnings("unchecked")
 	private void searchPorts() {
-		Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
+		Enumeration<CommPortIdentifier> ports = CommPortIdentifier
+				.getPortIdentifiers();
 
 		while(ports.hasMoreElements()) {
 			// Insert ports in the map
-			CommPortIdentifier tempPort = (CommPortIdentifier) ports.nextElement();
+			CommPortIdentifier tempPort = (CommPortIdentifier) ports
+					.nextElement();
 			if( tempPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 				portMap.put(tempPort.getName(), tempPort);
-				System.out.println(" Port name: " + tempPort.getName() + " object: " + tempPort);
+				System.out.println(" Port name: " + tempPort.getName()
+						+ " object: " + tempPort);
 			} else {
-				System.out.println(" Port: " + tempPort.getName() + " not serial");
+				System.out.println(" Port: " + tempPort.getName() 
+						+ " not serial");
 			}
 		}
 	}
@@ -72,19 +76,28 @@ public class Communicator implements SerialPortEventListener {
 		
 			selectedPortId = (CommPortIdentifier) portMap.get(portName);
 			try {
-				serialPort = (SerialPort) selectedPortId.open(portName, PORT_CONNECT_TIMEOUT);
+				serialPort = (SerialPort) selectedPortId.open(portName,
+						PORT_CONNECT_TIMEOUT);
 				// TODO some magic here needed to check
-				serialPort.setSerialPortParams(dataRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE); 
+				serialPort.setSerialPortParams(
+						dataRate,
+						SerialPort.DATABITS_8,
+						SerialPort.STOPBITS_1,
+						SerialPort.PARITY_NONE); 
 				// TODO more magic
 				//serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
 				//serialPort.setRTS(true);
 				// Open the stream
-				input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-				output = new BufferedWriter(new OutputStreamWriter(serialPort.getOutputStream()));
+				input = new BufferedReader(new InputStreamReader(
+						serialPort.getInputStream()));
+				output = new BufferedWriter(new OutputStreamWriter(
+						serialPort.getOutputStream()));
 				// Add listeners
 				serialPort.addEventListener(this);
 				serialPort.notifyOnDataAvailable(true);
-			} catch(PortInUseException | TooManyListenersException | UnsupportedCommOperationException | IOException e) {
+			} catch(PortInUseException | TooManyListenersException
+					| UnsupportedCommOperationException | IOException e)
+			{
 				e.printStackTrace();
 			} 
 		
