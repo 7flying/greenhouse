@@ -32,6 +32,7 @@ public class Constants {
 	 * *************/
 	 public static final String INTERNAL_SERVER_ERROR 	   = "500";
 	 public static final String DUPLICATED_SENSOR 		   = "501";
+	 public static final String DUPLICATED_ACTUATOR		   = "502";
 	 public static final String INCORRECT_NUMBER_OF_PARAMS = "400";
 	
 }

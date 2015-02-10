@@ -16,10 +16,15 @@ import org.apache.commons.codec.binary.Base64;
 import com.sevenflying.server.Env;
 import com.sevenflying.server.GreenServer;
 import com.sevenflying.server.database.DBManager;
+import com.sevenflying.server.domain.Actuator;
+import com.sevenflying.server.domain.ActuatorType;
+import com.sevenflying.server.domain.CompareType;
 import com.sevenflying.server.domain.Sensor;
 import com.sevenflying.server.domain.SensorType;
+import com.sevenflying.server.domain.exceptions.DuplicatedActuatorException;
 import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
+import com.sevenflying.server.domain.exceptions.NoSuchSensorException;
 import com.sevenflying.utils.Utils;
 
 /** Manages the communications. */
@@ -250,7 +255,7 @@ public class NetServer {
 		ois.close();
 	}
 	
-	/** Processes NEW command. Creates a new sensor.
+	/** Processes NEW_SENSOR command. Creates a new sensor.
 	 * @param ois
 	 * @param oos
 	 * @throws Exception
@@ -305,7 +310,7 @@ public class NetServer {
 		ois.close();
 	}
 	
-	/** Processes UPDATE command. Updates the given sensor
+	/** Processes UPDATE_SENSOR command. Updates the given sensor
 	 * @param ois
 	 * @param oos
 	 * @throws Exception
@@ -387,14 +392,14 @@ public class NetServer {
 		ois.close();
 	}
 	
-	/** Processes DELETE command. Deletes the given sensor and its readings.
+	/** Processes DELETE_SENSOR command. Deletes the given sensor and its readings.
 	 * Expects sensor's pinid and type
 	 * @param ois
 	 * @param oos
 	 * @throws Exception
 	 */
 	private void deleteSensor(ObjectInputStream ois, ObjectOutputStream oos)
-	 throws Exception
+	throws Exception
 	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
@@ -437,9 +442,62 @@ public class NetServer {
 	 * @throws Exception
 	 */
 	private void createActuator(ObjectInputStream ois, ObjectOutputStream oos)
-	  throws Exception
+	throws Exception
 	{
-		// TODO
+		String raw = (String) ois.readObject();
+		System.out.println(" $ params: " + raw);
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[6]; // Actuator is variable, max = 6
+		int index = 0;
+		while(tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken().trim();
+			System.out.println(temp[index]);
+			index++;
+		}
+		String errorCode = null;
+		if (index == 6 || index == 3) {
+			DBManager manager = DBManager.getInstance();
+			try {
+				manager.connect(pathToDB);
+				Actuator act = new Actuator(
+						new String(Base64.decodeBase64(temp[0])),
+						temp[1],
+						ActuatorType.valueOf(temp[2].toUpperCase()));
+				if (index == 6) {
+					Sensor sensor = manager.getSensor(Integer.valueOf(temp[3]));
+					act.setControlSensor(sensor);
+					act.setCompareType(CompareType.valueOf(
+							temp[4].toUpperCase()));
+					act.setCompareValue(Double.parseDouble(temp[5]));
+				}
+				manager.insertActuator(act);
+				
+			} catch (DuplicatedActuatorException ex) {
+				errorCode = Constants.DUPLICATED_ACTUATOR;
+				manager.disconnect();
+			} catch (NumberFormatException | SQLException
+					| ClassNotFoundException e)
+			{
+				e.printStackTrace(); 
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
+			} catch (NoSuchSensorException e) {
+				e.printStackTrace();
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
+			} finally {
+				manager.disconnect();
+			}
+		} else {
+			// Incorrect number of parameters
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject(Constants.OK);
+		oos.flush();	
+
+		oos.close();
+		ois.close();
 	}
 	
 	/** Handles the deletion of an actuator.
@@ -450,7 +508,36 @@ public class NetServer {
 	private void deleteActuator(ObjectInputStream ois, ObjectOutputStream oos)
 	 throws Exception
 	{
-		// TODO
+		String raw = (String) ois.readObject();
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[1];
+		int index = 0;
+		temp[index] = tokenizer.nextToken();
+		String errorCode = null;
+		if (index == 0) {
+			DBManager manager = DBManager.getInstance();
+			try {
+				System.out.println("\t -Params: " + temp[0]);
+				manager.connect(pathToDB);				
+				manager.deleteActuator(temp[0]);
+				manager.disconnect();
+			} catch (NumberFormatException | SQLException
+					| ClassNotFoundException e)
+			{
+				e.printStackTrace(); 
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
+			}
+		} else {
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject(Constants.OK);
+		oos.flush();	
+
+		oos.close();
+		ois.close();
 	}
 	
 	/** Handles the update of an actuator.
