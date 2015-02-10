@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
+import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                 formattedSensorMap.put(newKey, temp);
             }
         }
-        EditText etName = (EditText) findViewById(R.id.et_name);
+        final EditText etName = (EditText) findViewById(R.id.et_name);
         etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -64,7 +65,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
-        EditText etPin = (EditText) findViewById(R.id.et_pin_number);
+        final EditText etPin = (EditText) findViewById(R.id.et_pin_number);
         etPin.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -83,7 +84,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
-        RadioButton radioAnalog = (RadioButton) findViewById(R.id.radio_analog);
+        final RadioButton radioAnalog = (RadioButton) findViewById(R.id.radio_analog);
         RadioButton radioDigital = (RadioButton) findViewById(R.id.radio_digital);
         final LinearLayout layoutOpSensor = (LinearLayout) findViewById(
                 R.id.layout_optional_control_sensor);
@@ -149,6 +150,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String analogDig = radioAnalog.isChecked() ? "A" : "D";
 
             }
         });

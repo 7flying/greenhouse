@@ -2,4 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/material_deep_teal_500</color>
     <color name="colorPrimaryDark">@color/material_deep_teal_200</color>
+    <color name="md_teal_700">#00796b</color>
+    <color name="md_amber_500">#ffc107</color>
+    <color name="md_amber_700">#ffa000</color>
 </resources>

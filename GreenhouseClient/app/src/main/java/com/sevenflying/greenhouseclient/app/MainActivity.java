@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.sevenflying.greenhouseclient.app.about.AboutActivity;
@@ -26,7 +24,6 @@ import com.sevenflying.greenhouseclient.app.settings.SettingsActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
-import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 
@@ -46,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
+        tabs.setIndicatorColor(getResources().getColor(R.color.md_amber_700));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         // Alarm manager setup
