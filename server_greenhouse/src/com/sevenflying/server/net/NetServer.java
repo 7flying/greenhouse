@@ -548,7 +548,55 @@ public class NetServer {
 	private void updateActuator(ObjectInputStream ois, ObjectOutputStream oos)
 	 throws Exception
 	{
-		// TODO
+		String raw = (String) ois.readObject();
+		System.out.println(" $ params: " + raw);
+		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
+		String [] temp = new String[6]; // max is 6
+		int index = 0;
+		while(tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken();
+			index++;
+		}
+		String errorCode = null;
+		if(index == 6 || index == 3) {
+			DBManager manager = DBManager.getInstance();
+			try {
+				manager.connect(pathToDB);
+				Actuator act = new Actuator(
+						new String(Base64.decodeBase64(temp[0])),
+						temp[1],
+						ActuatorType.valueOf(temp[2].toUpperCase()));
+				if (index == 6) {
+					Sensor sensor = manager.getSensor(Integer.valueOf(temp[3]));
+					act.setControlSensor(sensor);
+					act.setCompareType(CompareType.valueOf(
+							temp[4].toUpperCase()));
+					act.setCompareValue(Double.parseDouble(temp[5]));
+				}
+				manager.updateActuator(act);
+				
+			} catch (NoSuchSensorException ex) {
+				ex.printStackTrace();
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
+			} catch (NumberFormatException | SQLException |
+				ClassNotFoundException e)
+			{
+				e.printStackTrace(); 
+				errorCode = Constants.INTERNAL_SERVER_ERROR;
+			} finally {
+				manager.disconnect();
+			}
+		} else {
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
+		}
+		if(errorCode != null) 
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject(Constants.OK);
+		oos.flush();	
+
+		oos.close();
+		ois.close();
 	}
 
 	public static void main(String [] args) throws Exception {
