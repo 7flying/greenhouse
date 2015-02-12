@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
     private ActuatorAdapter actuatorAdapter;
     private ListView actuatorListView;
     private DBManager manager;
+    private LinearLayout layoutNoActuators;
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, final Bundle savedInstanceState)
@@ -36,6 +38,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
             return null;
         else {
             View view = inflater.inflate(R.layout.fragment_actuator_list, container, false);
+            layoutNoActuators = (LinearLayout) view.findViewById(R.id.layout_no_actuators);
             actuatorListView = (ListView) view.findViewById(R.id.list_actuators);
             manager = new DBManager(getActivity().getApplicationContext());
             actuatorList = manager.getAllActuators();
@@ -75,6 +78,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                                                 Toast.LENGTH_SHORT).show();
                                         break;
                                 }
+                                checkVisibility();
                             }
                         });
                     AlertDialog dialog = builder.create();
@@ -82,9 +86,16 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                     return true;
                 }
             });
-
+            checkVisibility();
             return view;
         }
+    }
+
+    private void checkVisibility() {
+        if (actuatorList.size() > 0)
+            layoutNoActuators.setVisibility(View.GONE);
+        else
+            layoutNoActuators.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -93,5 +104,6 @@ public class ActuatorListFragment extends Fragment implements Updateable {
         actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuatorList);
         actuatorListView.setAdapter(actuatorAdapter);
         actuatorAdapter.notifyDataSetChanged();
+        checkVisibility();
     }
 }

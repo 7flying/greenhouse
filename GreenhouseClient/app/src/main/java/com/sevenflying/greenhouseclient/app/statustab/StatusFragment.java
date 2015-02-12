@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,13 +35,15 @@ public class StatusFragment extends Fragment implements Updateable {
     private MonitoringItemAdapter moniAdapter;
     private ListView moniList;
 
+    private LinearLayout layoutNoItems;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if(container == null)
             return null;
         else {
             View view =  inflater.inflate(R.layout.fragment_status, container, false);
             moniList = (ListView) view.findViewById(R.id.list_items);
-
+            layoutNoItems = (LinearLayout) view.findViewById(R.id.layout_no_items);
             monitoringItems = new ArrayList<MonitoringItem>();
             manager = new DBManager(getActivity().getApplicationContext());
             monitoringItems = manager.getItems();
@@ -85,6 +88,7 @@ public class StatusFragment extends Fragment implements Updateable {
                                                     Toast.LENGTH_SHORT).show();
                                             break;
                                     }
+                                    checkVisibility();
                                 }
                             });
                     AlertDialog dialog = builder.create();
@@ -92,8 +96,16 @@ public class StatusFragment extends Fragment implements Updateable {
                     return true;
                 }
             });
+            checkVisibility();
             return view;
         }
+    }
+
+    private void checkVisibility() {
+        if (monitoringItems.size() > 0)
+            layoutNoItems.setVisibility(View.GONE);
+        else
+            layoutNoItems.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -104,5 +116,6 @@ public class StatusFragment extends Fragment implements Updateable {
                 monitoringItems);
         moniList.setAdapter(moniAdapter);
         moniAdapter.notifyDataSetChanged();
+        checkVisibility();
     }
 }

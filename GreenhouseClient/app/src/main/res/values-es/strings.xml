@@ -56,7 +56,7 @@
     <string name="prefs_insert_server_port">Insertar puerto del servidor</string>
     <string name="radio_analog">Analógico</string>
     <string name="radio_digital">Digital</string>
-    <string name="refresh_rate">Ratio de refresco (segundos)</string>
+    <string name="refresh_rate">Ratio de refresco</string>
     <string name="repo">Código en GitHub</string>
     <string name="select_sensor_spinner">Sensor</string>
     <string name="sensor_creation">CREAR SENSOR</string>
@@ -73,7 +73,7 @@
     <string name="title_add_alert">Añadir alerta</string>
     <string name="title_sensor_creation">Crear sensor</string>
     <string name="title_sensor_edition">Editar sensor</string>
-    <string name="title_sensor_status">Información de sensor</string>
+    <string name="title_sensor_status">Información del sensor</string>
     <string name="title_settings">Ajustes</string>
     <string name="title_item_status">Información de item</string>
     <string name="xml_sensor_name">Nombre:</string>
@@ -106,4 +106,13 @@
     <string name="add_control_sensor">¿Añadir un sensor de control?</string>
     <string name="control_type">Tipo de control</string>
     <string name="control_value">Valor de control</string>
+    <string name="actuator">Actuador</string>
+    <string name="actuator_created">Actuator creado.</string>
+    <string name="actuator_deleted">Actuador borrado.</string>
+    <string name="actuator_modified">Actuador modificado.</string>
+    <string name="no_actuators">No hay ningúin actuador, ¡añade uno!</string>
+    <string name="no_moni_item">¡Puedes añadir un item!</string>
+    <string name="title_actuator_info">Información del actuador</string>
+    <string name="title_add_actuator">Añadir actuador</string>
+    <string name="title_edit_actuator">Modificar actuador</string>
 </resources>

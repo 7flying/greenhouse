@@ -30,8 +30,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
 
 	private List<Sensor> sensorList;
     private ListView listView;
-    private LinearLayout layoutProgress;
-    private LinearLayout layoutNoConnection;
+    private LinearLayout layoutProgress, layoutNoConnection, layoutNoSensors;
     private SensorAdapter adapter;
     private DBManager manager;
 
@@ -46,6 +45,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
 			listView = (ListView) view.findViewById(R.id.sensorsListView);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             layoutNoConnection = (LinearLayout) view.findViewById(R.id.linear_layout_connection);
+            layoutNoSensors = (LinearLayout) view.findViewById(R.id.layout_no_sensors);
             manager = new DBManager(getActivity().getApplicationContext());
             sensorList = manager.getSensors();
         	adapter = new SensorAdapter(getActivity(),R.layout.sensor_list_row,sensorList);
@@ -107,6 +107,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                             }
                                             break;
                                     }
+                                    checkVisibility();
                                 }
                             });
                     AlertDialog dialog = builder.create();
@@ -120,6 +121,13 @@ public class SensorsListFragment extends Fragment implements Updateable {
 		}
     }
 
+    private void checkVisibility() {
+        if (sensorList.size() > 0)
+            layoutNoSensors.setVisibility(View.GONE);
+        else
+            layoutNoSensors.setVisibility(View.VISIBLE);
+    }
+
     public void updateSensors() {
         SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);
@@ -127,6 +135,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
         adapter = new SensorAdapter(getActivity(), R.layout.sensor_list_row, sensorList);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        checkVisibility();
     }
 
     @Override

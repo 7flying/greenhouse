@@ -38,7 +38,7 @@ public class DBManager {
 	private static final String READINGS_TABLE_NAME = "Readings";
 	
 	public synchronized static DBManager getInstance() {
-		if(manager == null)
+		if (manager == null)
 			manager = new DBManager();
 		return manager;
 	}
@@ -407,7 +407,9 @@ public class DBManager {
 	 * @throws SQLException 
 	 * @throws NoSuchSensorException 
 	 */
-	public List<Actuator> getActuators() throws SQLException, NoSuchSensorException {
+	public List<Actuator> getActuators() throws SQLException,
+	NoSuchSensorException
+	{
 		List<Actuator> ret = new ArrayList<Actuator>();
 		Statement sta = conn.createStatement();
 		ResultSet result = sta.executeQuery("SELECT * FROM Actuators;");

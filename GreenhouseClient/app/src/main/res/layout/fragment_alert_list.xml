@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="@string/no_alerts"/>
-        </LinearLayout>
+    </LinearLayout>
     <ListView
         android:id="@+id/alertsListView"
         android:layout_width="fill_parent"

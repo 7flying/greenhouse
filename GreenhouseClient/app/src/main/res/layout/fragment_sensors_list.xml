@@ -17,9 +17,10 @@
         </ProgressBar>
     </LinearLayout>
     <LinearLayout
+        android:layout_marginTop="15dp"
         android:id="@+id/linear_layout_connection"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -30,8 +31,25 @@
             android:textSize="16sp"
             android:text="@string/no_connection"/>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_no_sensors"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/linear_layout_connection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:clickable="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/no_sensors"/>
+    </LinearLayout>
     <ListView
         android:id="@+id/sensorsListView"
+        android:layout_below="@id/layout_no_sensors"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginLeft="16dp"

@@ -42,6 +42,7 @@
     <string name="xml_sensor_refresh_rate">Refresh rate:</string>
     <string name="xml_sensor_seconds_word">secs</string>
     <!-- fragment_sensor_list-->
+    <string name="no_sensors">There aren\'t any sensors, try to add one!</string>
     <string name="no_connection">No connection</string>
     <!-- activity_alert_creation-->
     <string name="select_sensor_spinner">Sensor</string>
@@ -56,6 +57,7 @@
     <!-- fragment_alert_list -->
     <string name="no_alerts">There aren\'t any alerts, try to add one!</string>
     <!-- fragment_status -->
+    <string name="no_moni_item">You can add an item!</string>
     <string name="monitoring_items">MONITORING ITEMS</string>
     <string name="add_item">Add item</string>
     <string name="actuators">ACTUATORS</string>
@@ -85,6 +87,7 @@
     <string name="yes">Yes, please</string>
     <string name="no">Nope, don\'t worry</string>
     <!-- actuators general -->
+    <string name="no_actuators">There aren\'t any actuators, try to add one!</string>
     <string name="actuator">Actuator</string>
     <string name="actuator_created">Actuator created.</string>
     <string name="actuator_deleted">Actuator deleted.</string>
