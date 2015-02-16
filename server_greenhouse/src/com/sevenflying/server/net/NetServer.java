@@ -106,6 +106,7 @@ public class NetServer {
 
 						oos.close();
 						ois.close();
+						break;
 					default:
 						System.out.println("$$ Command " + command + " UNKNOWN");
 						oos.close();
