@@ -13,7 +13,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
-import com.sevenflying.greenhouseclient.net.HistoricalRecordObtainer;
+import com.sevenflying.greenhouseclient.net.tasks.HistoricalRecordObtainerTask;
 
 /** Activity to show further info about a sensor.
  * Created by 7flying on 13/07/2014.
@@ -104,7 +104,7 @@ public class SensorStatusActivity extends ActionBarActivity {
     }
 
     private void getHistoricalData() {
-        HistoricalRecordObtainer hro = new HistoricalRecordObtainer(currentSensor.getPinId(),
+        HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
                 String.valueOf(currentSensor.getType().getIdentifier()),
                 chart, layoutProgress, layoutChart, getApplicationContext());
         // TODO: it seems that there is a known crash for "width and height must be > 0 error"

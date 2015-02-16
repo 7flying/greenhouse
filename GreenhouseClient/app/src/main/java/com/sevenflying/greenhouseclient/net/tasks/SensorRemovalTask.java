@@ -1,7 +1,11 @@
-package com.sevenflying.greenhouseclient.net;
+package com.sevenflying.greenhouseclient.net.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.sevenflying.greenhouseclient.net.Commands;
+import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

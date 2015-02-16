@@ -28,7 +28,6 @@ import com.sevenflying.greenhouseclient.net.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /** Activity for the creation of Alerts.
  * Created by 7flying on 20/07/2014.

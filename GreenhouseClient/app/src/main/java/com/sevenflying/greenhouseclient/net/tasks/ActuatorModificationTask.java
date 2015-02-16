@@ -1,32 +1,36 @@
-package com.sevenflying.greenhouseclient.net;
+package com.sevenflying.greenhouseclient.net.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.sevenflying.greenhouseclient.net.Commands;
+import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-/** Requests an actuator creation using a background task.
+/** Requests an actuator modification using a background task.
  * Created by flying on 10/02/15.
  */
-public class ActuatorCreationTask extends AsyncTask<String, Void, String> {
+public class ActuatorModificationTask extends AsyncTask<String, Void, String> {
 
     private Communicator comm;
     private String host;
     private int serverPort;
 
-    public ActuatorCreationTask(Context context) {
+    public ActuatorModificationTask(Context context) {
         this.comm = new Communicator(context);
     }
 
     @Override
     protected void onPreExecute() {
-       this.serverPort = comm.getServerPort();
-       this.host = comm.getServer();
+        this.serverPort = comm.getServerPort();
+        this.host = comm.getServer();
     }
-
     @Override
     protected String doInBackground(String... params) {
         // 0- name (encoded)
@@ -42,7 +46,7 @@ public class ActuatorCreationTask extends AsyncTask<String, Void, String> {
                 Socket s = new Socket(add, serverPort);
                 ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-                oos.writeObject(Commands.NEW_ACTUATOR);
+                oos.writeObject(Commands.UPDATE_ACTUATOR);
                 oos.flush();
                 String send = params[0] + ":" + params[1] + ":" + params[2];
                 if (params.length == 6)

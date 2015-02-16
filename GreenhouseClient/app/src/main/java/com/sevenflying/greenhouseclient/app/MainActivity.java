@@ -24,6 +24,7 @@ import com.sevenflying.greenhouseclient.app.settings.SettingsActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
+import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 
@@ -70,61 +71,63 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.action_add_generic:
+                final Communicator comm = new Communicator(getApplicationContext());
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(getString(R.string.what_to_add))
                         .setItems(R.array.items_to_create_array,
-                                new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int index) {
-                                switch (index) {
-                                    case 0: // Alert
-                                        if(new DBManager(getApplicationContext()).getSensors()
-                                                .size() >0 )
-                                        {
-                                            startActivityForResult(new Intent(MainActivity.this,
-                                                            AlertCreationActivity.class),
-                                                    Codes.CODE_CREATE_NEW_ALERT);
-                                        } else {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(
-                                                   MainActivity.this);
-                                            builder.setMessage(MainActivity.this
-                                                    .getResources()
-                                                    .getString(R.string.alert_creation_no));
-                                            builder.
-                                                    setPositiveButton(R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int index) {
+                                        switch (index) {
+                                            case 0: // Alert
+                                                if (new DBManager(getApplicationContext())
+                                                        .getSensors().size() >0 )
+                                                {
+                                                    startActivityForResult(new Intent(MainActivity.this,
+                                                                    AlertCreationActivity.class),
+                                                            Codes.CODE_CREATE_NEW_ALERT);
+                                                } else {
+                                                    AlertDialog.Builder builder = new AlertDialog
+                                                            .Builder(MainActivity.this);
+                                                    builder.setMessage(MainActivity.this
+                                                            .getResources()
+                                                            .getString(R.string.alert_creation_no));
+                                                    builder.setPositiveButton(R.string.ok,
                                                             new DialogInterface.OnClickListener() {
-                                                                public void onClick(DialogInterface dialogInterface,
-                                                                                    int i) {
-                                                                }
-                                                            });
-                                            builder.show();
+                                                                public void onClick(
+                                                                        DialogInterface dialogInterface,
+                                                                        int i) {}});
+                                                    builder.show();
+                                                }
+                                                break;
+                                            case 1: // Monitoring item
+                                                startActivityForResult(new Intent(MainActivity.this,
+                                                        MoniItemCreationActivity.class),
+                                                        Codes.CODE_NEW_MONI_ITEM);
+                                                break;
+                                            case 2: // Sensor
+                                                if (comm.testConnection()) {
+                                                    startActivityForResult(new Intent(
+                                                                MainActivity.this,
+                                                                SensorCreationActivity.class),
+                                                            Codes.CODE_NEW_SENSOR);
+                                                } else
+                                                    showNoConnectionDialog();
+                                                break;
+                                            case 3: // Actuator
+                                                if (comm.testConnection()) {
+                                                    startActivityForResult(new Intent(
+                                                                    MainActivity.this,
+                                                                    ActuatorCreationActivity.class),
+                                                            Codes.CODE_NEW_ACTUATOR);
+                                                } else
+                                                    showNoConnectionDialog();
+                                                break;
                                         }
-                                        break;
-                                    case 1: // Monitoring item
-                                        startActivityForResult(new Intent(MainActivity.this,
-                                                MoniItemCreationActivity.class)
-                                                , Codes.CODE_NEW_MONI_ITEM);
-                                        break;
-                                    case 2: // Sensor
-                                        startActivityForResult(new Intent(MainActivity.this,
-                                                SensorCreationActivity.class), Codes.CODE_NEW_SENSOR);
-                                        break;
-                                    case 3: // Actuator
-                                        startActivityForResult(new Intent(MainActivity.this,
-                                                ActuatorCreationActivity.class),
-                                                Codes.CODE_NEW_ACTUATOR);
-                                        break;
-                                }
-                            }
-                        });
+                                    }
+                                });
                 builder.show();
                 return true;
-           /* case R.id.action_add_item:
-                startActivityForResult(new Intent(MainActivity.this,
-                        MoniItemCreationActivity.class), Codes.CODE_NEW_MONI_ITEM);
-                return true;
-           */
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -188,5 +191,16 @@ public class MainActivity extends ActionBarActivity {
             default:
                 break;
         }
+    }
+
+    /** Shows a no-connection dialog
+     */
+    private void showNoConnectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(MainActivity.this.getResources().getString(
+                R.string.alert_no_server_conn));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {}});
+        builder.show();
     }
 }

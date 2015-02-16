@@ -1,4 +1,4 @@
-package com.sevenflying.greenhouseclient.net;
+package com.sevenflying.greenhouseclient.net.tasks;
 
 
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.widget.LinearLayout;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Commands;
+import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,7 +28,7 @@ import java.util.StringTokenizer;
 /** Task that requests sensor values.
  * Created by 7flying on 10/07/2014.
  */
-public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> { // Params, progress, result
+public class SensorsValueUpdaterTask extends AsyncTask<Void, Sensor, List<Sensor>> { // Params, progress, result
     // AsyncTask<Void, Sensor, List<Sensor>> -> means Params, Progress and Result
     private SensorAdapter adapter;
     private List<Sensor> buffer, dbSensors;
@@ -37,8 +40,8 @@ public class SensorsValueUpdater extends AsyncTask<Void, Sensor, List<Sensor>> {
     private String host;
     private int serverPort;
 
-    public SensorsValueUpdater(SensorAdapter adapter, LinearLayout layoutCharge,
-           LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
+    public SensorsValueUpdaterTask(SensorAdapter adapter, LinearLayout layoutCharge,
+                                   LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
     {
         this.adapter = adapter;
         this.layoutCharge = layoutCharge;

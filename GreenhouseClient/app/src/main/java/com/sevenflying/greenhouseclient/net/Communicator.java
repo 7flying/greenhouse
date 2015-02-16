@@ -7,6 +7,10 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.settings.SettingsFragment;
+import com.sevenflying.greenhouseclient.net.tasks.SensorCreationTask;
+import com.sevenflying.greenhouseclient.net.tasks.SensorModificationTask;
+import com.sevenflying.greenhouseclient.net.tasks.SensorRemovalTask;
+import com.sevenflying.greenhouseclient.net.tasks.TestConnectionTask;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -142,6 +146,20 @@ public class Communicator {
            ret = task.execute(pinID, type).get();
         } catch (Exception e) {
             ret = -1;
+        }
+        return ret;
+    }
+
+    /** Test the connection to the server.
+     * @return true if the connection is fine, false otherwise
+     */
+    public boolean testConnection() {
+        TestConnectionTask task =  new TestConnectionTask(context);
+        boolean ret = true;
+        try{
+            ret = task.execute().get();
+        } catch (Exception e) {
+            ret = false;
         }
         return ret;
     }

@@ -99,6 +99,13 @@ public class NetServer {
 					case Constants.UPDATE_ACTUATOR:
 						updateActuator(ois, oos);
 						break;
+					case Constants.TEST_CONNECTION:
+						// Send an ok
+						oos.writeObject(Constants.OK);
+						oos.flush();	
+
+						oos.close();
+						ois.close();
 					default:
 						System.out.println("$$ Command " + command + " UNKNOWN");
 						oos.close();
@@ -510,16 +517,14 @@ public class NetServer {
 	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
-		String [] temp = new String[1];
-		int index = 0;
-		temp[index] = tokenizer.nextToken();
+		String temp = tokenizer.nextToken();
 		String errorCode = null;
-		if (index == 0) {
+		if (temp != null) {
 			DBManager manager = DBManager.getInstance();
 			try {
-				System.out.println("\t -Params: " + temp[0]);
+				System.out.println("\t -Params: " + temp);
 				manager.connect(pathToDB);				
-				manager.deleteActuator(temp[0]);
+				manager.deleteActuator(temp);
 				manager.disconnect();
 			} catch (NumberFormatException | SQLException
 					| ClassNotFoundException e)
@@ -598,7 +603,7 @@ public class NetServer {
 		oos.close();
 		ois.close();
 	}
-
+	
 	public static void main(String [] args) throws Exception {
 		NetServer ns = new NetServer(null);
 		ns.launch();

@@ -99,6 +99,8 @@
     <!-- Main activity -->
     <string name="alert_creation_no">There isn\'t any sensor to attach the alert,
         please create a new sensor first.</string>
+    <string name="alert_no_server_conn">We cannot establish a connection to the server, please
+        try again later.</string>
     <!-- xmls menu-->
     <string name="action_new">New</string>
     <string name="action_refresh">Refresh</string>

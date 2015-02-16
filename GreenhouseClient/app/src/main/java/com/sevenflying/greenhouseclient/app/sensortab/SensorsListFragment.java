@@ -19,7 +19,7 @@ import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
-import com.sevenflying.greenhouseclient.net.SensorsValueUpdater;
+import com.sevenflying.greenhouseclient.net.tasks.SensorsValueUpdaterTask;
 
 import java.util.List;
 
@@ -129,7 +129,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
     }
 
     public void updateSensors() {
-        SensorsValueUpdater updater = new SensorsValueUpdater(adapter, layoutProgress,
+        SensorsValueUpdaterTask updater = new SensorsValueUpdaterTask(adapter, layoutProgress,
                 layoutNoConnection, getActivity().getApplicationContext(), sensorList);
         updater.execute();
         adapter = new SensorAdapter(getActivity(), R.layout.sensor_list_row, sensorList);

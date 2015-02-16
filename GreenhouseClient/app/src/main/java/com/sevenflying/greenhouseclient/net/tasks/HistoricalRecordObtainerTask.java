@@ -1,4 +1,4 @@
-package com.sevenflying.greenhouseclient.net;
+package com.sevenflying.greenhouseclient.net.tasks;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.sevenflying.greenhouseclient.net.Commands;
+import com.sevenflying.greenhouseclient.net.Communicator;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,7 +27,7 @@ import java.util.StringTokenizer;
 /** Obtains the historical records of a sensor from the server.
  * Created by 7flying on 04/08/2014.
  */
-public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<String, Float>>> {
+public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map<String, Float>>> {
 
     // Sensor's pin id
     private String pinId;
@@ -38,8 +40,8 @@ public class HistoricalRecordObtainer extends AsyncTask<Void, Void, List<Map<Str
     private String serverIP;
     private int serverPort;
 
-    public HistoricalRecordObtainer(String pinId, String senType, LineChart chart,
-           LinearLayout layoutProgress, LinearLayout layoutChart, Context context)
+    public HistoricalRecordObtainerTask(String pinId, String senType, LineChart chart,
+                                        LinearLayout layoutProgress, LinearLayout layoutChart, Context context)
     {
         this.pinId = pinId;
         this.senType = senType;
