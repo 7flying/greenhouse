@@ -7,6 +7,9 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.settings.SettingsFragment;
+import com.sevenflying.greenhouseclient.net.tasks.ActuatorCreationTask;
+import com.sevenflying.greenhouseclient.net.tasks.ActuatorModificationTask;
+import com.sevenflying.greenhouseclient.net.tasks.ActuatorRemovalTask;
 import com.sevenflying.greenhouseclient.net.tasks.SensorCreationTask;
 import com.sevenflying.greenhouseclient.net.tasks.SensorModificationTask;
 import com.sevenflying.greenhouseclient.net.tasks.SensorRemovalTask;
@@ -43,6 +46,24 @@ public class Communicator {
         Log.d(Constants.DEBUGTAG, "$ Communicator - port: " + port);
         return  port;
     }
+
+    // -- General --
+
+    /** Test the connection to the server.
+     * @return true if the connection is fine, false otherwise
+     */
+    public boolean testConnection() {
+        TestConnectionTask task =  new TestConnectionTask(context);
+        boolean ret = true;
+        try{
+            ret = task.execute().get();
+        } catch (Exception e) {
+            ret = false;
+        }
+        return ret;
+    }
+
+    // -- Sensors --
 
     /** Gets the sensor's last value from the server.
      * @param sensorPinId - sensor's pin id
@@ -150,16 +171,101 @@ public class Communicator {
         return ret;
     }
 
-    /** Test the connection to the server.
-     * @return true if the connection is fine, false otherwise
+    // -- Actuators --
+
+    /** Creates an actuator with a control sensor
+     * @param name - actuator name
+     * @param id - actuator id
+     * @param type - actuator type
+     * @param sensorId - sensor id
+     * @param compareType - control type
+     * @param compareValue - compare value
+     * @return ok or error description
      */
-    public boolean testConnection() {
-        TestConnectionTask task =  new TestConnectionTask(context);
-        boolean ret = true;
-        try{
-            ret = task.execute().get();
+    public String createActuator(String name, String id, String type, String sensorId,
+    String compareType, double compareValue)
+    {
+        ActuatorCreationTask task = new ActuatorCreationTask(context);
+        String ret = null;
+        try {
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type,
+                    sensorId, compareType, Double.toString(compareValue)).get();
         } catch (Exception e) {
-            ret = false;
+            ret = null;
+        }
+        return ret;
+    }
+
+    /** Creates a simple actuator
+     * @param name - actuator name
+     * @param id - actuator id
+     * @param type - actuator type
+     * @return ok or error description
+     */
+    public String createActuator(String name, String id, String type) {
+        ActuatorCreationTask task = new ActuatorCreationTask(context);
+        String ret = null;
+        try {
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type)
+                    .get();
+        } catch (Exception e) {
+            ret = null;
+        }
+        return ret;
+    }
+
+    /** Deletes an actuator
+     * @param id - - actuator id
+     * @return ok or error description
+     */
+    public String deleteActuator(String id) {
+        ActuatorRemovalTask task = new ActuatorRemovalTask(context);
+        String ret = null;
+        try {
+            ret = task.execute(id).get();
+        } catch (Exception e) {
+            ret = null;
+        }
+        return ret;
+    }
+
+    /** Modifies an actuator with a control sensor
+     * @param name - actuator name
+     * @param id - actuator id
+     * @param type - actuator type
+     * @param sensorId - sensor id
+     * @param compareType - control type
+     * @param compareValue - compare value
+     * @return ok or error description
+     */
+    public String modifyActuator(String name, String id, String type, String sensorId,
+                                 String compareType, double compareValue)
+    {
+        ActuatorModificationTask task = new ActuatorModificationTask(context);
+        String ret = null;
+        try {
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type,
+                    sensorId, compareType, Double.toString(compareValue)).get();
+        } catch (Exception e) {
+            ret = null;
+        }
+        return ret;
+    }
+
+    /** Modifies a simple actuator
+     * @param name - actuator name
+     * @param id - actuator id
+     * @param type - actuator type
+     * @return ok or error description
+     */
+    public String modifyActuator(String name, String id, String type) {
+        ActuatorModificationTask task = new ActuatorModificationTask(context);
+        String ret = null;
+        try {
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type)
+                    .get();
+        } catch (Exception e) {
+            ret = null;
         }
         return ret;
     }
