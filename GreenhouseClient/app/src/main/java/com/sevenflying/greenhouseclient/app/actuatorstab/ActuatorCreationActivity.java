@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
@@ -41,16 +42,27 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         setContentView(R.layout.activity_actuator_creation);
         formattedSensorMap = new DBManager(getApplicationContext()).getFormattedSensors();
         GreenhouseUtils utils = new GreenhouseUtils(getBaseContext());
-        List<String> keys = new ArrayList<String>(formattedSensorMap.keySet());
-        for (String key : keys) {
-            Sensor temp = formattedSensorMap.remove(key);
-            int ind = key.lastIndexOf('-');
-            if (ind > 0) {
-                String newKey = key.substring(0, ind) + "- " + utils.getI18nSensorType(
-                        temp.getType());
-                formattedSensorMap.put(newKey, temp);
+        final LinearLayout layoutOpSensor = (LinearLayout) findViewById(
+                R.id.layout_optional_control_sensor);
+        if (formattedSensorMap.keySet().size() > 0) {
+            List<String> keys = new ArrayList<String>(formattedSensorMap.keySet());
+            for (String key : keys) {
+                Sensor temp = formattedSensorMap.remove(key);
+                int ind = key.lastIndexOf('-');
+                if (ind > 0) {
+                    String newKey = key.substring(0, ind) + "- " + utils.getI18nSensorType(
+                            temp.getType());
+                    formattedSensorMap.put(newKey, temp);
+                }
             }
+        } else {
+            // Disable option of control sensor
+            LinearLayout lay = (LinearLayout) findViewById(R.id.layout_radio_control_sensor);
+            lay.setVisibility(View.GONE);
+            // layout where the sensor is chosen
+            layoutOpSensor.setVisibility(View.GONE);
         }
+
         final EditText etName = (EditText) findViewById(R.id.et_name);
         etName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -86,8 +98,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         });
         final RadioButton radioAnalog = (RadioButton) findViewById(R.id.radio_analog);
         RadioButton radioDigital = (RadioButton) findViewById(R.id.radio_digital);
-        final LinearLayout layoutOpSensor = (LinearLayout) findViewById(
-                R.id.layout_optional_control_sensor);
+
         radioYes = (RadioButton) findViewById(R.id.radio_yes);
         radioNo = (RadioButton) findViewById(R.id.radio_no);
         radioYes.setChecked(true);
@@ -151,17 +162,18 @@ public class ActuatorCreationActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 String analogDig = radioAnalog.isChecked() ? "A" : "D";
-
+                Toast.makeText(getApplicationContext(), "creating actuator", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
     private void checkSaveButton() {
-        if (radioYes.isChecked())
+        if (radioYes.isChecked() && formattedSensorMap.keySet().size() > 0)
             createButton.setEnabled(validated[0] && validated[1] && validated[2]);
         else
             createButton.setEnabled(validated[0] && validated[1]);
+
         if (createButton.isEnabled())
             createButton.setTextColor(getResources().getColor(
                     R.color.bright_foreground_inverse_material_dark));

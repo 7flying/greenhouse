@@ -81,34 +81,41 @@
                 </RadioGroup>
             </TableRow>
             <!-- control sensor? -->
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:textSize="16sp"
-                android:textColor="@color/bright_foreground_inverse_material_dark"
-                android:text="@string/add_control_sensor"/>
-            <RadioGroup
+            <LinearLayout
+                android:id="@+id/layout_radio_control_sensor"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp">
-                <RadioButton
-                    android:layout_weight="1"
-                    android:id="@+id/radio_yes"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/yes"
-                    android:checked="true"/>
-                <RadioButton
-                    android:layout_weight="1"
-                    android:id="@+id/radio_no"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/no"/>
-            </RadioGroup>
+                    android:layout_marginLeft="15dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:text="@string/add_control_sensor"/>
+                <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp">
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:id="@+id/radio_yes"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/yes"
+                        android:checked="true"/>
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:id="@+id/radio_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no"/>
+                </RadioGroup>
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layout_optional_control_sensor"
                 android:layout_width="fill_parent"
