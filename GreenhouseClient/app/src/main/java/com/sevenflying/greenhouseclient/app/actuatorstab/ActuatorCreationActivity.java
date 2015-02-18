@@ -21,6 +21,7 @@ import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Communicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +115,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                 checkSaveButton();
             }
         });
-        EditText etControlValue = (EditText) findViewById(R.id.et_control_value);
+        final EditText etControlValue = (EditText) findViewById(R.id.et_control_value);
         etControlValue.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -150,7 +151,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         });
 
         // Spinner of control types
-        Spinner controlTypeSpinner = (Spinner) findViewById(R.id.sensort_type_chooser);
+        final Spinner controlTypeSpinner = (Spinner) findViewById(R.id.sensort_type_chooser);
         ArrayAdapter<CharSequence> controlSpinnerAdapter = ArrayAdapter.createFromResource(this,
             R.array.alert_type_array, android.R.layout.simple_spinner_item);
         controlSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -161,8 +162,23 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String analogDig = radioAnalog.isChecked() ? "A" : "D";
-                Toast.makeText(getApplicationContext(), "creating actuator", Toast.LENGTH_SHORT).show();
+                Communicator comm = new Communicator(getApplicationContext());
+                String response = null;
+                String pin = (radioAnalog.isChecked() ? "A" : "D") + etPin.getText().toString();
+                String name = etName.getText().toString();
+                if (formattedSensorMap.keySet().size() > 0 && radioYes.isChecked()) {
+                    Sensor control = formattedSensorMap.get(
+                            (String) controlSensorSpinner.getSelectedItem());
+                    String controlType = (String) controlTypeSpinner.getSelectedItem();
+                    double compareValue = Double.parseDouble(etControlValue.getText().toString());
+                    response = comm.createActuator(name, pin,
+                            Character.toString(control.getType().getIdentifier()),
+                            control.getPinId(), controlType, compareValue);
+                } else {
+                    // Simple fields
+                    response = comm.createActuator(name, pin);
+                }
+
             }
         });
 

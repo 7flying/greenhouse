@@ -35,12 +35,12 @@ public class ActuatorCreationTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         // 0- name (encoded)
         // 1- id
-        // 2- type
+        // 2- (optional) sensor type
         // 3- (optional) sensor id
         // 4- (optional) compare type
         // 5- (optional) compare value
         String ret = null;
-        if (params.length == 3 || params.length == 6) {
+        if (params.length == 2 || params.length == 6) {
             try {
                 InetAddress add = InetAddress.getByName(host);
                 Socket s = new Socket(add, serverPort);
@@ -48,9 +48,9 @@ public class ActuatorCreationTask extends AsyncTask<String, Void, String> {
                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                 oos.writeObject(Commands.NEW_ACTUATOR);
                 oos.flush();
-                String send = params[0] + ":" + params[1] + ":" + params[2];
+                String send = params[0] + ":" + params[1];
                 if (params.length == 6)
-                    send += params[3] + ":" + params[4] + ":" + params[5];
+                    send += params[2] + ":" + params[3] + ":" + params[4] + ":" + params[5];
                 oos.writeObject(send);
                 oos.flush();
                 String response = (String) ois.readObject();

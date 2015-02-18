@@ -176,20 +176,21 @@ public class Communicator {
     /** Creates an actuator with a control sensor
      * @param name - actuator name
      * @param id - actuator id
-     * @param type - actuator type
+     * @param sensorType - sensor's type
      * @param sensorId - sensor id
      * @param compareType - control type
      * @param compareValue - compare value
      * @return ok or error description
      */
-    public String createActuator(String name, String id, String type, String sensorId,
+    public String createActuator(String name, String id, String sensorType, String sensorId,
     String compareType, double compareValue)
     {
         ActuatorCreationTask task = new ActuatorCreationTask(context);
         String ret = null;
         try {
-            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type,
-                    sensorId, compareType, Double.toString(compareValue)).get();
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id,
+                    sensorType, sensorId, compareType, Double.toString(compareValue))
+                    .get();
         } catch (Exception e) {
             ret = null;
         }
@@ -199,14 +200,13 @@ public class Communicator {
     /** Creates a simple actuator
      * @param name - actuator name
      * @param id - actuator id
-     * @param type - actuator type
      * @return ok or error description
      */
-    public String createActuator(String name, String id, String type) {
+    public String createActuator(String name, String id) {
         ActuatorCreationTask task = new ActuatorCreationTask(context);
         String ret = null;
         try {
-            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type)
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id)
                     .get();
         } catch (Exception e) {
             ret = null;
