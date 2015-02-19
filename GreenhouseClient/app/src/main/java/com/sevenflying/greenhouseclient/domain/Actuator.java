@@ -16,6 +16,8 @@ public class Actuator implements Serializable {
     private double compareValue;
     private int icon;
 
+    public Actuator(){}
+
     public  Actuator(String name, String pinId) {
         this.name = name;
         this.pinId = pinId;
