@@ -1,5 +1,6 @@
 package com.sevenflying.greenhouseclient.app.actuatorstab;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -20,8 +21,10 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Actuator;
+import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
     private RadioButton radioYes, radioNo;
     private Map<String, Sensor> formattedSensorMap;
     private Button createButton;
+    private int selectedType = -1;
     private boolean []validated = { false, false, false};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +160,13 @@ public class ActuatorCreationActivity extends ActionBarActivity {
             R.array.alert_type_array, android.R.layout.simple_spinner_item);
         controlSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         controlTypeSpinner.setAdapter(controlSpinnerAdapter);
+        controlTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ActuatorCreationActivity.this.selectedType = position;
+            }
+            public void onNothingSelected(AdapterView<?> adapterView){}
+        });
 
         // Button create
         createButton = (Button) findViewById(R.id.button_create_actuator);
@@ -166,17 +177,30 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                 String response = null;
                 String pin = (radioAnalog.isChecked() ? "A" : "D") + etPin.getText().toString();
                 String name = etName.getText().toString();
+                Actuator temp = new Actuator(name, pin);
                 if (formattedSensorMap.keySet().size() > 0 && radioYes.isChecked()) {
                     Sensor control = formattedSensorMap.get(
                             (String) controlSensorSpinner.getSelectedItem());
-                    String controlType = (String) controlTypeSpinner.getSelectedItem();
+                    AlertType controlType = AlertType.alertTypes[selectedType];
                     double compareValue = Double.parseDouble(etControlValue.getText().toString());
+                    temp.setControlSensor(control);
+                    temp.setCompareType(AlertType.valueOf(controlType.toString()));
+                    temp.setCompareValue(compareValue);
                     response = comm.createActuator(name, pin,
-                            Character.toString(control.getType().getIdentifier()),
-                            control.getPinId(), controlType, compareValue);
+                            control.getType().toString().toUpperCase(),
+                            control.getPinId(), controlType.toString(), compareValue);
                 } else {
                     // Simple fields
                     response = comm.createActuator(name, pin);
+                }
+                switch (response) {
+                    case Constants.OK:
+                        // Send an ok to previous activity
+                        Intent returnIntent = new Intent();
+                        setResult(RESULT_OK, returnIntent);
+                        finish();
+                        break;
+                    // TODO other errros
                 }
 
             }

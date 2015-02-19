@@ -41,12 +41,12 @@ public class SensorsValueUpdaterTask extends AsyncTask<Void, Sensor, List<Sensor
     private int serverPort;
 
     public SensorsValueUpdaterTask(SensorAdapter adapter, LinearLayout layoutCharge,
-                                   LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
+    LinearLayout layoutNoConnection, Context context, List<Sensor> buffer)
     {
         this.adapter = adapter;
         this.layoutCharge = layoutCharge;
         this.layoutNoConnection = layoutNoConnection;
-        exception = null;
+        this.exception = null;
         this.buffer = buffer;
         this.context = context;
         this.comm = new Communicator(context);
@@ -80,10 +80,10 @@ public class SensorsValueUpdaterTask extends AsyncTask<Void, Sensor, List<Sensor
                     Sensor sensor = new Sensor();
                     StringTokenizer tokenizer = new StringTokenizer(ss, ":");
                     ArrayList<String> temp = new ArrayList<String>();
-                    while(tokenizer.hasMoreTokens())
+                    while (tokenizer.hasMoreTokens())
                         temp.add(new String(Base64.decode(tokenizer.nextToken().getBytes(),
                                 Base64.DEFAULT)));
-                    if(temp.size() == 5) {
+                    if (temp.size() == 5) {
                         sensor.setName(temp.get(0));
                         sensor.setPinId(temp.get(1));
                         sensor.setType(temp.get(2).charAt(0));
@@ -117,18 +117,12 @@ public class SensorsValueUpdaterTask extends AsyncTask<Void, Sensor, List<Sensor
         if(exception != null)
             layoutNoConnection.setVisibility(View.VISIBLE);
 
-
-        for(Sensor s : result) {
+        for (Sensor s : result) {
             Log.d(Constants.DEBUGTAG, " $ SensorsValueUpdater sensor:-> " + s.toString());
-            if(!dbSensors.contains(s))
+            if (!dbSensors.contains(s))
                 manager.addSensor(s);
             else
                 manager.editSensor(s);
-            /*if(!buffer.contains(s)) {
-                buffer.add(s);
-            } else {
-                manager.editSensor(s);
-            }*/
             manager.updateSensor(s, s.getValue(), s.getUpdatedAt());
 
         }

@@ -160,7 +160,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                                 etRefreshRate.getText().toString(),
                                 ensureRefresh
                         );
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         result = null;
                     }
                 }
@@ -180,7 +180,9 @@ public class SensorCreationActivity extends ActionBarActivity {
 
                         // Return sensor to previous activity
                         Intent returnIntent = new Intent();
-                        returnIntent.putExtra("sensor", temp);
+                        // The creation does not need a result
+                        if (!etPin.isEnabled())
+                            returnIntent.putExtra("sensor", temp);
                         setResult(RESULT_OK, returnIntent);
                         finish();
                         break;
@@ -200,15 +202,12 @@ public class SensorCreationActivity extends ActionBarActivity {
                                     .getString(R.string.sensor_creation_error));
                         else
                             builder.setMessage(SensorCreationActivity.this.getResources()
-                                    .getString(R.string.sensor_edition));
-
+                                    .getString(R.string.sensor_modif_error));
                         break;
-
                 }
-
             }
         });
-        if(getIntent().hasExtra("sensor-to-edit")) {
+        if (getIntent().hasExtra("sensor-to-edit")) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_sensor_edition));
             Sensor extraSensor = (Sensor) getIntent().getSerializableExtra("sensor-to-edit");
             radioAnalog.setChecked(extraSensor.getPinId().charAt(0) == 'A');

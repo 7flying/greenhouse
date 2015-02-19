@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
@@ -105,5 +106,32 @@ public class ActivityResultHandler {
         manager.editSensor(s);
         Toast.makeText(context, context.getResources().getString(R.string.sensor_modified),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    /** Handles the callback from the creation of an Actuator
+     * @param context
+     */
+    public static void handleCreateNewActuator(Context context) {
+        Toast.makeText(context, context.getString(R.string.actuator_created), Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    /** Handles the callback from the deletion of an Actuator
+     * @param context
+     */
+    public static void handleDeleteActuator(Context context) {
+        Toast.makeText(context, context.getString(R.string.actuator_deleted), Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    /** Handles the callback from the modification of an Actuator
+     * @param context
+     */
+    public static void handleModifyctuator(Context context, Intent data) {
+        Actuator a = (Actuator) data.getSerializableExtra("actuator");
+        DBManager manager = new DBManager(context);
+        manager.updateActuator(a);
+        Toast.makeText(context, context.getString(R.string.actuator_modified), Toast.LENGTH_SHORT)
+                .show();
     }
 }

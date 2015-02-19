@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case Codes.CODE_NEW_MONI_ITEM:
                 // Callback from MoniItemCreationActivity
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
                     tabsPaAdapter.update(0);
                 }
@@ -185,8 +185,16 @@ public class MainActivity extends ActionBarActivity {
                 }
                 break;
             case Codes.CODE_NEW_ACTUATOR:
+                if (resultCode == RESULT_OK) {
+                    ActivityResultHandler.handleCreateNewActuator(getApplicationContext());
+                    tabsPaAdapter.update(3);
+                }
                 break;
             case Codes.CODE_EDIT_ACTUATOR:
+                if (resultCode == RESULT_OK) {
+                    ActivityResultHandler.handleModifyctuator(getApplicationContext(), data);
+                    tabsPaAdapter.update(3);
+                }
                 break;
             default:
                 break;
