@@ -536,7 +536,6 @@ public class NetServer {
 		int index = 0;
 		while(tokenizer.hasMoreTokens()) {
 			temp[index] = tokenizer.nextToken().trim();
-			System.out.println(temp[index]);
 			index++;
 		}
 		// 0- name (encoded)

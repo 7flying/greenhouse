@@ -178,8 +178,8 @@ public class DBManager {
 		Sensor ret = null;
 		PreparedStatement pre = conn.prepareStatement("SELECT * FROM Sensors "
 				+ " WHERE pinid = ? AND type = ?;");
-		pre.setString(1, Character.toString(type.getIdentifier()));
-		pre.setString(2, pinId);
+		pre.setString(1, pinId);
+		pre.setString(2, Character.toString(type.getIdentifier()));
 		ResultSet result = pre.executeQuery();
 		if (result.next()) {
 			ret = new Sensor();
