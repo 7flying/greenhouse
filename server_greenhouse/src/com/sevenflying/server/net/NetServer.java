@@ -90,6 +90,9 @@ public class NetServer {
 					case Constants.POWSAV:
 						setPowerSaving(ois, oos);
 						break;
+					case Constants.GETACTUATORS:
+						getActuators(ois, oos);
+						break;
 					case Constants.NEW_ACTUATOR:
 						createActuator(ois, oos);
 						break;
@@ -135,7 +138,7 @@ public class NetServer {
 		manager.connect(pathToDB);
 		List<Sensor> sensorList = manager.getSensors();
 		List<String> ret = new ArrayList<String>();
-		for(Sensor s : sensorList)
+		for (Sensor s : sensorList)
 			ret.add(Utils.encode64(s.getName()) + ":" +
 					Utils.encode64(s.getPinId()) + ":" + 
 					Utils.encode64(s.getType().getIdentifier()) + ":" + 
@@ -149,7 +152,7 @@ public class NetServer {
 		// Tell to the client how many sensors it has to expect
 		oos.writeObject(Integer.valueOf(number).toString());
 		oos.flush();
-		while(number > 0) {
+		while (number > 0) {
 			oos.writeObject(ret.get(index));
 			oos.flush();
 			String control = (String) ois.readObject();
@@ -413,12 +416,12 @@ public class NetServer {
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[2];
 		int index = 0;
-		while(tokenizer.hasMoreTokens()) {
+		while (tokenizer.hasMoreTokens()) {
 			temp[index] = tokenizer.nextToken();
 			index++;
 		}
 		String errorCode = null;
-		if(index == 2) {
+		if (index == 2) {
 			DBManager manager = DBManager.getInstance();
 			try {
 				System.out.println("\t -Params: " + temp[0] + ":" + temp[1]);
@@ -434,12 +437,86 @@ public class NetServer {
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
+		if (errorCode != null) 
 			oos.writeObject(errorCode);
 		else
 			oos.writeObject(Constants.OK);
 		oos.flush();	
 
+		oos.close();
+		ois.close();
+	}
+	
+	/** Returns the actuators from the database 
+	 * @param ois
+	 * @param oos
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	private void getActuators(ObjectInputStream ois, ObjectOutputStream oos)
+	throws ClassNotFoundException, SQLException, IOException
+	{
+		DBManager manager = DBManager.getInstance();
+		manager.connect(pathToDB);
+		String errorCode = null;
+		try {
+			List<Actuator> listActuator = manager.getActuators();
+			List<String> listRet = new ArrayList<String>();
+			for (Actuator act : listActuator) {
+				// 0- name (encoded)
+		        // 1- id (encoded)
+		        // 2- (optional) sensor type (encoded)
+		        // 3- (optional) sensor id (encoded)
+		        // 4- (optional) compare type (encoded)
+		        // 5- (optional) compare value (encoded)
+				String temp = Utils.encode64(act.getName()) + ":" +
+							  Utils.encode64(act.getPinId());
+				if (act.hasControlSensor()) {
+					temp += ":" + Utils.encode64(act.getControlSensor()
+								  .getType().getIdentifier())
+						  + ":" + Utils.encode64(act.getControlSensor()
+								  .getPinId())
+						  + ":" + Utils.encode64(act.getCompareType()
+								  .toString())
+						  + ":" + Utils.encode64(act.getCompareValue());
+				}
+				listRet.add(temp);
+			}
+			int retNumber = listRet.size(), current = 0, error = 0;
+			System.out.println("\t Returning: " + retNumber + " actuators");
+			// Tell the client how many actuator it has to expect
+			oos.writeObject(Integer.valueOf(retNumber).toString());
+			oos.flush();
+			while (retNumber > 0) {
+				oos.writeObject(listRet.get(current));
+				oos.flush();
+				String control = (String) ois.readObject();
+				if (control.equals(Constants.ACK)) {
+					retNumber--;
+					current++;
+				} else {
+					// Retry if error count < 3
+					if (error < 3)
+						error++;
+					else {
+						// discard the actuator
+						error = 0;
+						retNumber--;
+						current++;
+					}
+				}
+			}
+		} catch (NoSuchSensorException e) {
+			e.printStackTrace();
+			errorCode = Constants.INTERNAL_SERVER_ERROR;
+		}
+		if (errorCode != null)
+			oos.writeObject(errorCode);
+		else
+			oos.writeObject(Constants.ACK);
+		
+		oos.flush();
 		oos.close();
 		ois.close();
 	}
@@ -462,17 +539,25 @@ public class NetServer {
 			System.out.println(temp[index]);
 			index++;
 		}
+		// 0- name (encoded)
+        // 1- id
+        // 2- (optional) sensor type
+        // 3- (optional) sensor id
+        // 4- (optional) compare type
+        // 5- (optional) compare value
 		String errorCode = null;
-		if (index == 6 || index == 3) {
+		if (index == 6 || index == 2) {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);
 				Actuator act = new Actuator(
 						new String(Base64.decodeBase64(temp[0])),
 						temp[1],
-						ActuatorType.valueOf(temp[2].toUpperCase()));
+						ActuatorType.PUMP);
 				if (index == 6) {
-					Sensor sensor = manager.getSensor(Integer.valueOf(temp[3]));
+					Sensor sensor = manager.getSensor(
+							SensorType.valueOf(temp[2].toUpperCase()), // type
+							temp[3]);								   // id
 					act.setControlSensor(sensor);
 					act.setCompareType(CompareType.valueOf(
 							temp[4].toUpperCase()));
@@ -563,24 +648,32 @@ public class NetServer {
 			temp[index] = tokenizer.nextToken();
 			index++;
 		}
+		// 0- name (encoded)
+        // 1- id
+        // 2- (optional) sensor type
+        // 3- (optional) sensor id
+        // 4- (optional) compare type
+        // 5- (optional) compare value
 		String errorCode = null;
-		if(index == 6 || index == 3) {
+		if(index == 6 || index == 2) {
 			DBManager manager = DBManager.getInstance();
 			try {
+				manager.connect(pathToDB);
 				manager.connect(pathToDB);
 				Actuator act = new Actuator(
 						new String(Base64.decodeBase64(temp[0])),
 						temp[1],
-						ActuatorType.valueOf(temp[2].toUpperCase()));
+						ActuatorType.PUMP);
 				if (index == 6) {
-					Sensor sensor = manager.getSensor(Integer.valueOf(temp[3]));
+					Sensor sensor = manager.getSensor(
+							SensorType.valueOf(temp[2].toUpperCase()), // type
+							temp[3]);								   // id
 					act.setControlSensor(sensor);
 					act.setCompareType(CompareType.valueOf(
 							temp[4].toUpperCase()));
 					act.setCompareValue(Double.parseDouble(temp[5]));
 				}
 				manager.updateActuator(act);
-				
 			} catch (NoSuchSensorException ex) {
 				ex.printStackTrace();
 				errorCode = Constants.INTERNAL_SERVER_ERROR;

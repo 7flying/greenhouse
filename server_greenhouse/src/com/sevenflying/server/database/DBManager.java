@@ -18,6 +18,7 @@ import com.sevenflying.server.domain.Actuator;
 import com.sevenflying.server.domain.ActuatorType;
 import com.sevenflying.server.domain.CompareType;
 import com.sevenflying.server.domain.Sensor;
+import com.sevenflying.server.domain.SensorType;
 import com.sevenflying.server.domain.exceptions.DuplicatedActuatorException;
 import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
@@ -160,6 +161,36 @@ public class DBManager {
 			result.close();
 			pre.close();
 		} else
+			throw new NoSuchSensorException();
+		return ret;
+	}
+	
+	/** Returns a sensor given its pinId and type
+	 * @param type - type of the sensor
+	 * @param pinId - pinid of the sensor
+	 * @return
+	 * @throws SQLException
+	 * @throws NoSuchSensorException 
+	 */
+	public Sensor getSensor(SensorType type, String pinId) throws SQLException,
+	NoSuchSensorException
+	{
+		Sensor ret = null;
+		PreparedStatement pre = conn.prepareStatement("SELECT * FROM Sensors "
+				+ " WHERE pinid = ? AND type = ?;");
+		pre.setString(1, Character.toString(type.getIdentifier()));
+		pre.setString(2, pinId);
+		ResultSet result = pre.executeQuery();
+		if (result.next()) {
+			ret = new Sensor();
+			ret.setName(result.getString(2));
+			ret.setPinId(result.getString(3));
+			ret.setType(result.getString(4).charAt(0));
+			ret.setRefreshRate(result.getLong(5));
+		}
+		result.close();
+		pre.close();
+		if (ret == null)
 			throw new NoSuchSensorException();
 		return ret;
 	}

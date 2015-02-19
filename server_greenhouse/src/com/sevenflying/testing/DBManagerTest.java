@@ -63,7 +63,6 @@ public class DBManagerTest {
 			manager.insertReading(s1, i);
 			manager.insertReading(s2, i * 10);
 			manager.insertReading(s3, i * 100);
-			Thread.sleep(1000);
 		}
 
 

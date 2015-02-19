@@ -27,6 +27,7 @@ public class Constants {
 	 * Control codes *
 	 * ***************/
 	public static final String OK = "OK\n";
+	public static final String ACK = "ACK";
 	
 	/* *************
 	 * Error codes *
