@@ -118,4 +118,6 @@
     <string name="alert_no_server_conn">No se puede establecer una conexión con el servidor, por favor inténtelo de nuevo más tarde.</string>
     <string name="no_sensors">No hay ningún sensor, ¡intenta añadir uno!</string>
     <string name="refresh_rate_seconds">Ratio de refresco (segundos)</string>
+    <string name="actuator_error_delete">Error borrando el actuador.</string>
+    <string name="actuator_error_modify">Error modificando el actuador.</string>
 </resources>

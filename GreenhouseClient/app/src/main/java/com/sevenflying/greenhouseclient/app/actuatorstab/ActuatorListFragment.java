@@ -17,6 +17,8 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Actuator;
+import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 import com.sevenflying.greenhouseclient.net.tasks.ActuatorObtainerTask;
 
 import java.util.List;
@@ -44,7 +46,8 @@ public class ActuatorListFragment extends Fragment implements Updateable {
             actuatorListView = (ListView) view.findViewById(R.id.list_actuators);
             manager = new DBManager(getActivity().getApplicationContext());
             actuatorList = manager.getAllActuators();
-            actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuatorList);
+            actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row,
+                    actuatorList);
             actuatorListView.setAdapter(actuatorAdapter);
             actuatorAdapter.notifyDataSetChanged();
             // Click for further data display
@@ -61,7 +64,8 @@ public class ActuatorListFragment extends Fragment implements Updateable {
             // Context menu on long click
             actuatorListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
+                                               long id) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(getResources().getString(R.string.actuator))
                         .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
@@ -72,12 +76,24 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                                         // TODO edit actuator
                                         break;
                                     case 1: // delete
-                                        manager.deleteActuator(actuatorList.get(position));
-                                        actuatorList.remove(position);
-                                        actuatorAdapter.notifyDataSetChanged();
-                                        Toast.makeText(ActuatorListFragment.this.getActivity(),
-                                                getResources().getString(R.string.actuator_deleted),
-                                                Toast.LENGTH_SHORT).show();
+                                        Communicator comm = new Communicator(getActivity()
+                                                .getApplicationContext());
+                                        String result = comm.deleteActuator(actuatorList
+                                                .get(position).getPinId());
+                                        if (result.equals(Constants.OK)) {
+                                            manager.deleteActuator(actuatorList.get(position));
+                                            actuatorList.remove(position);
+                                            actuatorAdapter.notifyDataSetChanged();
+                                            Toast.makeText(ActuatorListFragment.this.getActivity(),
+                                                    getResources()
+                                                        .getString(R.string.actuator_deleted),
+                                                    Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(ActuatorListFragment.this.getActivity(),
+                                                    getResources().getString(
+                                                            R.string.actuator_error_delete),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
                                         break;
                                 }
                                 checkVisibility();

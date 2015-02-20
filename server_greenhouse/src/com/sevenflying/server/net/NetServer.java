@@ -621,7 +621,7 @@ public class NetServer {
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
+		if (errorCode != null) 
 			oos.writeObject(errorCode);
 		else
 			oos.writeObject(Constants.OK);

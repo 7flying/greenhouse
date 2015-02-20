@@ -91,7 +91,9 @@
     <string name="actuator">Actuator</string>
     <string name="actuator_created">Actuator created.</string>
     <string name="actuator_deleted">Actuator deleted.</string>
+    <string name="actuator_error_delete">Error deleting the actuator.</string>
     <string name="actuator_modified">Actuator modified.</string>
+    <string name="actuator_error_modify">Error modifying the actuator.</string>
     <!-- activity actuator creation -->
     <string name="add_control_sensor">Add a control sensor?</string>
     <string name="control_type">Control type</string>
