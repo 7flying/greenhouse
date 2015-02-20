@@ -1,8 +1,6 @@
 package com.sevenflying.testing;
 
 import java.util.List;
-import java.util.Map;
-
 import com.sevenflying.server.Env;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Actuator;
@@ -14,7 +12,7 @@ import com.sevenflying.server.domain.SensorType;
 public class DBManagerTest {
 
 	public static void main(String [] args) throws Exception {
-		test_1();
+		generateData();
 		System.out.println(" $ Tests finished");
 	}
 
@@ -129,5 +127,31 @@ public class DBManagerTest {
 		for (Actuator a : manager.getActuators())
 			System.out.println(a);
 		manager.disconnect();
+	}
+	
+	public static void generateData() throws Exception {
+		DBManager manager = DBManager.getInstance();
+		manager.connect(Env.DB_PATH);
+		manager.createDatabase();
+		Sensor s1 = new Sensor("DHT22", "D03", SensorType.TEMPERATURE,60000, true);
+		Sensor s2 = new Sensor("DHT22", "D03", SensorType.HUMIDITY, 60000, true);
+		Sensor s3 = new Sensor("Photo", "A04", SensorType.LIGHT, 60000, true);
+		manager.insertSensor(s1);
+		manager.insertSensor(s2);
+		manager.insertSensor(s3);
+		// Values
+		for(int i = 1; i < 20 ; i++) {
+			manager.insertReading(s1, i * 10);
+			manager.insertReading(s2, i);
+			manager.insertReading(s3, i * 100);
+		}
+		Actuator actuator = new Actuator("Water pump", "A45",
+				ActuatorType.PUMP);
+		Actuator actuatorTwo = new Actuator("Large water pump", "D44", 
+				ActuatorType.PUMP, s3,CompareType.EQUAL, 34);
+		manager.insertActuator(actuator);
+		manager.insertActuator(actuatorTwo);
+		System.out.println("$ Testing data created");
+		
 	}
 }

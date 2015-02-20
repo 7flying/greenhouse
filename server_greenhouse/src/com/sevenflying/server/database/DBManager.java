@@ -258,8 +258,6 @@ public class DBManager {
 	
 	/** Gets the db id of a sensor */
 	private int getSensorDBid(Sensor sensor) throws SQLException {
-		System.out.println(" $$ requested : " + sensor.getPinId() + ", "
-				+ sensor.getType().getIdentifier());
 		return getSensorBDid(sensor.getPinId(),
 				Character.toString(sensor.getType().getIdentifier()));
 	}

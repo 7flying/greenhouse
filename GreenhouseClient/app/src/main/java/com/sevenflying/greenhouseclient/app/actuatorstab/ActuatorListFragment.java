@@ -17,6 +17,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Actuator;
+import com.sevenflying.greenhouseclient.net.tasks.ActuatorObtainerTask;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
     private ActuatorAdapter actuatorAdapter;
     private ListView actuatorListView;
     private DBManager manager;
-    private LinearLayout layoutNoActuators;
+    private LinearLayout layoutNoActuators, layoutProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, final Bundle savedInstanceState)
@@ -39,6 +40,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
         else {
             View view = inflater.inflate(R.layout.fragment_actuator_list, container, false);
             layoutNoActuators = (LinearLayout) view.findViewById(R.id.layout_no_actuators);
+            layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
             actuatorListView = (ListView) view.findViewById(R.id.list_actuators);
             manager = new DBManager(getActivity().getApplicationContext());
             actuatorList = manager.getAllActuators();
@@ -86,7 +88,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                     return true;
                 }
             });
-            checkVisibility();
+            update();
             return view;
         }
     }
@@ -100,6 +102,9 @@ public class ActuatorListFragment extends Fragment implements Updateable {
 
     @Override
     public void update() {
+        ActuatorObtainerTask obtainerTask = new ActuatorObtainerTask(actuatorAdapter, layoutProgress,
+                getActivity().getApplicationContext(), actuatorList);
+        obtainerTask.execute();
         // actuatorList = manager.getActuators();
         actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuatorList);
         actuatorListView.setAdapter(actuatorAdapter);

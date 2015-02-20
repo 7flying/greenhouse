@@ -694,7 +694,7 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String select = ActuatorEntry.AC_PIN + " = ? ";
         db.delete(ActuatorEntry.TABLE_NAME, select, new String[] {actuator.getPinId()});
-        Log.e(Constants.DEBUGTAG, " $ addActuator deleted: " + actuator.toString());
+        Log.e(Constants.DEBUGTAG, " $ deleteActuator deleted: " + actuator.toString());
     }
 
     /** Obtains all the actuators in the db
@@ -709,18 +709,28 @@ public class DBManager extends SQLiteOpenHelper {
                 Actuator actTemp = new Actuator(
                         cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_NAME)),
                         cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_PIN)));
-                if (cursor.getColumnIndex(ActuatorEntry.AC_SENSOR_REF) != -1) {
+                Log.e(Constants.DEBUGTAG, " $ getActuators ini: " + actTemp.toString());
+                if (cursor.getColumnIndex(ActuatorEntry.AC_SENSOR_REF) != -1 &&
+                   cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE)) != null)
+                {
                     // The column exists, there is a control sensor for this actuator
                     int sensorId = cursor.getInt(cursor.getColumnIndex(
                             ActuatorEntry.AC_SENSOR_REF));
                     Sensor s = getSensorBy(Integer.toString(sensorId));
+                    Log.e(Constants.DEBUGTAG, "\t control sensor simple: " + s.toString());
                     actTemp.setControlSensor(s);
-                    actTemp.setCompareType(AlertType.valueOf(cursor.getString(
-                            cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE))));
+
+                    String compareType = cursor.getString(
+                            cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE));
+                    Log.e(Constants.DEBUGTAG, "\t compareType: " + compareType);
+                    actTemp.setCompareType(AlertType.valueOf(compareType));
+                    Log.e(Constants.DEBUGTAG, "\t compareType: " + cursor.getDouble(
+                            cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
                     actTemp.setCompareValue(cursor.getDouble(
                             cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
                 }
                 ret.add(actTemp);
+                Log.e(Constants.DEBUGTAG, " $ getActuators end: " + actTemp.toString());
             } while(cursor.moveToNext());
         }
         cursor.close();

@@ -29,7 +29,7 @@ public class ActuatorObtainerTask extends AsyncTask<Void, Actuator, List<Actuato
 
     private ActuatorAdapter adapter;
     private List<Actuator> currentActuators, dbActuators;
-    private LinearLayout layoutCharge, layoutNoConnection;
+    private LinearLayout layoutCharge;
     private Exception exception;
     private Context context;
     private DBManager manager;
@@ -38,11 +38,10 @@ public class ActuatorObtainerTask extends AsyncTask<Void, Actuator, List<Actuato
     private int serverPort;
 
     public ActuatorObtainerTask(ActuatorAdapter adapter, LinearLayout layoutCharge,
-    LinearLayout layoutNoConnection, Context context, List<Actuator> currentActuators)
+    Context context, List<Actuator> currentActuators)
     {
         this.adapter = adapter;
         this.layoutCharge = layoutCharge;
-        this.layoutNoConnection = layoutNoConnection;
         this.exception = null;
         this.currentActuators = currentActuators;
         this.context = context;
@@ -52,9 +51,8 @@ public class ActuatorObtainerTask extends AsyncTask<Void, Actuator, List<Actuato
     protected void onPreExecute() {
         serverPort = comm.getServerPort();
         host = comm.getServer();
-        layoutNoConnection.setVisibility(View.GONE);
         layoutCharge.setVisibility(View.VISIBLE);
-        manager= new DBManager(context);
+        manager = new DBManager(context);
         dbActuators = manager.getAllActuators();
     }
 

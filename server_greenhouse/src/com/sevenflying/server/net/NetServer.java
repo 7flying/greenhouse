@@ -484,7 +484,8 @@ public class NetServer {
 				listRet.add(temp);
 			}
 			int retNumber = listRet.size(), current = 0, error = 0;
-			System.out.println("\t Returning: " + retNumber + " actuators");
+			System.out.println("\t # Returning: " + retNumber + " actuators");
+			System.out.println("\t # " + listActuator.toString());
 			// Tell the client how many actuator it has to expect
 			oos.writeObject(Integer.valueOf(retNumber).toString());
 			oos.flush();
