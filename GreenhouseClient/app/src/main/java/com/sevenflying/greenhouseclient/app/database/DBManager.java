@@ -666,24 +666,29 @@ public class DBManager extends SQLiteOpenHelper {
      */
     public boolean updateActuator(Actuator actuator) {
         Log.d(Constants.DEBUGTAG, " $ updateActuator: actuator: " + actuator.toString());
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues vals = new ContentValues();
-        vals.put(ActuatorEntry.AC_NAME, actuator.getName());
-        if (actuator.hasControlSensor()) {
+        if (!actuator.hasControlSensor()) {
+            deleteActuator(actuator);
+            return addActuator(actuator);
+
+        } else {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues vals = new ContentValues();
+            vals.put(ActuatorEntry.AC_NAME, actuator.getName());
             vals.put(ActuatorEntry.AC_SENSOR_REF,
-                    getSensorID(actuator.getControlSensor().getPinId(),
-                            String.valueOf(actuator.getControlSensor().getType().getIdentifier())));
+                        getSensorID(actuator.getControlSensor().getPinId(),
+                                String.valueOf(actuator.getControlSensor().getType().getIdentifier())));
             vals.put(ActuatorEntry.AC_COMPARE_TYPE, actuator.getCompareType().toString());
             vals.put(ActuatorEntry.AC_COMPARE_VALUE, actuator.getCompareValue());
-        }
-        int result = db.update(ActuatorEntry.TABLE_NAME, vals, ActuatorEntry.AC_PIN + " = ?",
-                new String[] {actuator.getPinId()});
-        if (result > 0) {
-            Log.d(Constants.DEBUGTAG, " $ updateActuator: oks");
-            return true;
-        } else {
-            Log.e(Constants.DEBUGTAG, " $ updateActuator: NOT updated");
-            return false;
+
+            int result = db.update(ActuatorEntry.TABLE_NAME, vals, ActuatorEntry.AC_PIN + " = ?",
+                    new String[] {actuator.getPinId()});
+            if (result > 0) {
+                Log.d(Constants.DEBUGTAG, " $ updateActuator: oks");
+                return true;
+            } else {
+                Log.e(Constants.DEBUGTAG, " $ updateActuator: NOT updated");
+                return false;
+            }
         }
     }
 

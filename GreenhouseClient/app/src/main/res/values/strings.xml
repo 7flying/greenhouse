@@ -90,6 +90,7 @@
     <string name="no_actuators">There aren\'t any actuators, try to add one!</string>
     <string name="actuator">Actuator</string>
     <string name="actuator_created">Actuator created.</string>
+    <string name="actuator_error_create">Error creating the actuator.</string>
     <string name="actuator_deleted">Actuator deleted.</string>
     <string name="actuator_error_delete">Error deleting the actuator.</string>
     <string name="actuator_modified">Actuator modified.</string>

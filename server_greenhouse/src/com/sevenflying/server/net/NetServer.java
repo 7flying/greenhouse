@@ -24,6 +24,7 @@ import com.sevenflying.server.domain.SensorType;
 import com.sevenflying.server.domain.exceptions.DuplicatedActuatorException;
 import com.sevenflying.server.domain.exceptions.DuplicatedSensorException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
+import com.sevenflying.server.domain.exceptions.NoSuchActuatorException;
 import com.sevenflying.server.domain.exceptions.NoSuchSensorException;
 import com.sevenflying.utils.Utils;
 
@@ -648,7 +649,7 @@ public class NetServer {
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[6]; // max is 6
 		int index = 0;
-		while(tokenizer.hasMoreTokens()) {
+		while (tokenizer.hasMoreTokens()) {
 			temp[index] = tokenizer.nextToken();
 			index++;
 		}
@@ -678,7 +679,9 @@ public class NetServer {
 					act.setCompareValue(Double.parseDouble(temp[5]));
 				}
 				manager.updateActuator(act);
-			} catch (NoSuchSensorException ex) {
+			} catch (NoSuchSensorException | NoSuchActuatorException
+					| DuplicatedActuatorException ex)
+			{
 				ex.printStackTrace();
 				errorCode = Constants.INTERNAL_SERVER_ERROR;
 			} catch (NumberFormatException | SQLException |

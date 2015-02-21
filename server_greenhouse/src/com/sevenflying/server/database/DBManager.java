@@ -431,6 +431,27 @@ public class DBManager {
 		return r == 1;
 	}
 	
+	/** Checks wether an actuator has a control sensor.
+	 * @param pinid - actuator's pin
+	 * @return 
+	 * @throws SQLException
+	 */
+	private boolean hasControlSensor(String pinid) throws SQLException {
+		PreparedStatement pre = conn.prepareStatement("SELECT * from Actuators"
+				+ " WHERE pinid = ?;");
+		pre.setString(1, pinid);
+		ResultSet resultSet = pre.executeQuery();
+		boolean ret = true;
+		try {
+			resultSet.getInt(5);
+		} catch (SQLException e) {
+			ret = false;
+		}
+		resultSet.close();
+		pre.close();
+		return ret;
+	}
+	
 	/** Retrieves all the actuators from the database
 	 * @return
 	 * @throws SQLException 
@@ -542,14 +563,16 @@ public class DBManager {
 	 * @param actuator - actuator to update
 	 * @throws SQLException 
 	 * @throws NoSuchSensorException 
+	 * @throws DuplicatedActuatorException 
 	 */
 	public synchronized void updateActuator(Actuator actuator)
-	throws SQLException, NoSuchSensorException
+	throws SQLException, NoSuchSensorException, NoSuchActuatorException,
+	DuplicatedActuatorException
 	{
 		if (isActuatorCreated(actuator.getPinId())) {
-			PreparedStatement pre = null;
-			int idPos = -1, sensorId = -1;
+			int sensorId = -1;
 			if (actuator.hasControlSensor()) {
+				PreparedStatement pre = null;
 				sensorId = getSensorBDid(actuator.getControlSensor()
 						.getPinId(), Character.toString(actuator
 								.getControlSensor().getType()
@@ -559,22 +582,33 @@ public class DBManager {
 				pre = conn.prepareStatement("UPDATE Actuators SET type = ?,"
 						+ "name = ?, idSensor = ?, compareType = ?,"
 						+ "compareValue = ? WHERE pinid = ?;");
-				idPos = 6;
-			} else {
-				pre = conn.prepareStatement("UPDATE Actuators SET type = ?,"
-						+ "name = ? WHERE pinid = ?;");
-				idPos = 3;
-			}
-			pre.setString(1, actuator.getType().toString());
-			pre.setString(2, actuator.getName());
-			if (actuator.hasControlSensor()) {
+				pre.setString(1, actuator.getType().toString());
+				pre.setString(2, actuator.getName());
 				pre.setInt(3, sensorId);
 				pre.setString(4, actuator.getCompareType().toString());
 				pre.setDouble(5, actuator.getCompareValue());
+				pre.setString(6, actuator.getPinId());
+				pre.executeUpdate();
+				pre.close();
+			} else {
+				// If we just set -1 on the sensor field it is a constraint
+				// violation, safely delete the actuator and create a new one
+				// Two cases -> 
+				// update from control to normal -> requires delete and insert
+				if (hasControlSensor(actuator.getPinId())) {
+					deleteActuator(actuator);
+					insertActuator(actuator);
+				} else {
+					// // update from normal to normal -> update
+					PreparedStatement pre = conn.prepareStatement("UPDATE "
+							+ "Actuator SET name = ? WHERE pinid = ?;");
+					pre.setString(1, actuator.getName());
+					pre.setString(2, actuator.getPinId());
+					pre.executeUpdate();
+					pre.close();
+				}
 			}
-			pre.setString(idPos, actuator.getPinId());
-			pre.executeUpdate();
-			pre.close();
-		}
+		} else
+			throw new NoSuchActuatorException();
 	}
 }

@@ -1,5 +1,7 @@
 package com.sevenflying.greenhouseclient.app.actuatorstab;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -184,6 +186,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                 String name = etName.getText().toString();
                 Actuator temp = new Actuator(name, pin);
                 if (formattedSensorMap.keySet().size() > 0 && radioYes.isChecked()) {
+                    Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify with control fields");
                     Sensor control = formattedSensorMap.get(
                             (String) controlSensorSpinner.getSelectedItem());
                     AlertType controlType = AlertType.alertTypes[selectedType];
@@ -203,15 +206,22 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                                      control.getPinId(), controlType.toString(), compareValue);
                     }
                 } else {
+                    // simple fields
+                    Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify simple fields");
                     // Creation
                     if (etPin.isEnabled()) {
-                        // Simple fields
                         response = comm.createActuator(name, pin);
                     } else {
                         // Modification
                         response = comm.modifyActuator(name, pin);
                     }
                 }
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        ActuatorCreationActivity.this);
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }});
                 switch (response) {
                     case Constants.OK:
                         // Send an ok to previous activity
@@ -221,9 +231,20 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                         setResult(RESULT_OK, returnIntent);
                         finish();
                         break;
-                    // TODO other errors
+                    case Constants.INCORRECT_NUMBER_OF_PARAMS:
+                        builder.setMessage(ActuatorCreationActivity.this.getResources()
+                                .getString(R.string.error_incorrect_params));
+                        builder.show();
+                        break;
+                    case Constants.INTERNAL_SERVER_ERROR:
+                        if (etPin.isEnabled())
+                            builder.setMessage(ActuatorCreationActivity.this.getResources()
+                                    .getString(R.string.actuator_error_create));
+                        else
+                            builder.setMessage(ActuatorCreationActivity.this.getResources()
+                                    .getString(R.string.actuator_error_modify));
+                        break;
                 }
-
             }
         });
         if (getIntent().hasExtra(Extras.EXTRA_ACTUATOR_EDIT)) {
