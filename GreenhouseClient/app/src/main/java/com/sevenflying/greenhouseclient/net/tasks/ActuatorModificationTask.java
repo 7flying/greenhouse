@@ -50,7 +50,7 @@ public class ActuatorModificationTask extends AsyncTask<String, Void, String> {
                 oos.flush();
                 String send = params[0] + ":" + params[1];
                 if (params.length == 6)
-                    send += params[2] + ":" + params[3] + ":" + params[4] + ":" + params[5];
+                    send += ":" + params[2] + ":" + params[3] + ":" + params[4] + ":" + params[5];
                 oos.writeObject(send);
                 oos.flush();
                 String response = (String) ois.readObject();

@@ -56,7 +56,7 @@ public class NetServer {
 	}
 
 	public void processConnection(final Socket s) {
-		System.out.println(" $ Incoming connection:" +
+		System.out.println("\n $ Incoming connection:" +
 		 s.getInetAddress().toString() + " " + s.getLocalAddress());
 		Thread t = new Thread(new Runnable() {
 			@Override
@@ -659,7 +659,7 @@ public class NetServer {
         // 4- (optional) compare type
         // 5- (optional) compare value
 		String errorCode = null;
-		if(index == 6 || index == 2) {
+		if (index == 6 || index == 2) {
 			DBManager manager = DBManager.getInstance();
 			try {
 				manager.connect(pathToDB);
@@ -690,13 +690,17 @@ public class NetServer {
 				manager.disconnect();
 			}
 		} else {
+			System.out.println("\t index: " + index);
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
+		
+		if (errorCode != null) { 
 			oos.writeObject(errorCode);
-		else
+			System.out.println("\t " + errorCode);
+		} else {
 			oos.writeObject(Constants.OK);
-		oos.flush();	
+			System.out.println("\t " + Constants.OK);
+		}oos.flush();	
 
 		oos.close();
 		ois.close();
