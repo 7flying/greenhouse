@@ -94,6 +94,8 @@
     <string name="actuator_error_delete">Error deleting the actuator.</string>
     <string name="actuator_modified">Actuator modified.</string>
     <string name="actuator_error_modify">Error modifying the actuator.</string>
+    <!-- activity actuator status -->
+    <string name="control_sensor">Control sensor</string>
     <!-- activity actuator creation -->
     <string name="add_control_sensor">Add a control sensor?</string>
     <string name="control_type">Control type</string>
