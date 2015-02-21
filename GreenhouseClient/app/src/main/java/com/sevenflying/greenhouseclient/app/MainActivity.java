@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000, 30000,
                 pendingIntent);
-        Log.d(Constants.DEBUGTAG, " # MainActitivy start AlarmManager");
+        Log.d(Constants.DEBUGTAG, " # MainActivity start AlarmManager");
     }
 
     @Override
@@ -193,7 +193,7 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case Codes.CODE_EDIT_ACTUATOR:
                 if (resultCode == RESULT_OK) {
-                    ActivityResultHandler.handleModifyctuator(getApplicationContext(), data);
+                    ActivityResultHandler.handleModifyActuator(getApplicationContext(), data);
                     tabsPaAdapter.update(3);
                 }
                 break;

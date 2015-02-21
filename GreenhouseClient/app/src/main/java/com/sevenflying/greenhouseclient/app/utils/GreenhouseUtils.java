@@ -1,9 +1,12 @@
 package com.sevenflying.greenhouseclient.app.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.text.DecimalFormat;
 
@@ -21,6 +24,15 @@ public class GreenhouseUtils {
     public static String suppressZeros(double toFormat) {
         DecimalFormat format = new DecimalFormat("#.##");
         return format.format(toFormat);
+    }
+
+    /** Returns a formatted version of the sensor data:
+     * "SensorName (sensorPin) - sensorType"
+     * @param s - sensor to format
+     * @return string
+     */
+    public static String getFormattedSensor(Sensor s) {
+       return s.getName() + " (" + s.getPinId() + ") - " + s.getType().toString();
     }
 
     public GreenhouseUtils(Context reference) {

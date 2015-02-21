@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
@@ -140,16 +141,16 @@ public class AlertCreationActivity extends ActionBarActivity {
                 Log.d(Constants.DEBUGTAG, " $ OK on AlertCreationAct. arg:" + a.toString());
                 // Return alert to previous activity
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("alert", a);
+                returnIntent.putExtra(Extras.EXTRA_ALERT, a);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
         });
 
-       if (getIntent().hasExtra("alert-to-edit")) {
+       if (getIntent().hasExtra(Extras.EXTRA_ALERT_EDIT)) {
             if(getSupportActionBar() != null)
                 getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_alert));
-            Alert a = (Alert) getIntent().getSerializableExtra("alert-to-edit");
+            Alert a = (Alert) getIntent().getSerializableExtra(Extras.EXTRA_ALERT_EDIT);
             // the equals of sensor takes pinId + type
             String key = a.getSensorName() + " (" + a.getSensorPinId() + ") " +
                     a.getSensorType().toString();

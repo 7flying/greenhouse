@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.actuatorstab.ActuatorActivity;
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
@@ -233,10 +234,9 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
         int rowsAffected = db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?", new String[]{id});
         Log.d(Constants.DEBUGTAG, " $ editSensor - rows affected: " + rowsAffected);
-        Sensor updated = getSensorBy(id);
-        Log.d(Constants.DEBUGTAG, " $ editSensor - before: " + s.toString());
-        Log.d(Constants.DEBUGTAG, " $ editSensor - after: " + updated.toString());
-
+        // Sensor updated = getSensorBy(id);
+        // Log.d(Constants.DEBUGTAG, " $ editSensor - before: " + s.toString());
+        // Log.d(Constants.DEBUGTAG, " $ editSensor - after: " + updated.toString());
     }
 
     /** Returns all the sensors at the manager.
@@ -289,7 +289,7 @@ public class DBManager extends SQLiteOpenHelper {
         Log.d(Constants.DEBUGTAG, " $ getFormattedSensors: num: " + sensors.size());
         for (Sensor s : sensors) {
             Log.d(Constants.DEBUGTAG, " $ getFormattedSensors: sensor:" + s.toString());
-            ret.put(s.getName() + " (" + s.getPinId() + ") -" + s.getType().toString(), s);
+            ret.put(GreenhouseUtils.getFormattedSensor(s), s);
         }
         Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map: " + ret.toString());
         return ret;
@@ -665,6 +665,7 @@ public class DBManager extends SQLiteOpenHelper {
      * @param actuator - actuator to update
      */
     public boolean updateActuator(Actuator actuator) {
+        Log.d(Constants.DEBUGTAG, " $ updateActuator: actuator: " + actuator.toString());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues vals = new ContentValues();
         vals.put(ActuatorEntry.AC_NAME, actuator.getName());
@@ -676,8 +677,7 @@ public class DBManager extends SQLiteOpenHelper {
             vals.put(ActuatorEntry.AC_COMPARE_VALUE, actuator.getCompareValue());
         }
         int result = db.update(ActuatorEntry.TABLE_NAME, vals, ActuatorEntry.AC_PIN + " = ?",
-                new String[] {String.valueOf(getSensorID(actuator.getControlSensor().getPinId(),
-                        String.valueOf(actuator.getControlSensor().getType().getIdentifier())))});
+                new String[] {actuator.getPinId()});
         if (result > 0) {
             Log.d(Constants.DEBUGTAG, " $ updateActuator: oks");
             return true;
@@ -694,7 +694,7 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String select = ActuatorEntry.AC_PIN + " = ? ";
         db.delete(ActuatorEntry.TABLE_NAME, select, new String[] {actuator.getPinId()});
-        Log.e(Constants.DEBUGTAG, " $ deleteActuator deleted: " + actuator.toString());
+        Log.d(Constants.DEBUGTAG, " $ deleteActuator deleted: " + actuator.toString());
     }
 
     /** Obtains all the actuators in the db
@@ -709,7 +709,7 @@ public class DBManager extends SQLiteOpenHelper {
                 Actuator actTemp = new Actuator(
                         cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_NAME)),
                         cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_PIN)));
-                Log.e(Constants.DEBUGTAG, " $ getActuators ini: " + actTemp.toString());
+                Log.d(Constants.DEBUGTAG, " $ getActuators ini: " + actTemp.toString());
                 if (cursor.getColumnIndex(ActuatorEntry.AC_SENSOR_REF) != -1 &&
                    cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE)) != null)
                 {
@@ -717,20 +717,20 @@ public class DBManager extends SQLiteOpenHelper {
                     int sensorId = cursor.getInt(cursor.getColumnIndex(
                             ActuatorEntry.AC_SENSOR_REF));
                     Sensor s = getSensorBy(Integer.toString(sensorId));
-                    Log.e(Constants.DEBUGTAG, "\t control sensor simple: " + s.toString());
+                    Log.d(Constants.DEBUGTAG, "\t control sensor simple: " + s.toString());
                     actTemp.setControlSensor(s);
 
                     String compareType = cursor.getString(
                             cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE));
-                    Log.e(Constants.DEBUGTAG, "\t compareType: " + compareType);
+                    Log.d(Constants.DEBUGTAG, "\t compareType: " + compareType);
                     actTemp.setCompareType(AlertType.valueOf(compareType));
-                    Log.e(Constants.DEBUGTAG, "\t compareType: " + cursor.getDouble(
+                    Log.d(Constants.DEBUGTAG, "\t compareType: " + cursor.getDouble(
                             cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
                     actTemp.setCompareValue(cursor.getDouble(
                             cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
                 }
                 ret.add(actTemp);
-                Log.e(Constants.DEBUGTAG, " $ getActuators end: " + actTemp.toString());
+                Log.d(Constants.DEBUGTAG, " $ getActuators end: " + actTemp.toString());
             } while(cursor.moveToNext());
         }
         cursor.close();

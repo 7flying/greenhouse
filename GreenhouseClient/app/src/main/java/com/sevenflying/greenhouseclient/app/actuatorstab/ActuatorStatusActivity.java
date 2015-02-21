@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 
 /** Holds the actuator info.
@@ -41,9 +42,9 @@ public class ActuatorStatusActivity extends ActionBarActivity {
                 .layout_optional_control_sensor_data);
 
 
-        if (getIntent().hasExtra("actuator")) {
+        if (getIntent().hasExtra(Extras.EXTRA_ACTUATOR)) {
             layoutOptionalControlSensor.setVisibility(View.VISIBLE);
-            final Actuator temp = (Actuator) getIntent().getSerializableExtra("actuator");
+            final Actuator temp = (Actuator) getIntent().getSerializableExtra(Extras.EXTRA_ACTUATOR);
             tvActuatorName.setText(temp.getName());
             tvPin.setText(temp.getPinId());
             if (temp.hasControlSensor()) {
@@ -60,7 +61,7 @@ public class ActuatorStatusActivity extends ActionBarActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(ActuatorStatusActivity.this,
                                 SensorStatusActivity.class);
-                        intent.putExtra("sensor", temp.getControlSensor());
+                        intent.putExtra(Extras.EXTRA_SENSOR, temp.getControlSensor());
                         startActivity(intent);
                     }
                 });

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.tasks.HistoricalRecordObtainerTask;
@@ -46,9 +47,9 @@ public class SensorStatusActivity extends ActionBarActivity {
 
 
         // Set data
-        if(getIntent().hasExtra("sensor")) {
+        if(getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
             GreenhouseUtils utils = new GreenhouseUtils(this);
-            currentSensor = (Sensor) getIntent().getSerializableExtra("sensor");
+            currentSensor = (Sensor) getIntent().getSerializableExtra(Extras.EXTRA_SENSOR);
             imageView.setImageResource(currentSensor.getDrawableId());
             textSensorValue.setText(GreenhouseUtils.suppressZeros(currentSensor.getValue()));
             textSensorUnit.setText(currentSensor.getType().getUnit());

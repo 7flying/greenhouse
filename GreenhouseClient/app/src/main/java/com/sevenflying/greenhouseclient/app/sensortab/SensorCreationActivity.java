@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.domain.SensorType;
 import com.sevenflying.greenhouseclient.net.Communicator;
@@ -182,7 +183,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                         Intent returnIntent = new Intent();
                         // The creation does not need a result
                         if (!etPin.isEnabled())
-                            returnIntent.putExtra("sensor", temp);
+                            returnIntent.putExtra(Extras.EXTRA_SENSOR, temp);
                         setResult(RESULT_OK, returnIntent);
                         finish();
                         break;
@@ -207,9 +208,9 @@ public class SensorCreationActivity extends ActionBarActivity {
                 }
             }
         });
-        if (getIntent().hasExtra("sensor-to-edit")) {
+        if (getIntent().hasExtra(Extras.EXTRA_SENSOR_EDIT)) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_sensor_edition));
-            Sensor extraSensor = (Sensor) getIntent().getSerializableExtra("sensor-to-edit");
+            Sensor extraSensor = (Sensor) getIntent().getSerializableExtra(Extras.EXTRA_SENSOR_EDIT);
             radioAnalog.setChecked(extraSensor.getPinId().charAt(0) == 'A');
             radioAnalog.setEnabled(radioAnalog.isChecked());
             radioDigital.setChecked(!radioAnalog.isChecked());

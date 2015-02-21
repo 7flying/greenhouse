@@ -20,6 +20,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.net.Constants;
 
@@ -71,7 +72,7 @@ public class AlertListFragment extends Fragment implements Updateable {
                                         case 0: // Edit
                                             Intent intent = new Intent(AlertListFragment.this
                                                     .getActivity(), AlertCreationActivity.class);
-                                            intent.putExtra("alert-to-edit",
+                                            intent.putExtra(Extras.EXTRA_ALERT_EDIT,
                                                     alertList.get(listPosition));
                                             getActivity().startActivityForResult(intent,
                                                     Codes.CODE_EDIT_ALERT);

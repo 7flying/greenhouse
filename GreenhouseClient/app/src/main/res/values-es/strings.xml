@@ -120,4 +120,5 @@
     <string name="refresh_rate_seconds">Ratio de refresco (segundos)</string>
     <string name="actuator_error_delete">Error borrando el actuador.</string>
     <string name="actuator_error_modify">Error modificando el actuador.</string>
+    <string name="control_sensor">Sensor de control</string>
 </resources>

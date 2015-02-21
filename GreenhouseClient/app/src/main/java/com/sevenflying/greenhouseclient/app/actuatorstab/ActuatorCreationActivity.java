@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,8 +22,10 @@ import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Actuator;
+import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
@@ -139,9 +144,9 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         final TextView tvControlUnit = (TextView) findViewById(R.id.et_control_unit);
         // Spinner of sensors
         final Spinner controlSensorSpinner = (Spinner) findViewById(R.id.sensor_chooser);
+        List<String> formatedSensorNames = new ArrayList<String>(formattedSensorMap.keySet());
         ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item,
-                new ArrayList<String>(formattedSensorMap.keySet()));
+                android.R.layout.simple_spinner_item, formatedSensorNames);
         sensorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         controlSensorSpinner.setAdapter(sensorAdapter);
         controlSensorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -186,26 +191,86 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                     temp.setControlSensor(control);
                     temp.setCompareType(AlertType.valueOf(controlType.toString()));
                     temp.setCompareValue(compareValue);
-                    response = comm.createActuator(name, pin,
-                            control.getType().toString().toUpperCase(),
-                            control.getPinId(), controlType.toString(), compareValue);
+                    // Creation if pin enabled
+                    if (etPin.isEnabled()) {
+                        response = comm.createActuator(name, pin,
+                                control.getType().toString().toUpperCase(),
+                                control.getPinId(), controlType.toString(), compareValue);
+                    } else {
+                        // Modification
+                        response = comm.modifyActuator(name, pin,
+                                     control.getType().toString().toUpperCase(),
+                                     control.getPinId(), controlType.toString(), compareValue);
+                    }
                 } else {
-                    // Simple fields
-                    response = comm.createActuator(name, pin);
+                    // Creation
+                    if (etPin.isEnabled()) {
+                        // Simple fields
+                        response = comm.createActuator(name, pin);
+                    } else {
+                        // Modification
+                        response = comm.modifyActuator(name, pin);
+                    }
                 }
                 switch (response) {
                     case Constants.OK:
                         // Send an ok to previous activity
                         Intent returnIntent = new Intent();
+                        if (!etPin.isEnabled())
+                            returnIntent.putExtra(Extras.EXTRA_ACTUATOR, temp);
                         setResult(RESULT_OK, returnIntent);
                         finish();
                         break;
-                    // TODO other errros
+                    // TODO other errors
                 }
 
             }
         });
+        if (getIntent().hasExtra(Extras.EXTRA_ACTUATOR_EDIT)) {
+            // Edit actuator
+            getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_actuator));
+            Actuator extraActuator = (Actuator) getIntent()
+                    .getSerializableExtra(Extras.EXTRA_ACTUATOR_EDIT);
+            etName.setText(extraActuator.getName());
+            radioAnalog.setChecked(extraActuator.getPinId().charAt(0) == 'A');
+            radioAnalog.setEnabled(radioAnalog.isChecked());
+            radioDigital.setChecked(!radioAnalog.isChecked());
+            radioDigital.setEnabled(radioDigital.isChecked());
+            etPin.setText(extraActuator.getPinId().substring(1));
+            etPin.setEnabled(false);
+            radioYes.setChecked(extraActuator.hasControlSensor());
+            radioNo.setChecked(!radioYes.isChecked());
+            if (extraActuator.hasControlSensor()) {
+                etControlValue.setText(Double.toString(extraActuator.getCompareValue()));
+                controlTypeSpinner.setSelection(extraActuator.getCompareType().getIndex());
+                String sensorFormat = GreenhouseUtils.getFormattedSensor(extraActuator
+                        .getControlSensor());
+                boolean found = false;
+                int index = 0;
+                while (!found && index < formatedSensorNames.size()) {
+                   if (sensorFormat.equals(formatedSensorNames.get(index)))
+                        found = true;
+                    else index++;
+                }
+                controlSensorSpinner.setSelection(index);
+            }
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_basic_cancel, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void checkSaveButton() {

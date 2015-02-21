@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Codes;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -73,7 +75,12 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0: // edit
-                                        // TODO edit actuator
+                                        Intent intent = new Intent(ActuatorListFragment.this
+                                                .getActivity(), ActuatorCreationActivity.class);
+                                        intent.putExtra(Extras.EXTRA_ACTUATOR_EDIT, actuatorList
+                                                .get(position));
+                                        getActivity().startActivityForResult(intent,
+                                                Codes.CODE_EDIT_ACTUATOR);
                                         break;
                                     case 1: // delete
                                         Communicator comm = new Communicator(getActivity()

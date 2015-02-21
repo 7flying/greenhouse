@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
@@ -25,7 +26,7 @@ public class ActivityResultHandler {
      */
     public static void handleCreateNewAlert(Context context, Intent data, Activity activity) {
         DBManager manager = new DBManager(context);
-        Alert a = (Alert) data.getSerializableExtra("alert");
+        Alert a = (Alert) data.getSerializableExtra(Extras.EXTRA_ALERT);
         Log.d(Constants.DEBUGTAG, " handleCreateNewAlert: arg " + a.toString());
         // Check if an alert of the same type on the sensor is created
         if (manager.hasAlertsCreatedFrom(a.getSensorPinId(), a.getSensorType(), a.getAlertType())) {
@@ -51,7 +52,7 @@ public class ActivityResultHandler {
      * @param data
      */
     public static void handleCreateNewMoniItem(Context context, Intent data) {
-        MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable("moni-item");
+        MonitoringItem item = (MonitoringItem) data.getExtras().getSerializable(Extras.EXTRA_MONI);
         DBManager manager = new DBManager(context);
         manager.addItem(item);
         Toast.makeText(context, context.getString(R.string.item_created), Toast.LENGTH_SHORT)
@@ -64,7 +65,7 @@ public class ActivityResultHandler {
      */
     public static void handleEditMoniItem(Context context, Intent data) {
         MonitoringItem itemEdited = (MonitoringItem) data
-                .getSerializableExtra("moni-item-result");
+                .getSerializableExtra(Extras.EXTRA_MONI_RESULT);
         Log.d(Constants.DEBUGTAG, " $ MainAct extraItem callback EDIT_MONI_ITEM: "
                 + itemEdited.toString());
         DBManager manager = new DBManager(context);
@@ -86,7 +87,7 @@ public class ActivityResultHandler {
      * @param data
      */
     public static void handleEditAlert(Context context, Intent data) {
-        Alert a = (Alert) data.getSerializableExtra("alert");
+        Alert a = (Alert) data.getSerializableExtra(Extras.EXTRA_ALERT);
         Log.d(Constants.DEBUGTAG, " $ Calling edit alert to ->" + a.toString());
         DBManager manager = new DBManager(context);
         manager.updateAlertCompareValue(a);
@@ -100,7 +101,7 @@ public class ActivityResultHandler {
      * @param data
      */
     public static void handleEditSensor(Context context, Intent data) {
-        Sensor s = (Sensor) data.getSerializableExtra("sensor");
+        Sensor s = (Sensor) data.getSerializableExtra(Extras.EXTRA_SENSOR);
         Log.d(Constants.DEBUGTAG, " $ Calling edit sensor to ->" + s.toString());
         DBManager manager = new DBManager(context);
         manager.editSensor(s);
@@ -127,8 +128,8 @@ public class ActivityResultHandler {
     /** Handles the callback from the modification of an Actuator
      * @param context
      */
-    public static void handleModifyctuator(Context context, Intent data) {
-        Actuator a = (Actuator) data.getSerializableExtra("actuator");
+    public static void handleModifyActuator(Context context, Intent data) {
+        Actuator a = (Actuator) data.getSerializableExtra(Extras.EXTRA_ACTUATOR);
         DBManager manager = new DBManager(context);
         manager.updateActuator(a);
         Toast.makeText(context, context.getString(R.string.actuator_modified), Toast.LENGTH_SHORT)

@@ -20,6 +20,7 @@ import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -52,8 +53,8 @@ public class MonItemStatusActivity extends ActionBarActivity {
         sensorList = new ArrayList<Sensor>();
         adapter = new SensorAdapter(this, R.layout.sensor_list_row, sensorList);
         moniAttachedSensors.setAdapter(adapter);
-        if(getIntent().hasExtra("moni-item")) {
-            extraInput = (MonitoringItem) getIntent().getSerializableExtra("moni-item");
+        if(getIntent().hasExtra(Extras.EXTRA_MONI)) {
+            extraInput = (MonitoringItem) getIntent().getSerializableExtra(Extras.EXTRA_MONI);
             Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem onCreate: "
                     + extraInput.toString());
             if(extraInput.getPhotoPath() != null)
@@ -70,7 +71,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
             // Display sensor data on new Activity
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Intent intent = new Intent(MonItemStatusActivity.this, SensorStatusActivity.class);
-                intent.putExtra("sensor", sensorList.get(index));
+                intent.putExtra(Extras.EXTRA_SENSOR, sensorList.get(index));
                 startActivity(intent);
             }
         });
@@ -78,13 +79,14 @@ public class MonItemStatusActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == Codes.CODE_EDIT_MONI_ITEM) {
             Log.d(Constants.DEBUGTAG, " $ MonItemStatus callBack from EDIT_MONI_ITEM");
             // Callback from MoniItemCreation
             if (resultCode == RESULT_OK) {
-                if (data.hasExtra("moni-item-result")) {
+                if (data.hasExtra(Extras.EXTRA_MONI_RESULT)) {
                     MonitoringItem itemEdited = (MonitoringItem) data
-                            .getSerializableExtra("moni-item-result");
+                            .getSerializableExtra(Extras.EXTRA_MONI_RESULT);
                     Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem callback EDIT_MONI_ITEM: "
                             + itemEdited.toString());
                     DBManager manager = new DBManager(getApplicationContext());
@@ -122,7 +124,7 @@ public class MonItemStatusActivity extends ActionBarActivity {
             case R.id.action_edit:
                 Intent intent = new Intent(MonItemStatusActivity.this,
                         MoniItemCreationActivity.class);
-                intent.putExtra("moni-to-edit", extraInput);
+                intent.putExtra(Extras.EXTRA_MONI_EDIT, extraInput);
                 startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
                 break;
             case R.id.action_cancel:

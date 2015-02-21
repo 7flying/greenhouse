@@ -255,14 +255,13 @@ public class Communicator {
     /** Modifies a simple actuator
      * @param name - actuator name
      * @param id - actuator id
-     * @param type - actuator type
      * @return ok or error description
      */
-    public String modifyActuator(String name, String id, String type) {
+    public String modifyActuator(String name, String id) {
         ActuatorModificationTask task = new ActuatorModificationTask(context);
         String ret = null;
         try {
-            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id, type)
+            ret = task.execute(new String(Base64.encode(name.getBytes(), Base64.DEFAULT)), id)
                     .get();
         } catch (Exception e) {
             ret = null;
