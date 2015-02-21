@@ -53,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000, 30000,
                 pendingIntent);
+        Log.d(Constants.DEBUGTAG, " # MainActitivy start AlarmManager");
     }
 
     @Override

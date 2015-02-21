@@ -346,7 +346,7 @@ public class DBManager {
 	{
 		int id = getSensorBDid(pinId, type);
 		PreparedStatement pre = conn.prepareStatement("SELECT value FROM"
-				+ "Readings WHERE idsensor = ? and id = "
+				+ " Readings WHERE idsensor = ? and id = "
 				+ "(SELECT max(id) FROM Readings WHERE idsensor = ?);");
 		pre.setInt(1, id);
 		pre.setInt(2, id);
@@ -359,7 +359,7 @@ public class DBManager {
 		}
 		result.close();
 		pre.close();
-		if(reading)
+		if (reading)
 			return ret;
 		else 
 			throw new NoDataException();

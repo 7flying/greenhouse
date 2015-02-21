@@ -33,6 +33,7 @@ public class AlertService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         manager = new DBManager(getApplicationContext());
+        Log.d(Constants.DEBUGTAG, "# ~ AlertService started");
         checkAlerts();
     }
 
@@ -121,8 +122,8 @@ public class AlertService extends IntentService {
      */
     private void setWarning(boolean active, String sensorPinId, String sensorType){
         List<MonitoringItem> listItems = manager.getItems();
-        for(MonitoringItem item : listItems) {
-            if(item.getSensorByKey(sensorPinId + sensorType) != null)
+        for (MonitoringItem item : listItems) {
+            if (item.getSensorByKey(sensorPinId + sensorType) != null)
                 manager.setWarning(active, item);
         }
     }

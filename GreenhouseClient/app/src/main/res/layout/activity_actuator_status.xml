@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/image_actuator"
+            android:layout_marginLeft="16dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_launch_orange"
+            android:contentDescription="@string/content_image_sensor_desc"/>
+        <TextView
+            android:id="@+id/text_actuator_name"
+            android:textColor="@color/bright_foreground_inverse_material_dark"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/image_actuator"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:text="Water pump"/>
+        <Button
+            android:text="@string/launch"
+            android:layout_below="@id/text_actuator_name"
+            android:layout_toRightOf="@id/image_actuator"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/separator_data"
+            android:layout_below="@id/image_actuator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:layout_alignLeft="@id/image_actuator"
+            android:layout_alignStart="@id/image_actuator"
+            android:layout_marginRight="16dp"
+            android:background="#333333"/>
+        <TableLayout
+            android:layout_below="@id/separator_data"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp">
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp">
+            <!-- Actuator pin -->
+            <TextView
+                android:id="@+id/static_text_actuator_pin"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/xml_sensor_pin"
+                android:textColor="@color/bright_foreground_inverse_material_dark"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/text_actuator_pin"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bright_foreground_inverse_material_dark"
+                android:text="D05"
+                android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+    </RelativeLayout>
+
+</ScrollView>

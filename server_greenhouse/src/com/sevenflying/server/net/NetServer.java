@@ -250,14 +250,18 @@ public class NetServer {
 			reading = manager.getLastReading(
 				pinidType.substring(0, pinidType.indexOf(':')),
 				pinidType.substring(pinidType.indexOf(':') + 1));
+			System.out.println("\t value: " + reading);
 			oos.writeObject(Utils.encode64(Double.valueOf(reading).toString()));
 			oos.flush();
 			System.out.println(reading);
 		} catch(NoDataException e) {
+			System.out.println("\t no data");
 			oos.writeObject(Utils.encode64(Double.valueOf(reading).toString()));
 			oos.flush();
 			System.out.println(reading);
 		} catch(SQLException e1) {
+			System.out.println("\t SQL exception");
+			e1.printStackTrace();
 			oos.writeObject("X");
 			oos.flush();
 		}
