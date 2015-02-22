@@ -77,56 +77,15 @@ public class MonItemStatusActivity extends ActionBarActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == Codes.CODE_EDIT_MONI_ITEM) {
-            Log.d(Constants.DEBUGTAG, " $ MonItemStatus callBack from EDIT_MONI_ITEM");
-            // Callback from MoniItemCreation
-            if (resultCode == RESULT_OK) {
-                if (data.hasExtra(Extras.EXTRA_MONI_RESULT)) {
-                    MonitoringItem itemEdited = (MonitoringItem) data
-                            .getSerializableExtra(Extras.EXTRA_MONI_RESULT);
-                    Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem callback EDIT_MONI_ITEM: "
-                            + itemEdited.toString());
-                    DBManager manager = new DBManager(getApplicationContext());
-                    manager.deleteItem(itemEdited.getId());
-                    manager.addItem(itemEdited);
-                    sensorList.clear();
-                    Log.d(Constants.DEBUGTAG, " $ MonItemStatus EDIT_MONI_ITEM get sensors from DB:"
-                        + " " + manager.getMoniItemById(itemEdited.getId()));
-                    sensorList.addAll(manager.getMoniItemById(itemEdited.getId())
-                            .getAttachedSensors());
-                    adapter.notifyDataSetChanged();
-                    moniName.setText(itemEdited.getName());
-                    if(itemEdited.getPhotoPath() != null)
-                        imageMonitoring.setImageBitmap(BitmapFactory.
-                                decodeFile(itemEdited.getPhotoPath()));
-                    else
-                        imageMonitoring.setImageDrawable(getResources()
-                                .getDrawable(R.drawable.ic_leaf_green));
-                    Toast.makeText(getApplicationContext(), R.string.item_edited, Toast.LENGTH_SHORT)
-                            .show();
-                }
-            }
-        }
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_moni_item, menu);
+        inflater.inflate(R.menu.menu_basic_cancel, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_edit:
-                Intent intent = new Intent(MonItemStatusActivity.this,
-                        MoniItemCreationActivity.class);
-                intent.putExtra(Extras.EXTRA_MONI_EDIT, extraInput);
-                startActivityForResult(intent, Codes.CODE_EDIT_MONI_ITEM);
-                break;
             case R.id.action_cancel:
                 finish();
                 break;
