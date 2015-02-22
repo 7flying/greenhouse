@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.sevenflying.greenhouseclient.app.sensortab.SensorCreationActivity;
 import com.sevenflying.greenhouseclient.app.settings.SettingsActivity;
 import com.sevenflying.greenhouseclient.app.statustab.MoniItemCreationActivity;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
+import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.AlarmReceiver;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -32,6 +35,8 @@ public class MainActivity extends ActionBarActivity {
 
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPaAdapter;
+    public static AlarmManager alarmManager;
+    public static PendingIntent alarmIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,13 +52,21 @@ public class MainActivity extends ActionBarActivity {
         tabs.setIndicatorColor(getResources().getColor(R.color.md_amber_700));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        // Alarm manager setup
-        Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30000, 30000,
-                pendingIntent);
-        Log.d(Constants.DEBUGTAG, " # MainActivity start AlarmManager");
+
+        if (alarmManager != null) {
+            alarmManager.cancel(alarmIntent);
+        } else {
+            // Alarm manager setup
+            Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+            alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent,
+                    0);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    GreenhouseUtils.THIRTY_SECONDS, GreenhouseUtils.THIRTY_SECONDS,
+                    alarmIntent);
+            Log.d(Constants.DEBUGTAG, " # MainActivity start AlarmManager");
+        }
+
     }
 
     @Override

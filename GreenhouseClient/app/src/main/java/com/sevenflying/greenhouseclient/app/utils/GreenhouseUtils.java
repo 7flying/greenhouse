@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 public class GreenhouseUtils {
 
     private Context reference;
+    public static final int THIRTY_SECONDS = 30 * 1000;
 
     /** Removes unimportant zeroes.
      * @param toFormat - number to format

@@ -1,6 +1,8 @@
 package com.sevenflying.greenhouseclient.app.alertstab;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.ToggleButton;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
+import com.sevenflying.greenhouseclient.domain.BootReceiver;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.Serializable;
@@ -50,6 +53,16 @@ public class AlertAdapter extends ArrayAdapter<Alert> implements Serializable {
                 alertList.get(post).setOn(!previousManagerValue);
                 getItem(post).setOn(!previousManagerValue);
                 Log.d(Constants.DEBUGTAG, " $ On Alert Adapter get view, toggle button clicked");
+
+                if (alertList.get(post).isOn()) {
+                    // Enable the notification when the device boots
+                    ComponentName receiver = new ComponentName(getContext(), BootReceiver.class);
+                    PackageManager pm = getContext().getPackageManager();
+
+                    pm.setComponentEnabledSetting(receiver,
+                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                            PackageManager.DONT_KILL_APP);
+                }
             }
         });
 

@@ -37,6 +37,16 @@ public class AlertService extends IntentService {
         checkAlerts();
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
     /** Checks if any alert is fired
      */
     private void checkAlerts() {
@@ -44,7 +54,7 @@ public class AlertService extends IntentService {
         List<Alert> alerts = manager.getAlerts();
         Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts()) - there are " + alerts.size() + " alerts");
         int alertCount = alerts.size() - 1;
-        for(Alert alert : alerts) {
+        for (Alert alert : alerts) {
             Log.d(Constants.DEBUGTAG, "(AlertService.checkAlerts() - alert: " + alert.toString());
             if(alert.isOn()) {
                 // Get the latest value from the server

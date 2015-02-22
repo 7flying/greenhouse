@@ -16,6 +16,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
        Intent service = new Intent(context, AlertService.class);
        context.startService(service);
-        Log.d(Constants.DEBUGTAG, "# ~ AlarmReceiver starting alert service started");
+       Log.d(Constants.DEBUGTAG, "# ~ AlarmReceiver starting alert service started");
     }
 }

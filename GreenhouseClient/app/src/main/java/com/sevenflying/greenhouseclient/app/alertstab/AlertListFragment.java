@@ -2,8 +2,10 @@ package com.sevenflying.greenhouseclient.app.alertstab;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,6 +24,7 @@ import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Alert;
+import com.sevenflying.greenhouseclient.domain.BootReceiver;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.util.List;
@@ -84,6 +87,19 @@ public class AlertListFragment extends Fragment implements Updateable {
                                             Toast.makeText(getActivity().getApplicationContext(),
                                                     getResources().getString(R.string.alert_deleted),
                                                     Toast.LENGTH_SHORT).show();
+                                            if (alertList.size() == 0) {
+                                                // Disable the notification when the device boots
+                                                ComponentName receiver = new ComponentName(
+                                                        getActivity().getApplicationContext(),
+                                                        BootReceiver.class);
+                                                PackageManager pm = getActivity()
+                                                        .getApplicationContext()
+                                                        .getPackageManager();
+
+                                                pm.setComponentEnabledSetting(receiver,
+                                                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                                                        PackageManager.DONT_KILL_APP);
+                                            }
                                             break;
                                     }
                                     checkLayoutVisibility();

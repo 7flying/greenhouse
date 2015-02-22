@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
@@ -96,8 +97,14 @@
                 android:value="com.sevenflying.greenhouseclient.app.MainActivity"/>
         </activity>
         <service android:name="com.sevenflying.greenhouseclient.domain.AlertService"
-            android:enabled="true"/>
+            android:enabled="true">
+        </service>
         <receiver android:name="com.sevenflying.greenhouseclient.domain.AlarmReceiver"/>
+        <receiver android:name="com.sevenflying.greenhouseclient.domain.BootReceiver" android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
