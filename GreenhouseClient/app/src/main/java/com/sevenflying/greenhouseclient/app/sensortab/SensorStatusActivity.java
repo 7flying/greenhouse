@@ -2,6 +2,7 @@ package com.sevenflying.greenhouseclient.app.sensortab;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Constants;
 import com.sevenflying.greenhouseclient.net.tasks.HistoricalRecordObtainerTask;
 
 /** Activity to show further info about a sensor.
@@ -44,23 +46,10 @@ public class SensorStatusActivity extends ActionBarActivity {
         TextView textSensorPin = (TextView) findViewById(R.id.text_sensor_pin);
         layoutProgress = (LinearLayout) findViewById(R.id.layout_progress);
         layoutChart = (LinearLayout) findViewById(R.id.layout_chart);
+        chart = (LineChart) findViewById (R.id.chart);
+        if (chart == null)
+            Log.e(Constants.DEBUGTAG, " $ SensorStatus chart is null");
 
-
-        // Set data
-        if(getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
-            GreenhouseUtils utils = new GreenhouseUtils(this);
-            currentSensor = (Sensor) getIntent().getSerializableExtra(Extras.EXTRA_SENSOR);
-            imageView.setImageResource(currentSensor.getDrawableId());
-            textSensorValue.setText(GreenhouseUtils.suppressZeros(currentSensor.getValue()));
-            textSensorUnit.setText(currentSensor.getType().getUnit());
-            textSensorUpdatedAt.setText(currentSensor.getUpdatedAt());
-            textSensorName.setText(currentSensor.getName());
-            textSensorType.setText(utils.getI18nSensorType(currentSensor.getType()));
-            textSensorRefresh.setText(Double.toString(currentSensor.getRefreshRate() / 1000d) );
-            textSensorPin.setText(currentSensor.getPinId());
-            getHistoricalData();
-        }
-        chart = (LineChart) findViewById(R.id.chart);
         // if enabled, the chart will always start at zero on the y-axis
         chart.setStartAtZero(false);
         // disable the drawing of values into the chart
@@ -82,6 +71,21 @@ public class SensorStatusActivity extends ActionBarActivity {
 
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(false);
+
+        // Set data
+        if(getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
+            GreenhouseUtils utils = new GreenhouseUtils(this);
+            currentSensor = (Sensor) getIntent().getSerializableExtra(Extras.EXTRA_SENSOR);
+            imageView.setImageResource(currentSensor.getDrawableId());
+            textSensorValue.setText(GreenhouseUtils.suppressZeros(currentSensor.getValue()));
+            textSensorUnit.setText(currentSensor.getType().getUnit());
+            textSensorUpdatedAt.setText(currentSensor.getUpdatedAt());
+            textSensorName.setText(currentSensor.getName());
+            textSensorType.setText(utils.getI18nSensorType(currentSensor.getType()));
+            textSensorRefresh.setText(Double.toString(currentSensor.getRefreshRate() / 1000d) );
+            textSensorPin.setText(currentSensor.getPinId());
+            getHistoricalData();
+        }
     }
 
     @Override
@@ -109,6 +113,6 @@ public class SensorStatusActivity extends ActionBarActivity {
                 String.valueOf(currentSensor.getType().getIdentifier()),
                 chart, layoutProgress, layoutChart, getApplicationContext());
         // TODO: it seems that there is a known crash for "width and height must be > 0 error"
-        // hro.execute();
+        hro.execute();
     }
 }

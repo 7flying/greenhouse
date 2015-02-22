@@ -41,7 +41,7 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
     private int serverPort;
 
     public HistoricalRecordObtainerTask(String pinId, String senType, LineChart chart,
-                                        LinearLayout layoutProgress, LinearLayout layoutChart, Context context)
+    LinearLayout layoutProgress, LinearLayout layoutChart, Context context)
     {
         this.pinId = pinId;
         this.senType = senType;
