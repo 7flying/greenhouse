@@ -1,22 +1,31 @@
 package com.sevenflying.greenhouseclient.app.sensortab;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
 import com.sevenflying.greenhouseclient.net.tasks.HistoricalRecordObtainerTask;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /** Activity to show further info about a sensor.
  * Created by 7flying on 13/07/2014.
@@ -59,9 +68,11 @@ public class SensorStatusActivity extends ActionBarActivity {
 
         // no description text
         chart.setDescription("");
+        chart.setNoDataTextDescription(getResources().getString(R.string.no_historical_data));
+
 
         // enable value highlighting
-        chart.setHighlightEnabled(false);
+        chart.setHighlightEnabled(true);
 
         // enable touch gestures
         chart.setTouchEnabled(false);
@@ -73,7 +84,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         chart.setPinchZoom(false);
 
         // Set data
-        if(getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
+        if (getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
             GreenhouseUtils utils = new GreenhouseUtils(this);
             currentSensor = (Sensor) getIntent().getSerializableExtra(Extras.EXTRA_SENSOR);
             imageView.setImageResource(currentSensor.getDrawableId());
@@ -112,7 +123,39 @@ public class SensorStatusActivity extends ActionBarActivity {
         HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
                 String.valueOf(currentSensor.getType().getIdentifier()),
                 chart, layoutProgress, layoutChart, getApplicationContext());
-        // TODO: it seems that there is a known crash for "width and height must be > 0 error"
-        hro.execute();
+        try {
+
+            List<Map<String, Float>> results = hro.execute().get();
+            ArrayList<Entry> yValues = new ArrayList<Entry>();
+            ArrayList<String> xValues = new ArrayList<String>();
+            // The data has to be ordered in reverse order, from past to present and it's received
+            // the other way around
+            int i = results.size() - 1;
+            for (Map<String, Float> stringFloatMap : results) {
+                for (String key : stringFloatMap.keySet()) {
+                    xValues.add((String) results.get(i).keySet().toArray()[0]);
+                    yValues.add(new Entry(stringFloatMap.get(key), i));
+                    i--;
+                }
+            }
+            LineDataSet set = new LineDataSet(yValues, currentSensor.getName());
+            set.setColor(Color.rgb(60, 220, 78));
+            set.setCircleColor(Color.rgb(60, 220, 78));
+            set.setLineWidth(1f);
+            set.setCircleSize(5f);
+            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+            dataSets.add(set);
+
+            LineData data = new LineData(xValues, dataSets);
+            chart.setData(data);
+            chart.animateX(1000);
+
+            layoutProgress.setVisibility(View.GONE);
+            layoutChart.setVisibility(View.VISIBLE);
+
+        } catch (Exception e) {
+            Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
+            e.printStackTrace();
+        }
     }
 }

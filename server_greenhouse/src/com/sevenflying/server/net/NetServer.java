@@ -191,7 +191,7 @@ public class NetServer {
 		DBManager manager = DBManager.getInstance();
 		manager.connect(pathToDB);
 		List<Map<String, Double>> history = manager.getLastXFromSensor(
-			5, pinidType.substring(0, pinidType.indexOf(':')),
+			15, pinidType.substring(0, pinidType.indexOf(':')),
 			pinidType.substring(pinidType.indexOf(':') + 1));
 		manager.disconnect();
 		// Tell to the client how many values it has to expect

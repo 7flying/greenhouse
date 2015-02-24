@@ -1,6 +1,8 @@
 package com.sevenflying.testing;
 
 import java.util.List;
+import java.util.Random;
+
 import com.sevenflying.server.Env;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.Actuator;
@@ -57,10 +59,11 @@ public class DBManagerTest {
 		manager.insertSensor(s2);
 		manager.insertSensor(s3);
 		// Values
-		for(int i = 1; i < 20 ; i++) {
-			manager.insertReading(s1, i);
-			manager.insertReading(s2, i * 10);
-			manager.insertReading(s3, i * 100);
+		Random r = new Random(System.currentTimeMillis());
+		for (int i = 1; i < 20 ; i++) {
+			manager.insertReading(s1, r.nextInt(50) - 10);
+			manager.insertReading(s2, r.nextInt(100));
+			manager.insertReading(s3, r.nextInt(1000));
 		}
 
 
@@ -140,10 +143,12 @@ public class DBManagerTest {
 		manager.insertSensor(s2);
 		manager.insertSensor(s3);
 		// Values
-		for(int i = 1; i < 20 ; i++) {
-			manager.insertReading(s1, i * 10);
-			manager.insertReading(s2, i);
-			manager.insertReading(s3, i * 100);
+		// Values
+		Random r = new Random(System.currentTimeMillis());
+		for (int i = 1; i < 20 ; i++) {
+			manager.insertReading(s1, r.nextInt(50) - 10);
+			manager.insertReading(s2, r.nextInt(100));
+			manager.insertReading(s3, r.nextInt(1000));
 		}
 		Actuator actuator = new Actuator("Water pump", "A45",
 				ActuatorType.PUMP);

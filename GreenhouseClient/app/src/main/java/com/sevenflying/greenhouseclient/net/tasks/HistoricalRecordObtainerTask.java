@@ -73,18 +73,18 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
             oos.flush();
             // Read how many pairs of: timedate-value we have to expect
             int numPairs = Integer.parseInt((String) ois.readObject());
-            while(numPairs > 0) {
+            while (numPairs > 0) {
                 String data = (String) ois.readObject();
-                if(data != null) {
+                if (data != null) {
                     StringTokenizer tokenizer = new StringTokenizer(data, ":");
                     String[] temp = new String[2];
                     int tempIndex = 0;
-                    while(tokenizer.hasMoreTokens()) {
+                    while (tokenizer.hasMoreTokens()) {
                         temp[tempIndex] = new String(Base64.decode(tokenizer.nextToken().getBytes(),
                                 Base64.DEFAULT));
                         tempIndex++;
                     }
-                    if(tempIndex == 2) {
+                    if (tempIndex == 2) {
                         // Remove date from timedate
                         temp[0] = temp[0].substring(0, temp[0].indexOf('-') - 1);
                         Map<String, Float> map = new HashMap<String, Float>();
@@ -110,31 +110,6 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
 
     @Override
     protected void onPostExecute(List<Map<String, Float>> stringFloatMapList) {
-        ArrayList<Entry> yValues = new ArrayList<Entry>();
-        ArrayList<String> xValues = new ArrayList<String>();
-        // The data has to be ordered in reverse order, from past to present and it's received
-        // the other way around
-        int i = stringFloatMapList.size() - 1;
-        for(Map<String, Float> stringFloatMap : stringFloatMapList) {
-            for(String key : stringFloatMap.keySet()) {
 
-                xValues.add((String) stringFloatMapList.get(i).keySet().toArray()[0]);
-                yValues.add(new Entry(stringFloatMap.get(key), i));
-                i--;
-            }
-        }
-        LineDataSet set = new LineDataSet(yValues, "Sensor");
-        set.setColor(Color.GREEN);
-        set.setCircleColor(Color.GREEN);
-        set.setLineWidth(1f);
-        set.setCircleSize(5f);
-        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        dataSets.add(set);
-
-        LineData data = new LineData(xValues, dataSets);
-        chart.setData(data);
-
-        layoutProgress.setVisibility(View.GONE);
-        layoutChart.setVisibility(View.VISIBLE);
     }
 }
