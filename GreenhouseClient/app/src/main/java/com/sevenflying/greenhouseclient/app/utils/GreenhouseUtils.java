@@ -49,6 +49,10 @@ public class GreenhouseUtils {
                     return reference.getResources().getString(R.string.temperature);
                 case LIGHT:
                     return reference.getResources().getString(R.string.light);
+                case PRESSURE:
+                    return reference.getResources().getString(R.string.pressure);
+                case STEAM:
+                    return reference.getResources().getString(R.string.steam);
                 default:
                     return " ";
             }

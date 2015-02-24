@@ -4,5 +4,7 @@
         <item>Humedad</item>
         <item>Luz</item>
         <item>Temperatura</item>
+        <item>Presión</item>
+        <item>Vapor</item>
     </string-array>
 </resources>

@@ -139,9 +139,13 @@ public class DBManagerTest {
 		Sensor s1 = new Sensor("DHT22", "D03", SensorType.TEMPERATURE,60000, true);
 		Sensor s2 = new Sensor("DHT22", "D03", SensorType.HUMIDITY, 60000, true);
 		Sensor s3 = new Sensor("Photo", "A04", SensorType.LIGHT, 60000, true);
+		Sensor s4 = new Sensor("Rain", "A05", SensorType.STEAM, 60000, true);
+		Sensor s5 = new Sensor("FSR", "A06", SensorType.PRESSURE, 60000, true);
 		manager.insertSensor(s1);
 		manager.insertSensor(s2);
 		manager.insertSensor(s3);
+		manager.insertSensor(s4);
+		manager.insertSensor(s5);
 		// Values
 		// Values
 		Random r = new Random(System.currentTimeMillis());
@@ -149,6 +153,8 @@ public class DBManagerTest {
 			manager.insertReading(s1, r.nextInt(50) - 10);
 			manager.insertReading(s2, r.nextInt(100));
 			manager.insertReading(s3, r.nextInt(1000));
+			manager.insertReading(s4, r.nextInt(100));
+			manager.insertReading(s5, r.nextInt(1000));
 		}
 		Actuator actuator = new Actuator("Water pump", "A45",
 				ActuatorType.PUMP);

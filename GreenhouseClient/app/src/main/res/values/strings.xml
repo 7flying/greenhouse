@@ -156,4 +156,6 @@
     <string name="humidity">Humidity</string>
     <string name="temperature">Temperature</string>
     <string name="light">Light</string>
+    <string name="pressure">Pressure</string>
+    <string name="steam">Steam</string>
 </resources>

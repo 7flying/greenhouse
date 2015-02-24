@@ -105,20 +105,7 @@ public class Sensor extends BlossomSensor {
 	}
 	
 	public void setType(char type) {
-        switch (type){
-            case 'H':
-                this.type = SensorType.HUMIDITY;
-                break;
-            case 'T':
-                this.type = SensorType.TEMPERATURE;
-                break;
-            case 'L':
-                this.type = SensorType.LIGHT;
-                break;
-            default:
-                this.type = SensorType.UNKNOWN;
-                break;
-        }
+		this.type = SensorType.getType(type);
     }
 
 }

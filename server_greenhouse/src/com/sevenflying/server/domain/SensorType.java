@@ -4,19 +4,21 @@ package com.sevenflying.server.domain;
  */
 public enum SensorType {
 
-	HUMIDITY, LIGHT, TEMPERATURE, UNKNOWN;
+	HUMIDITY, LIGHT, TEMPERATURE, PRESSURE, STEAM, UNKNOWN;
 	
 	/** Gets the measuring unit of the sensor.
 	 * @return measuring unit
 	 */
 	public String getUnit() {
 		switch (this) {
-			case HUMIDITY:
+			case HUMIDITY: case STEAM:
 				return "%";
 			case LIGHT:
 				return "lux";
 			case TEMPERATURE:
 				return "C";
+			case PRESSURE:
+				return "N";
 			default:
 				return "UNKNOWN";
 		}
@@ -32,8 +34,29 @@ public enum SensorType {
 				return 'L';
 			case TEMPERATURE:
 				return 'T';
+			case PRESSURE:
+				return 'P';
+			case STEAM:
+				return 'S';
 			default:
 				return '?';
 		}
 	}
+	
+	public static SensorType getType(char s) {
+        switch (s) {
+            case 'H':
+                return HUMIDITY;
+            case 'L':
+                return LIGHT;
+            case 'T':
+                return TEMPERATURE;
+            case 'P':
+                return PRESSURE;
+            case 'S':
+                return STEAM;
+            default:
+                return UNKNOWN;
+        }
+    }
 }

@@ -4,5 +4,7 @@
         <item>Humidity</item>
         <item>Light</item>
         <item>Temperature</item>
+        <item>Pressure</item>
+        <item>Steam</item>
     </string-array>
 </resources>

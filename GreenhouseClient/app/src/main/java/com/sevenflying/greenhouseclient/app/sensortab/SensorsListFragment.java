@@ -17,6 +17,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.tasks.SensorsValueUpdaterTask;
@@ -57,7 +58,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
                     // Arguments
                     Intent intent = new Intent(SensorsListFragment.this.getActivity(),
                             SensorStatusActivity.class);
-                    intent.putExtra("sensor", sensorList.get(index));
+                    intent.putExtra(Extras.EXTRA_SENSOR, sensorList.get(index));
                     startActivity(intent);
                 }
             });
@@ -72,7 +73,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                         case 0: // Edit
                                             Intent intent = new Intent(SensorsListFragment.this
                                                 .getActivity(), SensorCreationActivity.class);
-                                            intent.putExtra("sensor-to-edit",
+                                            intent.putExtra(Extras.EXTRA_SENSOR_EDIT,
                                                     sensorList.get(listPosition));
                                             getActivity().startActivityForResult(intent,
                                                     Codes.CODE_EDIT_SENSOR);

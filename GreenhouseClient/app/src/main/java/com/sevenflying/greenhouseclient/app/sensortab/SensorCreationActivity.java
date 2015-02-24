@@ -34,9 +34,6 @@ public class SensorCreationActivity extends ActionBarActivity {
     private Button buttonCreate;
     private boolean [] validated = { false, false, false };
     private int spinnerSelectedType = 0;
-    private SensorType [] sensorTypeArray = { SensorType.HUMIDITY, SensorType.LIGHT,
-                                              SensorType.TEMPERATURE
-    };
     private Spinner sensorTypeSpinner;
 
     @Override
@@ -132,7 +129,7 @@ public class SensorCreationActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 String analogDig = radioAnalog.isChecked() ? "A" : "D";
-                String type = sensorTypeArray[spinnerSelectedType].toString();
+                String type = SensorType.sensorTypeArray[spinnerSelectedType].toString();
                 boolean ensureRefresh = radioYes.isChecked();
                 String result = null;
                 Communicator comm = new Communicator(getApplicationContext());
@@ -215,20 +212,9 @@ public class SensorCreationActivity extends ActionBarActivity {
             radioAnalog.setEnabled(radioAnalog.isChecked());
             radioDigital.setChecked(!radioAnalog.isChecked());
             radioDigital.setEnabled(radioDigital.isChecked());
-            switch (extraSensor.getType()) {
-                case HUMIDITY:
-                    sensorTypeSpinner.setSelection(0);
-                    spinnerSelectedType = 0;
-                    break;
-                case LIGHT:
-                    sensorTypeSpinner.setSelection(1);
-                    spinnerSelectedType = 1;
-                    break;
-                case TEMPERATURE:
-                    sensorTypeSpinner.setSelection(2);
-                    spinnerSelectedType = 2;
-                    break;
-            }
+            sensorTypeSpinner.setSelection(extraSensor.getType().getIndex());
+            spinnerSelectedType = extraSensor.getType().getIndex();
+
             sensorTypeSpinner.setEnabled(false);
             etPin.setText(extraSensor.getPinId().substring(1));
             etPin.setEnabled(false);

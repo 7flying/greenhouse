@@ -51,20 +51,7 @@ public class Sensor implements Serializable {
     }
 
     public void setType(char type) {
-        switch (type){
-            case 'H':
-                this.type = SensorType.HUMIDITY;
-                break;
-            case 'T':
-                this.type = SensorType.TEMPERATURE;
-                break;
-            case 'L':
-                this.type = SensorType.LIGHT;
-                break;
-            default:
-                this.type = SensorType.UNKNOWN;
-                break;
-        }
+        this.type = SensorType.getType(type);
     }
     public void setType(SensorType type) {
         this.type = type;
@@ -98,6 +85,10 @@ public class Sensor implements Serializable {
                 return R.drawable.temperature_sensor_b;
             case LIGHT:
                 return R.drawable.light_sensor_b;
+            case PRESSURE:
+                return R.drawable.pressure_sensor_b;
+            case STEAM:
+                return R.drawable.rain_sensor_b;
             default:
                 return R.drawable.sensor_b;
         }
@@ -111,6 +102,10 @@ public class Sensor implements Serializable {
                 return R.drawable.temperature_sensor_w;
             case LIGHT:
                 return R.drawable.light_sensor_w;
+            case PRESSURE:
+                return R.drawable.pressure_sensor_w;
+            case STEAM:
+                return R.drawable.rain_sensor_w;
             default:
                 return R.drawable.sensor_w;
         }
