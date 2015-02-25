@@ -93,7 +93,8 @@ public class SensorStatusActivity extends ActionBarActivity {
             textSensorUpdatedAt.setText(currentSensor.getUpdatedAt());
             textSensorName.setText(currentSensor.getName());
             textSensorType.setText(utils.getI18nSensorType(currentSensor.getType()));
-            textSensorRefresh.setText(Double.toString(currentSensor.getRefreshRate() / 1000d) );
+            textSensorRefresh.setText(GreenhouseUtils.suppressZeros(currentSensor
+                    .getRefreshRate() / 1000d));
             textSensorPin.setText(currentSensor.getPinId());
             getHistoricalData();
         }
@@ -120,6 +121,8 @@ public class SensorStatusActivity extends ActionBarActivity {
     }
 
     private void getHistoricalData() {
+        layoutChart.setVisibility(View.GONE);
+        layoutProgress.setVisibility(View.VISIBLE);
         HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
                 String.valueOf(currentSensor.getType().getIdentifier()),
                 chart, layoutProgress, layoutChart, getApplicationContext());

@@ -31,8 +31,11 @@ public class DBManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = Constants.DB_NAME;
 
+    public GreenhouseUtils greenhouseUtils;
+
     public  DBManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.greenhouseUtils = new GreenhouseUtils(context);
     }
 
     @Override
@@ -233,7 +236,6 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(SensorEntry.S_NAME, s.getName());
         values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
         int rowsAffected = db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?", new String[]{id});
-        Log.d(Constants.DEBUGTAG, " $ editSensor - rows affected: " + rowsAffected);
         // Sensor updated = getSensorBy(id);
         // Log.d(Constants.DEBUGTAG, " $ editSensor - before: " + s.toString());
         // Log.d(Constants.DEBUGTAG, " $ editSensor - after: " + updated.toString());
@@ -277,7 +279,6 @@ public class DBManager extends SQLiteOpenHelper {
         if (c.moveToFirst())
            ret = c.getInt(c.getColumnIndex(SensorEntry._ID));
         c.close();
-        Log.d(Constants.DEBUGTAG, " $ sensorId: " + ret);
         return ret;
     }
 
@@ -289,7 +290,7 @@ public class DBManager extends SQLiteOpenHelper {
         Log.d(Constants.DEBUGTAG, " $ getFormattedSensors: num: " + sensors.size());
         for (Sensor s : sensors) {
             Log.d(Constants.DEBUGTAG, " $ getFormattedSensors: sensor:" + s.toString());
-            ret.put(GreenhouseUtils.getFormattedSensor(s), s);
+            ret.put(greenhouseUtils.getFormattedSensor(s), s);
         }
         Log.d(Constants.DEBUGTAG, " $ getFormattedSensors map: " + ret.toString());
         return ret;
@@ -653,12 +654,10 @@ public class DBManager extends SQLiteOpenHelper {
             vals.put(ActuatorEntry.AC_COMPARE_VALUE, actuator.getCompareValue());
         }
         if (db.insert(ActuatorEntry.TABLE_NAME, null, vals) == -1) {
-            Log.e(Constants.DEBUGTAG, " $ addActuator ERROR adding: " + actuator.toString());
+            Log.d(Constants.DEBUGTAG, " $ addActuator ERROR adding: " + actuator.toString());
             return false;
-        } else {
-            Log.e(Constants.DEBUGTAG, " $ addActuator added: " + actuator.toString());
+        } else
             return true;
-        }
     }
 
     /** Updates an Actuator
@@ -714,7 +713,6 @@ public class DBManager extends SQLiteOpenHelper {
                 Actuator actTemp = new Actuator(
                         cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_NAME)),
                         cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_PIN)));
-                Log.d(Constants.DEBUGTAG, " $ getActuators ini: " + actTemp.toString());
                 if (cursor.getColumnIndex(ActuatorEntry.AC_SENSOR_REF) != -1 &&
                    cursor.getString(cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE)) != null)
                 {
@@ -722,15 +720,11 @@ public class DBManager extends SQLiteOpenHelper {
                     int sensorId = cursor.getInt(cursor.getColumnIndex(
                             ActuatorEntry.AC_SENSOR_REF));
                     Sensor s = getSensorBy(Integer.toString(sensorId));
-                    Log.d(Constants.DEBUGTAG, "\t control sensor simple: " + s.toString());
                     actTemp.setControlSensor(s);
 
                     String compareType = cursor.getString(
                             cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_TYPE));
-                    Log.d(Constants.DEBUGTAG, "\t compareType: " + compareType);
                     actTemp.setCompareType(AlertType.valueOf(compareType));
-                    Log.d(Constants.DEBUGTAG, "\t compareType: " + cursor.getDouble(
-                            cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
                     actTemp.setCompareValue(cursor.getDouble(
                             cursor.getColumnIndex(ActuatorEntry.AC_COMPARE_VALUE)));
                 }

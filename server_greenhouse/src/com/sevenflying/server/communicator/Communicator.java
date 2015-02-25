@@ -53,11 +53,11 @@ public class Communicator implements SerialPortEventListener {
 		Enumeration<CommPortIdentifier> ports = CommPortIdentifier
 				.getPortIdentifiers();
 
-		while(ports.hasMoreElements()) {
+		while (ports.hasMoreElements()) {
 			// Insert ports in the map
 			CommPortIdentifier tempPort = (CommPortIdentifier) ports
 					.nextElement();
-			if( tempPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+			if (tempPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 				portMap.put(tempPort.getName(), tempPort);
 				System.out.println(" Port name: " + tempPort.getName()
 						+ " object: " + tempPort);
@@ -78,14 +78,13 @@ public class Communicator implements SerialPortEventListener {
 			try {
 				serialPort = (SerialPort) selectedPortId.open(portName,
 						PORT_CONNECT_TIMEOUT);
-				// TODO some magic here needed to check
 				serialPort.setSerialPortParams(
 						dataRate,
 						SerialPort.DATABITS_8,
 						SerialPort.STOPBITS_1,
 						SerialPort.PARITY_NONE); 
-				// TODO more magic
-				//serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+				//serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN
+				// | SerialPort.FLOWCONTROL_RTSCTS_OUT);
 				//serialPort.setRTS(true);
 				// Open the stream
 				input = new BufferedReader(new InputStreamReader(
@@ -105,7 +104,7 @@ public class Communicator implements SerialPortEventListener {
 
 	/** Closes the port */
 	public synchronized void close() {
-		if(serialPort != null) {
+		if (serialPort != null) {
 			try {
 				input.close();
 				output.close();
@@ -121,9 +120,9 @@ public class Communicator implements SerialPortEventListener {
 	/** Called when data is comming from the serial port */
 	public void serialEvent(SerialPortEvent anEvent) {
 		
-		if(anEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+		if (anEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				if(debugMode)
+				if (debugMode)
 					System.out.println(input.readLine());
 				else
 					portEvent.dataReceived(input.readLine());

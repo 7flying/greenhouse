@@ -32,8 +32,8 @@ public class GreenhouseUtils {
      * @param s - sensor to format
      * @return string
      */
-    public static String getFormattedSensor(Sensor s) {
-       return s.getName() + " (" + s.getPinId() + ") - " + s.getType().toString();
+    public String getFormattedSensor(Sensor s) {
+       return s.getName() + " (" + s.getPinId() + ") - " + getI18nSensorType(s.getType());
     }
 
     public GreenhouseUtils(Context reference) {

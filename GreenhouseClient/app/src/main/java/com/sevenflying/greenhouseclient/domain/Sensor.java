@@ -61,6 +61,9 @@ public class Sensor implements Serializable {
         return type;
     }
 
+    /** Returns the sensor's refresh rate (in ms)
+     * @return
+     */
 	public long getRefreshRate() {
 		return refreshRate;
 	}

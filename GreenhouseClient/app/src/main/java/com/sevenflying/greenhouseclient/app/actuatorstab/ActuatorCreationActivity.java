@@ -264,16 +264,19 @@ public class ActuatorCreationActivity extends ActionBarActivity {
             if (extraActuator.hasControlSensor()) {
                 etControlValue.setText(Double.toString(extraActuator.getCompareValue()));
                 controlTypeSpinner.setSelection(extraActuator.getCompareType().getIndex());
-                String sensorFormat = GreenhouseUtils.getFormattedSensor(extraActuator
-                        .getControlSensor());
+                String sensorFormat = new GreenhouseUtils(getApplicationContext())
+                        .getFormattedSensor(extraActuator.getControlSensor());
+                Log.d(Constants.DEBUGTAG, " $ ActuatorCreation  sensorFormat: " + sensorFormat);
                 boolean found = false;
                 int index = 0;
                 while (!found && index < formatedSensorNames.size()) {
+                   Log.d(Constants.DEBUGTAG, sensorFormat + " - " + formatedSensorNames.get(index));
                    if (sensorFormat.equals(formatedSensorNames.get(index)))
                         found = true;
                     else index++;
                 }
-                controlSensorSpinner.setSelection(index);
+                if (found)
+                    controlSensorSpinner.setSelection(index);
             }
         }
     }

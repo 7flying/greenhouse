@@ -6,6 +6,8 @@ package com.sevenflying.greenhouseclient.net;
 public class Constants {
 
     public static final String OK = "OK\n";
+    public static final String ACK = "ACK";
+    public static final String NACK = "NACK";
     // Error codes
     public static final String INTERNAL_SERVER_ERROR = "500";
     public static final String DUPLICATED_SENSOR = "501";

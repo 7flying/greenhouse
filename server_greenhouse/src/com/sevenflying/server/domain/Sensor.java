@@ -3,7 +3,6 @@ package com.sevenflying.server.domain;
 import java.sql.SQLException;
 
 import com.sevenflying.server.database.DBManager;
-import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 
 public class Sensor extends BlossomSensor {

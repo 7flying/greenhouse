@@ -98,4 +98,29 @@ public class Actuator implements Serializable {
                 ", icon=" + icon +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Actuator actuator = (Actuator) o;
+        if (pinId != null ? !pinId.equals(actuator.pinId) : actuator.pinId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (pinId != null ? pinId.hashCode() : 0);
+        result = 31 * result + (controlSensor != null ? controlSensor.hashCode() : 0);
+        result = 31 * result + (compareType != null ? compareType.hashCode() : 0);
+        temp = Double.doubleToLongBits(compareValue);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + icon;
+        return result;
+    }
 }

@@ -13,6 +13,7 @@ import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Commands;
 import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -89,15 +90,15 @@ public class ActuatorObtainerTask extends AsyncTask<Void, Actuator, List<Actuato
                             actuator.setCompareValue(Double.parseDouble(temp.get(5)));
                         }
                         ret.add(actuator);
-                        oos.writeObject("ACK");
+                        oos.writeObject(Constants.ACK);
                         oos.flush();
                         numActuators--;
                     } else {
-                        oos.writeObject("NACK");
+                        oos.writeObject(Constants.NACK);
                         oos.flush();
                     }
                 } else {
-                    oos.writeObject("NACK");
+                    oos.writeObject(Constants.ACK);
                     oos.flush();
                 }
             }

@@ -133,6 +133,8 @@ public class SensorCreationActivity extends ActionBarActivity {
                 boolean ensureRefresh = radioYes.isChecked();
                 String result = null;
                 Communicator comm = new Communicator(getApplicationContext());
+                // the refreshRate is displayed in seconds
+                long refreshRate = Long.parseLong(etRefreshRate.getText().toString()) * 1000;
                 if (!etPin.isEnabled()) {
                     // Handle edit sensor
                     try {
@@ -141,7 +143,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                                 analogDig,
                                 etPin.getText().toString(),
                                 type,
-                                etRefreshRate.getText().toString(),
+                                Long.toString(refreshRate),
                                 ensureRefresh
                         );
                     }catch (Exception e) {
@@ -155,7 +157,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                                 analogDig,
                                 etPin.getText().toString(),
                                 type,
-                                etRefreshRate.getText().toString(),
+                                Long.toString(refreshRate),
                                 ensureRefresh
                         );
                     } catch (Exception e) {

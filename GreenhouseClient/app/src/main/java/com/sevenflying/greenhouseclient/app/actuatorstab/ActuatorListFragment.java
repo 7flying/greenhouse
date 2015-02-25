@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                     // Display actuator data
                     Intent intent = new Intent(ActuatorListFragment.this.getActivity(),
                             ActuatorStatusActivity.class);
-                    intent.putExtra("actuator", actuatorList.get(position));
+                    intent.putExtra(Extras.EXTRA_ACTUATOR, actuatorList.get(position));
                     startActivity(intent);
                 }
             });
@@ -73,6 +74,8 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                         .setItems(R.array.edit_delete_array, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Log.d(Constants.DEBUGTAG, " $ ActuatorList  Click on: " + position +
+                                      "\n\t list has: " + actuatorList.toString());
                                 switch (which) {
                                     case 0: // edit
                                         Intent intent = new Intent(ActuatorListFragment.this
