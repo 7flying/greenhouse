@@ -127,4 +127,7 @@
     <string name="steam">Vapor</string>
     <string name="actuator_launch_error">Error lanzando el actuador.</string>
     <string name="actuator_launched">¡Actuador lanzado!</string>
+    <string name="sensor_power_save_error">Error cambiando el modo eco.</string>
+    <string name="sensor_power_save_off">Modo ahorro de energía desactivado.</string>
+    <string name="sensor_power_save_on">Modo ahorro de energía activado.</string>
 </resources>

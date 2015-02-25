@@ -390,7 +390,8 @@ public class NetServer {
 		}
 		String errorCode = null;
 		if (index == 4) {
-			greenDaemon.setPowerSaving(temp[0], temp[1],
+			if (greenDaemon != null)
+				greenDaemon.setPowerSaving(temp[0], temp[1],
 					Boolean.valueOf(temp[2])); // TODO handle error codes here
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;

@@ -132,6 +132,9 @@
     <string name="sensor_modif_error">Error modifying the sensor.</string>
     <string name="actuator_launched">Actuator launched!</string>
     <string name="actuator_launch_error">Error launching the actuator.</string>
+    <string name="sensor_power_save_on">Power saving mode enabled.</string>
+    <string name="sensor_power_save_off">Power saving mode disabled.</string>
+    <string name="sensor_power_save_error">Error changing the power saving mode.</string>
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>
