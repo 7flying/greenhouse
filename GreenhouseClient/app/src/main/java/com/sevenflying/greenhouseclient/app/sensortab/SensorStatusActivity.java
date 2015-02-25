@@ -36,6 +36,7 @@ public class SensorStatusActivity extends ActionBarActivity {
     private LinearLayout layoutProgress;
     private LinearLayout layoutChart;
     private LineChart chart;
+    private TextView textSensorUpdatedAt, textSensorValue;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -46,9 +47,9 @@ public class SensorStatusActivity extends ActionBarActivity {
 
         // Views
         ImageView imageView = (ImageView) findViewById(R.id.image_sensor);
-        TextView textSensorValue = (TextView) findViewById(R.id.text_sensor_value);
+        textSensorValue = (TextView) findViewById(R.id.text_sensor_value);
         TextView textSensorUnit = (TextView) findViewById(R.id.text_sensor_value_unit);
-        TextView textSensorUpdatedAt = (TextView) findViewById(R.id.text_sensor_updated_at);
+        textSensorUpdatedAt = (TextView) findViewById(R.id.text_sensor_updated_at);
         TextView textSensorName = (TextView) findViewById(R.id.text_sensor_name);
         TextView textSensorType = (TextView) findViewById(R.id.text_sensor_type);
         TextView textSensorRefresh = (TextView) findViewById(R.id.text_sensor_refresh);
@@ -138,6 +139,12 @@ public class SensorStatusActivity extends ActionBarActivity {
                 for (String key : stringFloatMap.keySet()) {
                     xValues.add((String) results.get(i).keySet().toArray()[0]);
                     yValues.add(new Entry(stringFloatMap.get(key), i));
+                    if (i == results.size() - 1) {
+                        // update the latest value on the view
+                        textSensorValue.setText(GreenhouseUtils.suppressZeros(
+                                stringFloatMap.get(key)));
+                        textSensorUpdatedAt.setText(key);
+                    }
                     i--;
                 }
             }

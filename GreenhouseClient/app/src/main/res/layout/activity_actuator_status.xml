@@ -25,6 +25,7 @@
             android:layout_marginTop="35dp"
             android:text="Water pump"/>
         <Button
+            android:id="@+id/button_launch"
             android:text="@string/launch"
             android:layout_below="@id/text_actuator_name"
             android:layout_toEndOf="@id/image_actuator"

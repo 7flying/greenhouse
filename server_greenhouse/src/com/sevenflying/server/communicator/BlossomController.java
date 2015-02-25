@@ -82,9 +82,9 @@ public class BlossomController implements PortEvent {
 	 * @param sensorKey 
 	 */
 	public void requestUpdate(String sensorKey) {
-		if(sensorMap.containsKey(sensorKey)) {
+		if (sensorMap.containsKey(sensorKey)) {
 			// Before asking we wait the required time
-			if(sensorMap.get(sensorKey).isRefreshEnsured()) {
+			if (sensorMap.get(sensorKey).isRefreshEnsured()) {
 				System.out.println(" - Waiting...");
 				try {
 					Thread.sleep(sensorMap.get(sensorKey).getRefreshRate());
@@ -121,6 +121,10 @@ public class BlossomController implements PortEvent {
 	public void setDebugMode(boolean activate) {
 		communicator.setDebugMode(activate);
 	}
-	// TODO launch actuator
+	
+	public void launch(String pinid) {
+		// TODO launch actuator
+	}
+
 
 }

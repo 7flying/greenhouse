@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class ActuatorView extends RelativeLayout {
 
     private TextView name;
     private ImageView icon;
+    private Button launchButton;
 
     public static ActuatorView inflate(ViewGroup parent) {
         return  (ActuatorView) LayoutInflater
@@ -37,10 +39,15 @@ public class ActuatorView extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.actuator_row, this, true);
         name = (TextView) findViewById(R.id.tv_actuator_name);
         icon = (ImageView) findViewById(R.id.image_actuator);
+        launchButton = (Button) findViewById(R.id.button_launch);
     }
 
     public void setActuator(Actuator actuator) {
         name.setText(actuator.getName());
         icon.setImageResource(actuator.getIcon());
+    }
+
+    public Button getLaunchButton() {
+        return launchButton;
     }
 }

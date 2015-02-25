@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -15,6 +16,7 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Actuator;
+import com.sevenflying.greenhouseclient.net.Communicator;
 
 /** Holds the actuator info.
  * Created by flying on 08/02/15.
@@ -67,7 +69,16 @@ public class ActuatorStatusActivity extends ActionBarActivity {
                 });
             } else
                 layoutOptionalControlSensor.setVisibility(View.GONE);
+            Button buttonLaunch = (Button) findViewById(R.id.button_launch);
+            buttonLaunch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Communicator comm = new Communicator(getBaseContext());
+                    comm.launchActuator(temp.getPinId());
+                }
+            });
         }
+
     }
 
     @Override

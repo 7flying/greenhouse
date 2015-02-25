@@ -36,7 +36,7 @@ public class NetServer {
 	private static GreenServer greenDaemon = null;
 	
 	public NetServer(GreenServer greenDaemon) {
-		if(NetServer.greenDaemon == null)
+		if (NetServer.greenDaemon == null)
 			NetServer.greenDaemon = greenDaemon; 
 	}
 
@@ -102,6 +102,9 @@ public class NetServer {
 						break;
 					case Constants.UPDATE_ACTUATOR:
 						updateActuator(ois, oos);
+						break;
+					case Constants.LAUNCH:
+						launchActuator(ois, oos);
 						break;
 					case Constants.TEST_CONNECTION:
 						// Send an ok
@@ -316,10 +319,7 @@ public class NetServer {
 			// Incorrect number of parameters
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.OK);
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
 		oos.close();
@@ -364,10 +364,7 @@ public class NetServer {
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.OK);
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
 		oos.close();
@@ -398,10 +395,7 @@ public class NetServer {
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.OK);
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
 		oos.close();
@@ -442,15 +436,14 @@ public class NetServer {
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if (errorCode != null) 
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.OK);
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
 		oos.close();
 		ois.close();
 	}
+	
+	// --- Actuators ---
 	
 	/** Returns the actuators from the database 
 	 * @param ois
@@ -517,10 +510,7 @@ public class NetServer {
 			e.printStackTrace();
 			errorCode = Constants.INTERNAL_SERVER_ERROR;
 		}
-		if (errorCode != null)
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.ACK);
+		oos.writeObject(errorCode == null ? Constants.ACK : errorCode);
 		
 		oos.flush();
 		oos.close();
@@ -588,10 +578,7 @@ public class NetServer {
 			// Incorrect number of parameters
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if(errorCode != null) 
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.OK);
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
 		oos.close();
@@ -626,10 +613,7 @@ public class NetServer {
 		} else {
 			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
 		}
-		if (errorCode != null) 
-			oos.writeObject(errorCode);
-		else
-			oos.writeObject(Constants.OK);
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
 		oos.close();
@@ -705,6 +689,42 @@ public class NetServer {
 			System.out.println("\t " + Constants.OK);
 		}oos.flush();	
 
+		oos.close();
+		ois.close();
+	}
+	
+	/** Launches an Actuator
+	 * @param ois
+	 * @param oos
+	 * @throws IOException
+	 */
+	private void launchActuator(ObjectInputStream ois, ObjectOutputStream oos)
+	throws IOException
+	{
+		String errorCode = null;
+		try {
+			String raw = (String) ois.readObject();
+			// Read actuator pinid
+			if (raw != null) {
+				DBManager manager = DBManager.getInstance();
+				manager.connect(pathToDB);
+				if (greenDaemon == null) {
+					if (!manager.isActuatorCreated(raw))
+						errorCode = Constants.INTERNAL_SERVER_ERROR;
+				} else {
+					if (!manager.isActuatorCreated(raw)
+						|| !greenDaemon.launchActuator(raw)) 
+						{
+							errorCode = Constants.INTERNAL_SERVER_ERROR;
+						}
+				}
+				manager.disconnect();
+			}
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			errorCode = Constants.INTERNAL_SERVER_ERROR;
+		}
+		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
+		oos.flush();
 		oos.close();
 		ois.close();
 	}

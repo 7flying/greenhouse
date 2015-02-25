@@ -125,4 +125,6 @@
     <string name="no_historical_data">Aún no hay datos históricos</string>
     <string name="pressure">Presión</string>
     <string name="steam">Vapor</string>
+    <string name="actuator_launch_error">Error lanzando el actuador.</string>
+    <string name="actuator_launched">¡Actuador lanzado!</string>
 </resources>

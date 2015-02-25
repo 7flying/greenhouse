@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.settings.SettingsFragment;
 import com.sevenflying.greenhouseclient.net.tasks.ActuatorCreationTask;
+import com.sevenflying.greenhouseclient.net.tasks.ActuatorLaunchTask;
 import com.sevenflying.greenhouseclient.net.tasks.ActuatorModificationTask;
 import com.sevenflying.greenhouseclient.net.tasks.ActuatorRemovalTask;
 import com.sevenflying.greenhouseclient.net.tasks.SensorCreationTask;
@@ -44,18 +47,20 @@ public class Communicator {
     public int getServerPort() {
         int port = Integer.valueOf(prefs.getString(SettingsFragment.PREF_SERVER_PORT, "5432"));
         Log.d(Constants.DEBUGTAG, "$ Communicator - port: " + port);
-        return  port;
+        return port;
     }
 
     // -- General --
 
-    /** Test the connection to the server.
+    /**
+     * Test the connection to the server.
+     *
      * @return true if the connection is fine, false otherwise
      */
     public boolean testConnection() {
-        TestConnectionTask task =  new TestConnectionTask(context);
+        TestConnectionTask task = new TestConnectionTask(context);
         boolean ret = true;
-        try{
+        try {
             ret = task.execute().get();
         } catch (Exception e) {
             ret = false;
@@ -65,20 +70,21 @@ public class Communicator {
 
     // -- Sensors --
 
-    /** Gets the sensor's last value from the server.
+    /**
+     * Gets the sensor's last value from the server.
+     *
      * @param sensorPinId - sensor's pin id
-     * @param sensorType - sensor's type
+     * @param sensorType  - sensor's type
      * @return sensor's last value
      * @throws java.io.IOException
      * @throws ClassNotFoundException
      */
     public double getLastValue(String sensorPinId, String sensorType)
-            throws ClassNotFoundException, IOException
-    {
+            throws ClassNotFoundException, IOException {
         double lastValue = -3;
         try {
-           // InetAddress add = InetAddress.getByName(Constants.serverIP);
-           // Socket s = new Socket(add, Constants.serverPort);
+            // InetAddress add = InetAddress.getByName(Constants.serverIP);
+            // Socket s = new Socket(add, Constants.serverPort);
             InetAddress add = InetAddress.getByName(getServer());
             Socket s = new Socket(add, getServerPort());
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
@@ -92,30 +98,31 @@ public class Communicator {
             s.close();
             oos.close();
             ois.close();
-        }catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return lastValue;
     }
 
-    /** Requests a Sensor creation on the server.
-     * @param name - sensor name
-     * @param analogDig - sensor type (analog/digital)
-     * @param pin - sensor's pin
-     * @param type - sensor's type
-     * @param refreshRate - sensor's refresh rate
+    /**
+     * Requests a Sensor creation on the server.
+     *
+     * @param name             - sensor name
+     * @param analogDig        - sensor type (analog/digital)
+     * @param pin              - sensor's pin
+     * @param type             - sensor's type
+     * @param refreshRate      - sensor's refresh rate
      * @param isRefreshEnsured - whether the refresh rate has to be ensured
      * @return status code
      * @throws java.io.IOException
      * @throws ClassNotFoundException
      */
     public String createSensor(String name, String analogDig, String pin, String type,
-        String refreshRate, boolean isRefreshEnsured) throws IOException, ClassNotFoundException
-    {
+                               String refreshRate, boolean isRefreshEnsured) throws IOException, ClassNotFoundException {
         Log.d("COMMUNICATOR", "At communicator");
-        if(pin.length() == 1)
+        if (pin.length() == 1)
             pin = "0" + pin;
-        String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
+        String stringRefreshEnsured = String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
         SensorCreationTask task = new SensorCreationTask(context);
         String ret = null;
@@ -128,21 +135,22 @@ public class Communicator {
         return ret;
     }
 
-    /** Request the modification of a sensor
-     * @param name - sensor name
-     * @param analogDig - sensor type (analog/digital)
-     * @param pin - sensor's pin
-     * @param type - sensor's type
-     * @param refreshRate - sensor's refresh rate
+    /**
+     * Request the modification of a sensor
+     *
+     * @param name             - sensor name
+     * @param analogDig        - sensor type (analog/digital)
+     * @param pin              - sensor's pin
+     * @param type             - sensor's type
+     * @param refreshRate      - sensor's refresh rate
      * @param isRefreshEnsured - whether the refresh rate has to be ensured
      * @return 0 if everything went right
      */
     public String editSensor(String name, String analogDig, String pin, String type,
-        String refreshRate, boolean isRefreshEnsured)
-    {
-        if(pin.length() == 1)
+                             String refreshRate, boolean isRefreshEnsured) {
+        if (pin.length() == 1)
             pin = "0" + pin;
-        String stringRefreshEnsured =  String.valueOf(isRefreshEnsured);
+        String stringRefreshEnsured = String.valueOf(isRefreshEnsured);
         String nameEncoded = new String(Base64.encode(name.getBytes(), Base64.DEFAULT));
         String ret = null;
         SensorModificationTask task = new SensorModificationTask(context);
@@ -155,16 +163,18 @@ public class Communicator {
         return ret;
     }
 
-    /** Deletes from the server a sensor given its pinId and type
+    /**
+     * Deletes from the server a sensor given its pinId and type
+     *
      * @param pinID - sensor's pin id
-     * @param type - - sensor's type
+     * @param type  - - sensor's type
      * @return -1 if error
      */
     public int deleteSensor(String pinID, String type) {
         SensorRemovalTask task = new SensorRemovalTask(context);
         Integer ret = -1;
         try {
-           ret = task.execute(pinID, type).get();
+            ret = task.execute(pinID, type).get();
         } catch (Exception e) {
             ret = -1;
         }
@@ -173,18 +183,19 @@ public class Communicator {
 
     // -- Actuators --
 
-    /** Creates an actuator with a control sensor
-     * @param name - actuator name
-     * @param id - actuator id
-     * @param sensorType - sensor's type
-     * @param sensorId - sensor id
-     * @param compareType - control type
+    /**
+     * Creates an actuator with a control sensor
+     *
+     * @param name         - actuator name
+     * @param id           - actuator id
+     * @param sensorType   - sensor's type
+     * @param sensorId     - sensor id
+     * @param compareType  - control type
      * @param compareValue - compare value
      * @return ok or error description
      */
     public String createActuator(String name, String id, String sensorType, String sensorId,
-    String compareType, double compareValue)
-    {
+                                 String compareType, double compareValue) {
         ActuatorCreationTask task = new ActuatorCreationTask(context);
         String ret = null;
         try {
@@ -197,9 +208,11 @@ public class Communicator {
         return ret;
     }
 
-    /** Creates a simple actuator
+    /**
+     * Creates a simple actuator
+     *
      * @param name - actuator name
-     * @param id - actuator id
+     * @param id   - actuator id
      * @return ok or error description
      */
     public String createActuator(String name, String id) {
@@ -214,7 +227,9 @@ public class Communicator {
         return ret;
     }
 
-    /** Deletes an actuator
+    /**
+     * Deletes an actuator
+     *
      * @param id - - actuator id
      * @return ok or error description
      */
@@ -229,18 +244,19 @@ public class Communicator {
         return ret;
     }
 
-    /** Modifies an actuator with a control sensor
-     * @param name - actuator name
-     * @param id - actuator id
-     * @param type - actuator type
-     * @param sensorId - sensor id
-     * @param compareType - control type
+    /**
+     * Modifies an actuator with a control sensor
+     *
+     * @param name         - actuator name
+     * @param id           - actuator id
+     * @param type         - actuator type
+     * @param sensorId     - sensor id
+     * @param compareType  - control type
      * @param compareValue - compare value
      * @return ok or error description
      */
     public String modifyActuator(String name, String id, String type, String sensorId,
-                                 String compareType, double compareValue)
-    {
+                                 String compareType, double compareValue) {
         ActuatorModificationTask task = new ActuatorModificationTask(context);
         String ret = null;
         try {
@@ -252,9 +268,11 @@ public class Communicator {
         return ret;
     }
 
-    /** Modifies a simple actuator
+    /**
+     * Modifies a simple actuator
+     *
      * @param name - actuator name
-     * @param id - actuator id
+     * @param id   - actuator id
      * @return ok or error description
      */
     public String modifyActuator(String name, String id) {
@@ -267,5 +285,27 @@ public class Communicator {
             ret = null;
         }
         return ret;
+    }
+
+    /**
+     * Launches an actuator
+     * @param pinid - actuator to launch
+     */
+    public void launchActuator(String pinid) {
+        ActuatorLaunchTask task = new ActuatorLaunchTask(context);
+        String ret = null;
+        try {
+            ret = task.execute(pinid).get();
+        } catch (Exception e) {
+            ret = null;
+        }
+        if (ret == null) {
+            Toast.makeText(context, context.getResources().getString(
+                            R.string.actuator_launch_error),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, context.getResources().getString(R.string.actuator_launched),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

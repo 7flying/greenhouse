@@ -420,7 +420,7 @@ public class DBManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	private boolean isActuatorCreated(String pinid) throws SQLException {
+	public boolean isActuatorCreated(String pinid) throws SQLException {
 		PreparedStatement pre = conn.prepareStatement("SELECT COUNT(*) FROM"
 				+ " Actuators WHERE pinid = ?;");
 		pre.setString(1, pinid);
