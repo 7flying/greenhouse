@@ -84,7 +84,7 @@ public class AlertListFragment extends Fragment implements Updateable {
                                             manager.removeAlert(alertList.get(listPosition));
                                             alertList.remove(alertList.get(listPosition));
                                             adapter.notifyDataSetChanged();
-                                            Toast.makeText(getActivity().getApplicationContext(),
+                                            Toast.makeText(getActivity().getBaseContext(),
                                                     getResources().getString(R.string.alert_deleted),
                                                     Toast.LENGTH_SHORT).show();
                                             if (alertList.size() == 0) {

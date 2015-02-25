@@ -81,7 +81,7 @@ public class StatusFragment extends Fragment implements Updateable {
                                             manager.deleteItem(monitoringItems.get(listPosition));
                                             monitoringItems.remove(monitoringItems.get(listPosition));
                                             moniAdapter.notifyDataSetChanged();
-                                            Toast.makeText(getActivity().getApplicationContext(),
+                                            Toast.makeText(getActivity().getBaseContext(),
                                                     getResources().getString(R.string.item_deleted),
                                                     Toast.LENGTH_SHORT).show();
                                             break;

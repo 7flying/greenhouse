@@ -156,28 +156,28 @@ public class MainActivity extends ActionBarActivity {
                 // Callback from AlertCreationActivity
                 if(resultCode == Activity.RESULT_OK) {
                     Log.d(Constants.DEBUGTAG, " MainActivity::OnActivity result: CODE_CREATE_NEW_ALERT OK");
-                    ActivityResultHandler.handleCreateNewAlert(getApplicationContext(), data, this);
+                    ActivityResultHandler.handleCreateNewAlert(getBaseContext(), data, this);
                     tabsPaAdapter.update(2);
                 }
                 break;
             case Codes.CODE_EDIT_ALERT:
                 // Callback from AlertCreationActivity on Edit mode
                 if(resultCode == Activity.RESULT_OK) {
-                    ActivityResultHandler.handleEditAlert(MainActivity.this, data);
+                    ActivityResultHandler.handleEditAlert(getBaseContext(), data);
                     tabsPaAdapter.update(2);
                 }
                 break;
             case Codes.CODE_NEW_SENSOR:
                 // Callback from SensorCreationActivity
                 if(resultCode == Activity.RESULT_OK) {
-                    ActivityResultHandler.handleCreateNewSensor(getApplicationContext());
+                    ActivityResultHandler.handleCreateNewSensor(getBaseContext());
                     tabsPaAdapter.update(1);
                 }
                 break;
             case Codes.CODE_EDIT_SENSOR:
                 // Callback from SensorCreationActivity
                 if (resultCode == Activity.RESULT_OK) {
-                    ActivityResultHandler.handleEditSensor(getApplicationContext(), data);
+                    ActivityResultHandler.handleEditSensor(getBaseContext(), data);
                     if (tabsPaAdapter !=  null)
                         tabsPaAdapter.update(1);
                     else
@@ -188,25 +188,25 @@ public class MainActivity extends ActionBarActivity {
             case Codes.CODE_NEW_MONI_ITEM:
                 // Callback from MoniItemCreationActivity
                 if (resultCode == Activity.RESULT_OK) {
-                    ActivityResultHandler.handleCreateNewMoniItem(getApplicationContext(), data);
+                    ActivityResultHandler.handleCreateNewMoniItem(getBaseContext(), data);
                     tabsPaAdapter.update(0);
                 }
                 break;
             case Codes.CODE_EDIT_MONI_ITEM:
                 if (resultCode == RESULT_OK) {
-                    ActivityResultHandler.handleEditMoniItem(getApplicationContext(), data);
+                    ActivityResultHandler.handleEditMoniItem(getBaseContext(), data);
                     tabsPaAdapter.update(0);
                 }
                 break;
             case Codes.CODE_NEW_ACTUATOR:
                 if (resultCode == RESULT_OK) {
-                    ActivityResultHandler.handleCreateNewActuator(getApplicationContext());
+                    ActivityResultHandler.handleCreateNewActuator(getBaseContext());
                     tabsPaAdapter.update(3);
                 }
                 break;
             case Codes.CODE_EDIT_ACTUATOR:
                 if (resultCode == RESULT_OK) {
-                    ActivityResultHandler.handleModifyActuator(getApplicationContext(), data);
+                    ActivityResultHandler.handleModifyActuator(getBaseContext(), data);
                     tabsPaAdapter.update(3);
                 }
                 break;
