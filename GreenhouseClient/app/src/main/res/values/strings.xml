@@ -41,7 +41,13 @@
     <string name="xml_sensor_pin">PIN:</string>
     <string name="xml_sensor_refresh_rate">Refresh rate:</string>
     <string name="xml_sensor_seconds_word">secs</string>
+    <string name="xml_sensor_power_saving">Power saving mode:</string>
     <string name="no_historical_data">There isn\'t historical data yet</string>
+    <string name="defaults_no_data">No data</string>
+    <string name="defaults_active">Active</string>
+    <string name="defaults_disabled">Disabled</string>
+    <string name="enable_power_saving">Activate</string>
+    <string name="disable_power_saving">Deactivate</string>
     <!-- fragment_sensor_list-->
     <string name="no_sensors">There aren\'t any sensors, try to add one!</string>
     <string name="no_connection">No connection</string>
@@ -135,6 +141,7 @@
     <string name="sensor_power_save_on">Power saving mode enabled.</string>
     <string name="sensor_power_save_off">Power saving mode disabled.</string>
     <string name="sensor_power_save_error">Error changing the power saving mode.</string>
+    <string name="error_retrieving_power_save_mode">Error retrieving the power saving mode.</string>
     <!-- General -->
     <string name="string_alert">Alert</string>
     <string name="ok">"Ok"</string>

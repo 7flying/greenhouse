@@ -8,9 +8,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -20,8 +23,11 @@ import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Sensor;
+import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
+import com.sevenflying.greenhouseclient.net.tasks.GetPowerSavingStatusTask;
 import com.sevenflying.greenhouseclient.net.tasks.HistoricalRecordObtainerTask;
+import com.sevenflying.greenhouseclient.net.tasks.SetPowerSavingTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +42,11 @@ public class SensorStatusActivity extends ActionBarActivity {
     private LinearLayout layoutProgress;
     private LinearLayout layoutChart;
     private LineChart chart;
-    private TextView textSensorUpdatedAt, textSensorValue;
+    private TextView textSensorUpdatedAt, textSensorValue, textPowerSavingOnOff;
+    private TableRow tableRow;
+    private Button buttonChangePowerMode;
+    private int modeOn = -1;
+    private Communicator communicator;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -44,7 +54,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         setContentView(R.layout.activity_sensor_status);
-
+        communicator = new Communicator(getBaseContext());
         // Views
         ImageView imageView = (ImageView) findViewById(R.id.image_sensor);
         textSensorValue = (TextView) findViewById(R.id.text_sensor_value);
@@ -66,24 +76,56 @@ public class SensorStatusActivity extends ActionBarActivity {
         chart.setDrawYValues(true);
         chart.setDrawXLabels(true);
         chart.setDrawBorder(false);
-
         // no description text
         chart.setDescription("");
         chart.setNoDataTextDescription(getResources().getString(R.string.no_historical_data));
-
-
         // enable value highlighting
         chart.setHighlightEnabled(true);
-
         // enable touch gestures
         chart.setTouchEnabled(false);
-
         // enable scaling and dragging
         chart.setDragEnabled(false);
-
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(false);
 
+        tableRow = (TableRow) findViewById(R.id.row_change_power_save);
+        tableRow.setVisibility(View.GONE);
+        textPowerSavingOnOff = (TextView) findViewById(R.id.text_power_saving_on_off);
+        buttonChangePowerMode = (Button) findViewById(R.id.button_power_save);
+        buttonChangePowerMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetPowerSavingTask task = new SetPowerSavingTask(getBaseContext());
+                String ret = null;
+                try{
+                    ret = task.execute(currentSensor.getPinId(), String.valueOf(
+                            currentSensor.getType().getIdentifier()),
+                            modeOn == 1 ? "false" : "true").get();
+                } catch (Exception e) {
+                    Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't change " +
+                            "pow-save mode");
+                }
+                if (ret != null && ret.equals(Constants.OK)) {
+                    if (modeOn == 1) {
+                        modeOn = 0;
+                        Toast.makeText(getBaseContext(), getResources()
+                                        .getString(R.string.sensor_power_save_off),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getBaseContext(), getResources()
+                                    .getString(R.string.sensor_power_save_on),
+                            Toast.LENGTH_SHORT).show();
+                        modeOn = 1;
+                    }
+                } else {
+                    Toast.makeText(getBaseContext(), getResources()
+                           .getString(R.string.sensor_power_save_error),
+                            Toast.LENGTH_SHORT).show();
+                    modeOn = -1;
+                }
+                updatePowerSavingStatus();
+            }
+        });
         // Set data
         if (getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
             GreenhouseUtils utils = new GreenhouseUtils(this);
@@ -97,7 +139,11 @@ public class SensorStatusActivity extends ActionBarActivity {
             textSensorRefresh.setText(GreenhouseUtils.suppressZeros(currentSensor
                     .getRefreshRate() / 1000d));
             textSensorPin.setText(currentSensor.getPinId());
-            getHistoricalData();
+
+            if (communicator.testConnection()) {
+                getHistoricalData();
+                getPowerSavingModeStatus();
+            }
         }
     }
 
@@ -112,7 +158,9 @@ public class SensorStatusActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
+
                 getHistoricalData();
+                getPowerSavingModeStatus();
                 break;
             case R.id.action_cancel:
                 finish();
@@ -165,7 +213,47 @@ public class SensorStatusActivity extends ActionBarActivity {
 
         } catch (Exception e) {
             Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
-            e.printStackTrace();
         }
+    }
+
+    private void getPowerSavingModeStatus() {
+        GetPowerSavingStatusTask task = new GetPowerSavingStatusTask(getBaseContext());
+        String mode = null;
+        try {
+            mode = task.execute(currentSensor.getPinId(), String.valueOf(
+                    currentSensor.getType().getIdentifier())).get();
+        } catch (Exception e) {
+            Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve Pow-save mode" +
+                    " status");
+        }
+        if (mode != null) {
+            if (mode.toLowerCase().equals("true"))
+                modeOn = 1;
+            else if (mode.toLowerCase().equals("false"))
+                modeOn = 0;
+        } else {
+            modeOn = -1;
+            Toast.makeText(getBaseContext(), getResources()
+                    .getString(R.string.error_retrieving_power_save_mode),
+                    Toast.LENGTH_SHORT).show();
+        }
+        updatePowerSavingStatus();
+
+    }
+
+    private void updatePowerSavingStatus() {
+        if (modeOn == -1) {
+            textPowerSavingOnOff.setText(getResources().getString(R.string.defaults_no_data));
+            tableRow.setVisibility(View.GONE);
+        } else {
+            textPowerSavingOnOff.setText(modeOn == 1
+                    ? getResources().getString(R.string.defaults_active)
+                    : getResources().getString(R.string.defaults_disabled));
+            buttonChangePowerMode.setText(modeOn == 1
+                    ? getResources().getString(R.string.disable_power_saving)
+                    : getResources().getString(R.string.enable_power_saving));
+            tableRow.setVisibility(View.VISIBLE);
+        }
+
     }
 }

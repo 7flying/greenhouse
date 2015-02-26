@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.apache.commons.codec.binary.Base64;
@@ -90,6 +91,9 @@ public class NetServer {
 						break;
 					case Constants.POWSAV:
 						setPowerSaving(ois, oos);
+						break;
+					case Constants.POWSAV_STATUS:
+						getPowerSavingStatus(ois, oos);
 						break;
 					case Constants.GETACTUATORS:
 						getActuators(ois, oos);
@@ -378,18 +382,18 @@ public class NetServer {
 	 * @throws Exception
 	 */
 	private void setPowerSaving(ObjectInputStream ois, ObjectOutputStream oos)
-	 throws Exception
+	throws Exception
 	{
 		String raw = (String) ois.readObject();
 		StringTokenizer tokenizer = new StringTokenizer(raw, ":");
 		String [] temp = new String[3];
 		int index = 0;
-		while(tokenizer.hasMoreTokens()) {
+		while (tokenizer.hasMoreTokens()) {
 			temp[index] = tokenizer.nextToken();
 			index++;
 		}
 		String errorCode = null;
-		if (index == 4) {
+		if (index == 3) {
 			if (greenDaemon != null)
 				greenDaemon.setPowerSaving(temp[0], temp[1],
 					Boolean.valueOf(temp[2])); // TODO handle error codes here
@@ -399,6 +403,43 @@ public class NetServer {
 		oos.writeObject(errorCode == null ? Constants.OK : errorCode);
 		oos.flush();	
 
+		oos.close();
+		ois.close();
+	}
+	
+	/** Returns the power saving state of a sensor.
+	 * @param ois
+	 * @param oos
+	 * @throws Exception
+	 */
+	private void getPowerSavingStatus(ObjectInputStream ois,
+	ObjectOutputStream oos) throws Exception
+	{
+		String raw = (String) ois.readObject();
+		StringTokenizer tokenizer  = new StringTokenizer(raw, ":");
+		String [] temp = new String[2];
+		int index = 0;
+		while (tokenizer.hasMoreTokens()) {
+			temp[index] = tokenizer.nextToken();
+			index++;
+		}
+		String errorCode = Constants.INTERNAL_SERVER_ERROR, ret = null;
+		if (index == 2) {
+			if (greenDaemon != null) {
+				ret = Boolean.toString(greenDaemon
+						.isPowerSavinEnabled(temp[0], temp[1]));
+			} else {
+				if (Env.DEBUG)
+					ret = new Random(System.currentTimeMillis()).nextInt(2) == 1 ?
+						"true" : "false";
+			}
+				
+		} else {
+			errorCode = Constants.INCORRECT_NUMBER_OF_PARAMS;
+		}
+		System.out.println("\t " + ret);
+		oos.writeObject(ret != null ? ret : errorCode);
+		oos.flush();
 		oos.close();
 		ois.close();
 	}

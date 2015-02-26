@@ -86,7 +86,8 @@
                     android:textSize="16sp"
                     android:text="@string/xml_sensor_name"
                     android:textColor="@color/bright_foreground_inverse_material_dark"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content" />
                 <TextView
                     android:id="@+id/text_sensor_name"
                     android:textColor="@color/bright_foreground_inverse_material_dark"
@@ -167,6 +168,41 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/bright_foreground_inverse_material_dark"
                     android:text="D05"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <!-- Power save status -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/static_power_saving"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/xml_sensor_power_saving"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/text_power_saving_on_off"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/defaults_no_data"
+                    android:textColor="@color/bright_foreground_inverse_material_dark"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow
+                android:id="@+id/row_change_power_save"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+                <TextView  android:layout_weight="1"/>
+                <Button
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/button_power_save"
+                    android:text="@string/defaults_no_data"
                     android:layout_weight="1"/>
             </TableRow>
         </TableLayout>

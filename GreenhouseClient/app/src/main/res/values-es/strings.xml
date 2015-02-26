@@ -130,4 +130,10 @@
     <string name="sensor_power_save_error">Error cambiando el modo eco.</string>
     <string name="sensor_power_save_off">Modo ahorro de energía desactivado.</string>
     <string name="sensor_power_save_on">Modo ahorro de energía activado.</string>
+    <string name="defaults_no_data">Sin datos</string>
+    <string name="disable_power_saving">Desactivar</string>
+    <string name="enable_power_saving">Activar</string>
+    <string name="xml_sensor_power_saving">Modo ahorro de energía:</string>
+    <string name="defaults_active">Activo</string>
+    <string name="defaults_disabled">Inactivo</string>
 </resources>

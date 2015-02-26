@@ -17,6 +17,7 @@ public class Commands {
     public static final String UPDATE_SENSOR 	= "UPDATE-SENSOR";
     public static final String UPDATE_ACTUATOR	= "UPDATE-ACTUATOR";
     public static final String POWSAV 			= "POWSAV";
+    public static final String POWSAV_STATUS	= "POWSAV-STATUS";
 
     public static final String TEST_CONNECTION  = "TEST-CONNECTION";
 }
