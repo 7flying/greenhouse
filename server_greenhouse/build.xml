@@ -6,7 +6,7 @@
 	<property name="lib.dir" location="lib" />
 	<property name="jar.dir" location="jar" />
 	<property name="javaversion" value="1.7" />
-	<property name="version" value="0.5" />
+	<property name="version" value="0.6" />
 	<property name="revision" value= ".0" />
 	<property name="main.jar" value="Greenhouse-Server-${version}${revision}"/>
 	<property name="main-class" value="com.sevenflying.server.net.NetServer"/>

@@ -140,12 +140,15 @@ public class SensorStatusActivity extends ActionBarActivity {
                     .getRefreshRate() / 1000d));
             textSensorPin.setText(currentSensor.getPinId());
 
-            if (communicator.testConnection()) {
-                getHistoricalData();
-                getPowerSavingModeStatus();
-            }
+
+        }
+        try { Thread.sleep(500); } catch (Exception e) {}
+        if (communicator.testConnection()) {
+            getHistoricalData();
+            getPowerSavingModeStatus();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
