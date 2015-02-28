@@ -23,11 +23,13 @@ import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,9 +78,9 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 }
                 Intent returnIntent = new Intent();
                 if (etName.isEnabled())
-                    returnIntent.putExtra("moni-item", current);
+                    returnIntent.putExtra(Extras.EXTRA_MONI, current);
                 else
-                    returnIntent.putExtra("moni-item-result", current);
+                    returnIntent.putExtra(Extras.EXTRA_MONI_RESULT, current);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -102,10 +104,12 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
         });
         imagePreview = (ImageView) findViewById(R.id.image_preview);
+        imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
         Button buttonTakePhoto = (Button) findViewById(R.id.button_take_photo);
         buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(Constants.DEBUGTAG, " $ MoniItemCreation, dispatch take picture");
                 dispatchTakePictureIntent();
             }
         });
@@ -123,9 +127,9 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         adapter = new SensorCheckAdapter(getApplicationContext(), R.layout.sensor_check_row,
                 sensorList);
         listViewSensors.setAdapter(adapter);
-        if(getIntent().hasExtra("moni-to-edit")) {
+        if (getIntent().hasExtra(Extras.EXTRA_MONI_EDIT)) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_edit_item));
-            current = (MonitoringItem) getIntent().getSerializableExtra("moni-to-edit");
+            current = (MonitoringItem) getIntent().getSerializableExtra(Extras.EXTRA_MONI_EDIT);
             Log.d(Constants.DEBUGTAG, " $ MonItemCreation extraItem: " + current.toString());
             etName.setText(current.getName());
             etName.setEnabled(false);
@@ -141,33 +145,41 @@ public class MoniItemCreationActivity extends ActionBarActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            Log.d(Constants.DEBUGTAG, " $ MonItemCreation dispatching take picture");
+
             File photo = null;
             try {
                 photo = createImageFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(photo != null) {
+            if (photo != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                addPhotoToGallery("file:" + photo.getAbsolutePath());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                addPhotoToGallery("file:" + photo.getAbsolutePath());
                 photoPath = photo.getPath();
+                Log.d(Constants.DEBUGTAG, " $ MonItemCreation photopath-dispatch: " + photoPath);
+                Log.d(Constants.DEBUGTAG, " $ MonItemCreation absolutepath-dispatch: "
+                        + photo.getAbsolutePath());
             }
         }
     }
 
-    /* TODO unused
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // The user has taken a photo
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                imagePreview.setImageBitmap(imageBitmap);
+                if (imageBitmap == null)
+                    Log.e(Constants.DEBUGTAG, " $ MonItemCreation result bitmap is null");
+                else
+                    imagePreview.setImageBitmap(imageBitmap);
             }
         } else {
             // Image comes from gallery
-            if(requestCode == PICK_IMAGE) {
+            if (requestCode == PICK_IMAGE) {
                 if(resultCode == RESULT_OK) {
                     Uri _uri = data.getData();
                     // Picked image
@@ -183,7 +195,34 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             }
         }
     }
-    */
+
+    /** Generates a unique file name.
+     * @return file     */
+    private File createImageFile() throws IOException {
+
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File ret = File.createTempFile(
+                "JPEG_" + new SimpleDateFormat("yyyyMMdd_HHmmss")
+                        .format(new Date()) + "_",
+                ".jpg",
+                storageDir);
+        addPhotoToGallery("file:" + ret.getAbsolutePath());
+        Log.d(Constants.DEBUGTAG, " $ MonItemCreation returning file: " + ret);
+
+        return ret;
+    }
+
+    /** Given a photo path adds it to the gallery
+     * @param photoPath - path of the photo to add
+     */
+    private void addPhotoToGallery(String photoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentUri = Uri.fromFile(new File(photoPath));
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_basic_cancel, menu);
@@ -198,29 +237,5 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /** Generates a unique file name.
-     * @return file     */
-    private File createImageFile() throws IOException {
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File ret = File.createTempFile(
-                "JPEG_" + new SimpleDateFormat("yyyyMMdd_HHmmss")
-                .format(new Date()) + "_",
-                ".jpg",
-                storageDir);
-        //addPhotoToGallery("file:" + ret.getAbsolutePath());
-        return ret;
-    }
-
-    /** Given a photo path adds it to the gallery
-     * @param photoPath - path of the photo to add
-     */
-    private void addPhotoToGallery(String photoPath) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(new File(photoPath));
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
     }
 }
