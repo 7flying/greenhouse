@@ -44,7 +44,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
         if (container == null)
             return null;
         else {
-            comm = new Communicator(getActivity().getBaseContext());
+            comm = Communicator.getInstance(getActivity().getBaseContext());
             View view = inflater.inflate(R.layout.fragment_actuator_list, container, false);
             layoutNoActuators = (LinearLayout) view.findViewById(R.id.layout_no_actuators);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
@@ -88,7 +88,6 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                                                 Codes.CODE_EDIT_ACTUATOR);
                                         break;
                                     case 1: // delete
-                                        comm = new Communicator(getActivity().getApplicationContext());
                                         if (comm.testConnection()) {
                                             String result = comm.deleteActuator(actuatorList
                                                     .get(position).getPinId());
@@ -109,7 +108,8 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         } else
-                                            comm.showNoConnectionDialog();
+                                            comm.showNoConnectionDialog(getActivity()
+                                                    .getApplicationContext());
                                         break;
                                 }
                                 checkVisibility();

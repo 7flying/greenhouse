@@ -35,6 +35,7 @@ public class SensorCreationActivity extends ActionBarActivity {
     private boolean [] validated = { false, false, false };
     private int spinnerSelectedType = 0;
     private Spinner sensorTypeSpinner;
+    private Communicator comm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class SensorCreationActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_sensor_creation);
-
+        comm = Communicator.getInstance(getBaseContext());
         // Name
         etName = (EditText) findViewById(R.id.et_sensor_name);
         etName.addTextChangedListener(new TextWatcher() {
@@ -128,82 +129,85 @@ public class SensorCreationActivity extends ActionBarActivity {
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String analogDig = radioAnalog.isChecked() ? "A" : "D";
-                String type = SensorType.sensorTypeArray[spinnerSelectedType].toString();
-                boolean ensureRefresh = radioYes.isChecked();
-                String result = null;
-                Communicator comm = new Communicator(getApplicationContext());
-                // the refreshRate is displayed in seconds
-                long refreshRate = Long.parseLong(etRefreshRate.getText().toString()) * 1000;
-                if (!etPin.isEnabled()) {
-                    // Handle edit sensor
-                    try {
-                        result = comm.editSensor(
-                                etName.getText().toString(),
-                                analogDig,
-                                etPin.getText().toString(),
-                                type,
-                                Long.toString(refreshRate),
-                                ensureRefresh
-                        );
-                    }catch (Exception e) {
-                        result = null;
-                    }
+                if (comm.testConnection()) {
+                    String analogDig = radioAnalog.isChecked() ? "A" : "D";
+                    String type = SensorType.sensorTypeArray[spinnerSelectedType].toString();
+                    boolean ensureRefresh = radioYes.isChecked();
+                    String result = null;
+                    // the refreshRate is displayed in seconds
+                    long refreshRate = Long.parseLong(etRefreshRate.getText().toString()) * 1000;
+                    if (!etPin.isEnabled()) {
+                        // Handle edit sensor
+                        try {
+                            result = comm.editSensor(
+                                    etName.getText().toString(),
+                                    analogDig,
+                                    etPin.getText().toString(),
+                                    type,
+                                    Long.toString(refreshRate),
+                                    ensureRefresh
+                            );
+                        }catch (Exception e) {
+                            result = null;
+                        }
 
+                    } else {
+                        try {
+                            result = comm.createSensor(
+                                    etName.getText().toString(),
+                                    analogDig,
+                                    etPin.getText().toString(),
+                                    type,
+                                    Long.toString(refreshRate),
+                                    ensureRefresh
+                            );
+                        } catch (Exception e) {
+                            result = null;
+                        }
+                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            SensorCreationActivity.this);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }});
+                    switch (result) {
+                        case Constants.OK:
+                            Sensor temp = new Sensor();
+                            temp.setName(etName.getText().toString());
+                            temp.setPinId(analogDig + etPin.getText().toString());
+                            temp.setType(SensorType.valueOf(type.toUpperCase()));
+                            temp.setRefreshRate(Long.valueOf(etRefreshRate.getText().toString()));
+
+                            // Return sensor to previous activity
+                            Intent returnIntent = new Intent();
+                            // The creation does not need a result
+                            if (!etPin.isEnabled())
+                                returnIntent.putExtra(Extras.EXTRA_SENSOR, temp);
+                            setResult(RESULT_OK, returnIntent);
+                            finish();
+                            break;
+                        case Constants.DUPLICATED_SENSOR:
+                            builder.setMessage(SensorCreationActivity.this.getResources()
+                                    .getString(R.string.error_duplicated_sensor));
+                            builder.show();
+                            break;
+                        case Constants.INCORRECT_NUMBER_OF_PARAMS:
+                            builder.setMessage(SensorCreationActivity.this.getResources()
+                                    .getString(R.string.error_incorrect_params));
+                            builder.show();
+                            break;
+                        case Constants.INTERNAL_SERVER_ERROR: default:
+                            if (etPin.isEnabled())
+                                builder.setMessage(SensorCreationActivity.this.getResources()
+                                        .getString(R.string.sensor_creation_error));
+                            else
+                                builder.setMessage(SensorCreationActivity.this.getResources()
+                                        .getString(R.string.sensor_modif_error));
+                            break;
+                    }
                 } else {
-                    try {
-                        result = comm.createSensor(
-                                etName.getText().toString(),
-                                analogDig,
-                                etPin.getText().toString(),
-                                type,
-                                Long.toString(refreshRate),
-                                ensureRefresh
-                        );
-                    } catch (Exception e) {
-                        result = null;
-                    }
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        SensorCreationActivity.this);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }});
-                switch (result) {
-                    case Constants.OK:
-                        Sensor temp = new Sensor();
-                        temp.setName(etName.getText().toString());
-                        temp.setPinId(analogDig + etPin.getText().toString());
-                        temp.setType(SensorType.valueOf(type.toUpperCase()));
-                        temp.setRefreshRate(Long.valueOf(etRefreshRate.getText().toString()));
-
-                        // Return sensor to previous activity
-                        Intent returnIntent = new Intent();
-                        // The creation does not need a result
-                        if (!etPin.isEnabled())
-                            returnIntent.putExtra(Extras.EXTRA_SENSOR, temp);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                        break;
-                    case Constants.DUPLICATED_SENSOR:
-                        builder.setMessage(SensorCreationActivity.this.getResources()
-                                .getString(R.string.error_duplicated_sensor));
-                        builder.show();
-                        break;
-                    case Constants.INCORRECT_NUMBER_OF_PARAMS:
-                        builder.setMessage(SensorCreationActivity.this.getResources()
-                                .getString(R.string.error_incorrect_params));
-                        builder.show();
-                        break;
-                    case Constants.INTERNAL_SERVER_ERROR: default:
-                        if (etPin.isEnabled())
-                            builder.setMessage(SensorCreationActivity.this.getResources()
-                                    .getString(R.string.sensor_creation_error));
-                        else
-                            builder.setMessage(SensorCreationActivity.this.getResources()
-                                    .getString(R.string.sensor_modif_error));
-                        break;
+                    comm.showNoConnectionDialog(SensorCreationActivity.this);
                 }
             }
         });

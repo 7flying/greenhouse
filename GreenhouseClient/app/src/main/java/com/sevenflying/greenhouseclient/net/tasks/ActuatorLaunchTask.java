@@ -22,7 +22,7 @@ public class ActuatorLaunchTask extends AsyncTask<String, Void, String> {
     private int serverPort;
 
     public ActuatorLaunchTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

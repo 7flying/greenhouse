@@ -46,7 +46,7 @@ public class ActuatorObtainerTask extends AsyncTask<Void, Actuator, List<Actuato
         this.exception = null;
         this.currentActuators = currentActuators;
         this.context = context;
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     protected void onPreExecute() {

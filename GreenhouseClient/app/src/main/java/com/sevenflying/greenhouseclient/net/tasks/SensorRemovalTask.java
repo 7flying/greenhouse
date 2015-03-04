@@ -22,7 +22,7 @@ public class SensorRemovalTask extends AsyncTask<String, Void, Integer> {
     private int serverPort;
 
     public SensorRemovalTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

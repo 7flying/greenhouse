@@ -34,6 +34,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
     private LinearLayout layoutProgress, layoutNoConnection, layoutNoSensors;
     private SensorAdapter adapter;
     private DBManager manager;
+    private Communicator comm;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
 
@@ -42,6 +43,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
 		else {
             setMenuVisibility(true);
             setHasOptionsMenu(true);
+            comm = Communicator.getInstance(getActivity().getBaseContext());
 			View view = inflater.inflate(R.layout.fragment_sensors_list, container, false);
 			listView = (ListView) view.findViewById(R.id.sensorsListView);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
@@ -80,12 +82,10 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                             break;
                                         case 1: // Delete
                                             int result = 0;
-                                            Communicator com = new Communicator(getActivity()
-                                                    .getApplicationContext());
-                                            if (com.testConnection()) {
+                                            if (comm.testConnection()) {
                                                 try {
 
-                                                    result = com.deleteSensor(
+                                                    result = comm.deleteSensor(
                                                             sensorList.get(listPosition).getPinId(),
                                                             Character.toString(sensorList.get(
                                                                     listPosition).getType()
@@ -109,7 +109,8 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                                             Toast.LENGTH_SHORT).show();
                                                 }
                                             } else
-                                                com.showNoConnectionDialog();
+                                                comm.showNoConnectionDialog(getActivity()
+                                                        .getApplicationContext());
                                             break;
                                     }
                                     checkVisibility();
@@ -134,7 +135,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
     }
 
     public void updateSensors() {
-        if (new Communicator(getActivity().getBaseContext()).testConnection()) {
+        if (comm.testConnection()) {
             SensorsValueUpdaterTask updater = new SensorsValueUpdaterTask(adapter, layoutProgress,
                     layoutNoConnection, getActivity().getApplicationContext(), sensorList);
             updater.execute();

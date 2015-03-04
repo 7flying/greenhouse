@@ -22,7 +22,7 @@ public class SetPowerSavingTask extends AsyncTask<String, Void, String> {
     private int serverPort;
 
     public SetPowerSavingTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

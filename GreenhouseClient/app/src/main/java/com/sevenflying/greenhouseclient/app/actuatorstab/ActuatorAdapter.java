@@ -34,7 +34,7 @@ public class ActuatorAdapter extends ArrayAdapter<Actuator> implements Serializa
         actuatorView.getLaunchButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Communicator comm = new Communicator(getContext());
+                Communicator comm = Communicator.getInstance(getContext());
                 comm.launchActuator(actuatorList.get(position).getPinId());
             }
         });

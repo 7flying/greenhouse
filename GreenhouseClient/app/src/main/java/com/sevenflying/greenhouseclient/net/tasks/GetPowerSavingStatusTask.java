@@ -21,7 +21,7 @@ public class GetPowerSavingStatusTask extends AsyncTask<String, Void, String> {
     private int serverPort;
 
     public GetPowerSavingStatusTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

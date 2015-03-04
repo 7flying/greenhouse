@@ -37,10 +37,20 @@ public class Communicator {
     private Context context;
     private static String server = null;
     private static int port = -1;
+    public static boolean connectionOk = false;
+    public static long lastConnectionCheck = 0l;
+    private static Communicator instance = null;
 
-    public Communicator(Context context) {
+
+    private Communicator(Context context) {
         this.context = context;
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+    }
+
+    public static Communicator getInstance(Context context) {
+        if (instance == null)
+            instance = new Communicator(context);
+        return  instance;
     }
 
     public String getServer() {
@@ -66,7 +76,7 @@ public class Communicator {
      * @return true if the connection is fine, false otherwise
      */
     public boolean testConnection() {
-        if (System.currentTimeMillis() - MainActivity.lastConnectionCheck > 60000) {
+        if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
             TestConnectionTask task = new TestConnectionTask(context);
             boolean ret = true;
             try {
@@ -74,23 +84,23 @@ public class Communicator {
             } catch (Exception e) {
                 ret = false;
             }
-            MainActivity.connectionOk = ret;
-            MainActivity.lastConnectionCheck = System.currentTimeMillis();
+            connectionOk = ret;
+            lastConnectionCheck = System.currentTimeMillis();
             Log.d(Constants.DEBUGTAG, "$ Communicator testConnection: UPDATE VALUE: "
                 + ret);
             return ret;
         } else {
             Log.d(Constants.DEBUGTAG, "$ Communicator testConnection: CACHED VALUE: "
-                    + MainActivity.connectionOk);
-            return MainActivity.connectionOk;
+                    + connectionOk);
+            return connectionOk;
         }
     }
 
     /** Shows a no-connection dialog
      */
-    public void showNoConnectionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(context.getResources().getString(R.string.alert_no_server_conn));
+    public void showNoConnectionDialog(Context currentContext) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(currentContext);
+        builder.setMessage(currentContext.getResources().getString(R.string.alert_no_server_conn));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {}});
         builder.show();

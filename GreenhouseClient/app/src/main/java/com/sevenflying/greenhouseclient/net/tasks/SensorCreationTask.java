@@ -24,7 +24,7 @@ public class SensorCreationTask  extends AsyncTask <String, Void, String> {
     private int serverPort;
 
     public SensorCreationTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

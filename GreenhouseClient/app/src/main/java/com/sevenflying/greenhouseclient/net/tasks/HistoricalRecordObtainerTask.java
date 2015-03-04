@@ -48,7 +48,7 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
         this.chart = chart;
         this.layoutProgress = layoutProgress;
         this.layoutChart = layoutChart;
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

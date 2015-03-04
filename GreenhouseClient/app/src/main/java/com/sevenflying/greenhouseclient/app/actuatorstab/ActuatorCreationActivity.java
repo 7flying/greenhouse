@@ -180,71 +180,74 @@ public class ActuatorCreationActivity extends ActionBarActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Communicator comm = new Communicator(getApplicationContext());
-                String response = null;
-                String pin = (radioAnalog.isChecked() ? "A" : "D") + etPin.getText().toString();
-                String name = etName.getText().toString();
-                Actuator temp = new Actuator(name, pin);
-                if (formattedSensorMap.keySet().size() > 0 && radioYes.isChecked()) {
-                    Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify with control fields");
-                    Sensor control = formattedSensorMap.get(
-                            (String) controlSensorSpinner.getSelectedItem());
-                    AlertType controlType = AlertType.alertTypes[selectedType];
-                    double compareValue = Double.parseDouble(etControlValue.getText().toString());
-                    temp.setControlSensor(control);
-                    temp.setCompareType(AlertType.valueOf(controlType.toString()));
-                    temp.setCompareValue(compareValue);
-                    // Creation if pin enabled
-                    if (etPin.isEnabled()) {
-                        response = comm.createActuator(name, pin,
-                                control.getType().toString().toUpperCase(),
-                                control.getPinId(), controlType.toString(), compareValue);
+                Communicator comm = Communicator.getInstance(getBaseContext());
+                if (comm.testConnection()) {
+                    String response = null;
+                    String pin = (radioAnalog.isChecked() ? "A" : "D") + etPin.getText().toString();
+                    String name = etName.getText().toString();
+                    Actuator temp = new Actuator(name, pin);
+                    if (formattedSensorMap.keySet().size() > 0 && radioYes.isChecked()) {
+                        Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify with control fields");
+                        Sensor control = formattedSensorMap.get(
+                                (String) controlSensorSpinner.getSelectedItem());
+                        AlertType controlType = AlertType.alertTypes[selectedType];
+                        double compareValue = Double.parseDouble(etControlValue.getText().toString());
+                        temp.setControlSensor(control);
+                        temp.setCompareType(AlertType.valueOf(controlType.toString()));
+                        temp.setCompareValue(compareValue);
+                        // Creation if pin enabled
+                        if (etPin.isEnabled()) {
+                            response = comm.createActuator(name, pin,
+                                    control.getType().toString().toUpperCase(),
+                                    control.getPinId(), controlType.toString(), compareValue);
+                        } else {
+                            // Modification
+                            response = comm.modifyActuator(name, pin,
+                                    control.getType().toString().toUpperCase(),
+                                    control.getPinId(), controlType.toString(), compareValue);
+                        }
                     } else {
-                        // Modification
-                        response = comm.modifyActuator(name, pin,
-                                     control.getType().toString().toUpperCase(),
-                                     control.getPinId(), controlType.toString(), compareValue);
+                        // simple fields
+                        Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify simple fields");
+                        // Creation
+                        if (etPin.isEnabled()) {
+                            response = comm.createActuator(name, pin);
+                        } else {
+                            // Modification
+                            response = comm.modifyActuator(name, pin);
+                        }
                     }
-                } else {
-                    // simple fields
-                    Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify simple fields");
-                    // Creation
-                    if (etPin.isEnabled()) {
-                        response = comm.createActuator(name, pin);
-                    } else {
-                        // Modification
-                        response = comm.modifyActuator(name, pin);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            ActuatorCreationActivity.this);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }});
+                    switch (response) {
+                        case Constants.OK:
+                            // Send an ok to previous activity
+                            Intent returnIntent = new Intent();
+                            if (!etPin.isEnabled())
+                                returnIntent.putExtra(Extras.EXTRA_ACTUATOR, temp);
+                            setResult(RESULT_OK, returnIntent);
+                            finish();
+                            break;
+                        case Constants.INCORRECT_NUMBER_OF_PARAMS:
+                            builder.setMessage(ActuatorCreationActivity.this.getResources()
+                                    .getString(R.string.error_incorrect_params));
+                            builder.show();
+                            break;
+                        case Constants.INTERNAL_SERVER_ERROR:
+                            if (etPin.isEnabled())
+                                builder.setMessage(ActuatorCreationActivity.this.getResources()
+                                        .getString(R.string.actuator_error_create));
+                            else
+                                builder.setMessage(ActuatorCreationActivity.this.getResources()
+                                        .getString(R.string.actuator_error_modify));
+                            break;
                     }
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        ActuatorCreationActivity.this);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }});
-                switch (response) {
-                    case Constants.OK:
-                        // Send an ok to previous activity
-                        Intent returnIntent = new Intent();
-                        if (!etPin.isEnabled())
-                            returnIntent.putExtra(Extras.EXTRA_ACTUATOR, temp);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                        break;
-                    case Constants.INCORRECT_NUMBER_OF_PARAMS:
-                        builder.setMessage(ActuatorCreationActivity.this.getResources()
-                                .getString(R.string.error_incorrect_params));
-                        builder.show();
-                        break;
-                    case Constants.INTERNAL_SERVER_ERROR:
-                        if (etPin.isEnabled())
-                            builder.setMessage(ActuatorCreationActivity.this.getResources()
-                                    .getString(R.string.actuator_error_create));
-                        else
-                            builder.setMessage(ActuatorCreationActivity.this.getResources()
-                                    .getString(R.string.actuator_error_modify));
-                        break;
-                }
+                } else
+                    comm.showNoConnectionDialog(ActuatorCreationActivity.this);
             }
         });
         if (getIntent().hasExtra(Extras.EXTRA_ACTUATOR_EDIT)) {

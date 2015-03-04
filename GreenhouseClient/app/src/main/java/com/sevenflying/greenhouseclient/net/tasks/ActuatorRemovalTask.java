@@ -22,7 +22,7 @@ public class ActuatorRemovalTask extends AsyncTask<String, Void, String> {
     private int serverPort;
 
     public ActuatorRemovalTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

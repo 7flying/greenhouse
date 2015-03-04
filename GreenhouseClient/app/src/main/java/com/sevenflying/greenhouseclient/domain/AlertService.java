@@ -64,7 +64,7 @@ public class AlertService extends IntentService {
                 double lastValue = -1;
                 do {
                     try {
-                        Communicator comm = new Communicator(getApplicationContext());
+                        Communicator comm = Communicator.getInstance(getApplicationContext());
                         lastValue = comm.getLastValue(alert.getSensorPinId(),
                                 Character.valueOf(alert.getSensorType().getIdentifier()).toString());
                         Log.d(Constants.DEBUGTAG,"(AlertService.checkAlerts() - alert's sensor " +

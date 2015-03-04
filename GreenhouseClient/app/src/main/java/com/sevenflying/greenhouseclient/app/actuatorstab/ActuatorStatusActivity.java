@@ -73,7 +73,7 @@ public class ActuatorStatusActivity extends ActionBarActivity {
             buttonLaunch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Communicator comm = new Communicator(getBaseContext());
+                    Communicator comm = Communicator.getInstance(getBaseContext());
                     comm.launchActuator(temp.getPinId());
                 }
             });

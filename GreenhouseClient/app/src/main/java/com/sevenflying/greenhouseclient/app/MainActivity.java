@@ -37,8 +37,6 @@ public class MainActivity extends ActionBarActivity {
     private TabsPagerAdapter tabsPaAdapter;
     public static AlarmManager alarmManager;
     public static PendingIntent alarmIntent;
-    public static boolean connectionOk = false;
-    public static long lastConnectionCheck = 0l;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.action_add_generic:
-                final Communicator comm = new Communicator(getApplicationContext());
+                final Communicator comm = Communicator.getInstance(getApplicationContext());
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(getString(R.string.what_to_add))
                         .setItems(R.array.items_to_create_array,
@@ -128,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
                                                                 SensorCreationActivity.class),
                                                             Codes.CODE_NEW_SENSOR);
                                                 } else
-                                                    comm.showNoConnectionDialog();
+                                                    comm.showNoConnectionDialog(MainActivity.this);
                                                 break;
                                             case 3: // Actuator
                                                 if (comm.testConnection()) {
@@ -137,7 +135,7 @@ public class MainActivity extends ActionBarActivity {
                                                                     ActuatorCreationActivity.class),
                                                             Codes.CODE_NEW_ACTUATOR);
                                                 } else
-                                                    comm.showNoConnectionDialog();
+                                                    comm.showNoConnectionDialog(MainActivity.this);
                                                 break;
                                         }
                                     }

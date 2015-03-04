@@ -22,7 +22,7 @@ public class TestConnectionTask extends AsyncTask<Void, Void, Boolean> {
     private int serverPort;
 
     public TestConnectionTask(Context context) {
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         setContentView(R.layout.activity_sensor_status);
-        communicator = new Communicator(getBaseContext());
+        communicator = Communicator.getInstance(getBaseContext());
         // Views
         ImageView imageView = (ImageView) findViewById(R.id.image_sensor);
         textSensorValue = (TextView) findViewById(R.id.text_sensor_value);

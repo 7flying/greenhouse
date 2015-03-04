@@ -49,7 +49,7 @@ public class SensorsValueUpdaterTask extends AsyncTask<Void, Sensor, List<Sensor
         this.exception = null;
         this.buffer = buffer;
         this.context = context;
-        this.comm = new Communicator(context);
+        this.comm = Communicator.getInstance(context);
     }
 
     protected void onPreExecute() {
