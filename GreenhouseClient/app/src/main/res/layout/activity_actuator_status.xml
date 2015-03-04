@@ -26,7 +26,9 @@
             android:text="Water pump"/>
         <Button
             android:id="@+id/button_launch"
+            android:background="@color/material_deep_teal_200"
             android:text="@string/launch"
+            android:textColor="@color/bright_foreground_inverse_material_dark"
             android:layout_below="@id/text_actuator_name"
             android:layout_toEndOf="@id/image_actuator"
             android:layout_marginStart="10dp"
