@@ -80,32 +80,36 @@ public class SensorsListFragment extends Fragment implements Updateable {
                                             break;
                                         case 1: // Delete
                                             int result = 0;
-                                            try {
-                                                Communicator com = new Communicator(getActivity()
-                                                        .getApplicationContext());
-                                                result = com.deleteSensor(
-                                                        sensorList.get(listPosition).getPinId(),
-                                                        Character.toString(sensorList.get(
-                                                                listPosition).getType()
-                                                                .getIdentifier()));
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                result = -1;
-                                            }
-                                            if(result == 0) {
-                                                manager.deleteSensor(sensorList.get(listPosition));
-                                                sensorList.remove(listPosition);
-                                                adapter.notifyDataSetChanged();
-                                                Toast.makeText(SensorsListFragment.this.getActivity(),
-                                                        getResources().getString(
-                                                                R.string.sensor_deleted),
-                                                                Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(SensorsListFragment.this.getActivity(),
-                                                        getResources().getString(
-                                                                R.string.sensor_error_delete),
-                                                                Toast.LENGTH_SHORT).show();
-                                            }
+                                            Communicator com = new Communicator(getActivity()
+                                                    .getApplicationContext());
+                                            if (com.testConnection()) {
+                                                try {
+
+                                                    result = com.deleteSensor(
+                                                            sensorList.get(listPosition).getPinId(),
+                                                            Character.toString(sensorList.get(
+                                                                    listPosition).getType()
+                                                                    .getIdentifier()));
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    result = -1;
+                                                }
+                                                if(result == 0) {
+                                                    manager.deleteSensor(sensorList.get(listPosition));
+                                                    sensorList.remove(listPosition);
+                                                    adapter.notifyDataSetChanged();
+                                                    Toast.makeText(SensorsListFragment.this.getActivity(),
+                                                            getResources().getString(
+                                                                    R.string.sensor_deleted),
+                                                            Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(SensorsListFragment.this.getActivity(),
+                                                            getResources().getString(
+                                                                    R.string.sensor_error_delete),
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else
+                                                com.showNoConnectionDialog();
                                             break;
                                     }
                                     checkVisibility();
@@ -130,12 +134,14 @@ public class SensorsListFragment extends Fragment implements Updateable {
     }
 
     public void updateSensors() {
-        SensorsValueUpdaterTask updater = new SensorsValueUpdaterTask(adapter, layoutProgress,
-                layoutNoConnection, getActivity().getApplicationContext(), sensorList);
-        updater.execute();
-        adapter = new SensorAdapter(getActivity(), R.layout.sensor_list_row, sensorList);
-        listView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        if (new Communicator(getActivity().getBaseContext()).testConnection()) {
+            SensorsValueUpdaterTask updater = new SensorsValueUpdaterTask(adapter, layoutProgress,
+                    layoutNoConnection, getActivity().getApplicationContext(), sensorList);
+            updater.execute();
+            adapter = new SensorAdapter(getActivity(), R.layout.sensor_list_row, sensorList);
+            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
         checkVisibility();
     }
 

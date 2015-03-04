@@ -36,6 +36,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
     private ListView actuatorListView;
     private DBManager manager;
     private LinearLayout layoutNoActuators, layoutProgress;
+    private Communicator comm;
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, final Bundle savedInstanceState)
@@ -43,6 +44,7 @@ public class ActuatorListFragment extends Fragment implements Updateable {
         if (container == null)
             return null;
         else {
+            comm = new Communicator(getActivity().getBaseContext());
             View view = inflater.inflate(R.layout.fragment_actuator_list, container, false);
             layoutNoActuators = (LinearLayout) view.findViewById(R.id.layout_no_actuators);
             layoutProgress = (LinearLayout) view.findViewById(R.id.linear_layout_progress);
@@ -86,24 +88,28 @@ public class ActuatorListFragment extends Fragment implements Updateable {
                                                 Codes.CODE_EDIT_ACTUATOR);
                                         break;
                                     case 1: // delete
-                                        Communicator comm = new Communicator(getActivity()
-                                                .getApplicationContext());
-                                        String result = comm.deleteActuator(actuatorList
-                                                .get(position).getPinId());
-                                        if (result.equals(Constants.OK)) {
-                                            manager.deleteActuator(actuatorList.get(position));
-                                            actuatorList.remove(position);
-                                            actuatorAdapter.notifyDataSetChanged();
-                                            Toast.makeText(ActuatorListFragment.this.getActivity(),
-                                                    getResources()
-                                                        .getString(R.string.actuator_deleted),
-                                                    Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(ActuatorListFragment.this.getActivity(),
-                                                    getResources().getString(
-                                                            R.string.actuator_error_delete),
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
+                                        comm = new Communicator(getActivity().getApplicationContext());
+                                        if (comm.testConnection()) {
+                                            String result = comm.deleteActuator(actuatorList
+                                                    .get(position).getPinId());
+                                            if (result.equals(Constants.OK)) {
+                                                manager.deleteActuator(actuatorList.get(position));
+                                                actuatorList.remove(position);
+                                                actuatorAdapter.notifyDataSetChanged();
+                                                Toast.makeText(
+                                                        ActuatorListFragment.this.getActivity(),
+                                                        getResources()
+                                                          .getString(R.string.actuator_deleted),
+                                                        Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(
+                                                        ActuatorListFragment.this.getActivity(),
+                                                        getResources().getString(
+                                                                R.string.actuator_error_delete),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else
+                                            comm.showNoConnectionDialog();
                                         break;
                                 }
                                 checkVisibility();
@@ -128,13 +134,16 @@ public class ActuatorListFragment extends Fragment implements Updateable {
 
     @Override
     public void update() {
-        ActuatorObtainerTask obtainerTask = new ActuatorObtainerTask(actuatorAdapter, layoutProgress,
-                getActivity().getApplicationContext(), actuatorList);
-        obtainerTask.execute();
-        // actuatorList = manager.getActuators();
-        actuatorAdapter = new ActuatorAdapter(getActivity(), R.layout.actuator_row, actuatorList);
-        actuatorListView.setAdapter(actuatorAdapter);
-        actuatorAdapter.notifyDataSetChanged();
+        if (comm.testConnection()) {
+            ActuatorObtainerTask obtainerTask = new ActuatorObtainerTask(actuatorAdapter,
+                    layoutProgress, getActivity().getApplicationContext(), actuatorList);
+            obtainerTask.execute();
+            // actuatorList = manager.getActuators();
+            actuatorAdapter = new ActuatorAdapter(getActivity(),
+                    R.layout.actuator_row, actuatorList);
+            actuatorListView.setAdapter(actuatorAdapter);
+            actuatorAdapter.notifyDataSetChanged();
+        }
         checkVisibility();
     }
 }

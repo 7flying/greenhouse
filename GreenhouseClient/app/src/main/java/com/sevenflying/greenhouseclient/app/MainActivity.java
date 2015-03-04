@@ -37,6 +37,8 @@ public class MainActivity extends ActionBarActivity {
     private TabsPagerAdapter tabsPaAdapter;
     public static AlarmManager alarmManager;
     public static PendingIntent alarmIntent;
+    public static boolean connectionOk = false;
+    public static long lastConnectionCheck = 0l;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
                                                                 SensorCreationActivity.class),
                                                             Codes.CODE_NEW_SENSOR);
                                                 } else
-                                                    showNoConnectionDialog();
+                                                    comm.showNoConnectionDialog();
                                                 break;
                                             case 3: // Actuator
                                                 if (comm.testConnection()) {
@@ -135,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
                                                                     ActuatorCreationActivity.class),
                                                             Codes.CODE_NEW_ACTUATOR);
                                                 } else
-                                                    showNoConnectionDialog();
+                                                    comm.showNoConnectionDialog();
                                                 break;
                                         }
                                     }
@@ -213,16 +215,5 @@ public class MainActivity extends ActionBarActivity {
             default:
                 break;
         }
-    }
-
-    /** Shows a no-connection dialog
-     */
-    private void showNoConnectionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage(MainActivity.this.getResources().getString(
-                R.string.alert_no_server_conn));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {}});
-        builder.show();
     }
 }

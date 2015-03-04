@@ -1,12 +1,15 @@
 package com.sevenflying.greenhouseclient.net;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sevenflying.greenhouseclient.app.MainActivity;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.settings.SettingsFragment;
 import com.sevenflying.greenhouseclient.net.tasks.ActuatorCreationTask;
@@ -32,6 +35,8 @@ public class Communicator {
 
     private SharedPreferences prefs;
     private Context context;
+    private static String server = null;
+    private static int port = -1;
 
     public Communicator(Context context) {
         this.context = context;
@@ -39,14 +44,16 @@ public class Communicator {
     }
 
     public String getServer() {
-        String ip = prefs.getString(SettingsFragment.PREF_SERVER_IP, "192.168.1.57");
-        Log.d(Constants.DEBUGTAG, "$ Communicator - ip: " + ip);
-        return ip;
+        if (server == null)
+            server = prefs.getString(SettingsFragment.PREF_SERVER_IP, "192.168.1.57");
+        // Log.d(Constants.DEBUGTAG, "$ Communicator - ip: " + ip);
+        return server;
     }
 
     public int getServerPort() {
-        int port = Integer.valueOf(prefs.getString(SettingsFragment.PREF_SERVER_PORT, "5432"));
-        Log.d(Constants.DEBUGTAG, "$ Communicator - port: " + port);
+        if (port == -1)
+            port = Integer.valueOf(prefs.getString(SettingsFragment.PREF_SERVER_PORT, "5432"));
+        // Log.d(Constants.DEBUGTAG, "$ Communicator - port: " + port);
         return port;
     }
 
@@ -54,18 +61,39 @@ public class Communicator {
 
     /**
      * Test the connection to the server.
-     *
+     * If the last check has been done less than a minute ago the previous value
+     * is returned.
      * @return true if the connection is fine, false otherwise
      */
     public boolean testConnection() {
-        TestConnectionTask task = new TestConnectionTask(context);
-        boolean ret = true;
-        try {
-            ret = task.execute().get();
-        } catch (Exception e) {
-            ret = false;
+        if (System.currentTimeMillis() - MainActivity.lastConnectionCheck > 60000) {
+            TestConnectionTask task = new TestConnectionTask(context);
+            boolean ret = true;
+            try {
+                ret = task.execute().get();
+            } catch (Exception e) {
+                ret = false;
+            }
+            MainActivity.connectionOk = ret;
+            MainActivity.lastConnectionCheck = System.currentTimeMillis();
+            Log.d(Constants.DEBUGTAG, "$ Communicator testConnection: UPDATE VALUE: "
+                + ret);
+            return ret;
+        } else {
+            Log.d(Constants.DEBUGTAG, "$ Communicator testConnection: CACHED VALUE: "
+                    + MainActivity.connectionOk);
+            return MainActivity.connectionOk;
         }
-        return ret;
+    }
+
+    /** Shows a no-connection dialog
+     */
+    public void showNoConnectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(context.getResources().getString(R.string.alert_no_server_conn));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {}});
+        builder.show();
     }
 
     // -- Sensors --

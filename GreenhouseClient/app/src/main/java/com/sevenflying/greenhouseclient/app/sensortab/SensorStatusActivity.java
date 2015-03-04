@@ -139,10 +139,8 @@ public class SensorStatusActivity extends ActionBarActivity {
             textSensorRefresh.setText(GreenhouseUtils.suppressZeros(currentSensor
                     .getRefreshRate() / 1000d));
             textSensorPin.setText(currentSensor.getPinId());
-
-
         }
-        try { Thread.sleep(500); } catch (Exception e) {}
+
         if (communicator.testConnection()) {
             getHistoricalData();
             getPowerSavingModeStatus();
@@ -161,7 +159,6 @@ public class SensorStatusActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-
                 getHistoricalData();
                 getPowerSavingModeStatus();
                 break;
@@ -173,75 +170,74 @@ public class SensorStatusActivity extends ActionBarActivity {
     }
 
     private void getHistoricalData() {
-        layoutChart.setVisibility(View.GONE);
-        layoutProgress.setVisibility(View.VISIBLE);
-        HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
-                String.valueOf(currentSensor.getType().getIdentifier()),
-                chart, layoutProgress, layoutChart, getApplicationContext());
-        try {
-
-            List<Map<String, Float>> results = hro.execute().get();
-            ArrayList<Entry> yValues = new ArrayList<Entry>();
-            ArrayList<String> xValues = new ArrayList<String>();
-            // The data has to be ordered in reverse order, from past to present and it's received
-            // the other way around
-            int i = results.size() - 1;
-            for (Map<String, Float> stringFloatMap : results) {
-                for (String key : stringFloatMap.keySet()) {
-                    xValues.add((String) results.get(i).keySet().toArray()[0]);
-                    yValues.add(new Entry(stringFloatMap.get(key), i));
-                    if (i == results.size() - 1) {
-                        // update the latest value on the view
-                        textSensorValue.setText(GreenhouseUtils.suppressZeros(
-                                stringFloatMap.get(key)));
-                        textSensorUpdatedAt.setText(key);
+        if (communicator.testConnection()) {
+            layoutChart.setVisibility(View.GONE);
+            layoutProgress.setVisibility(View.VISIBLE);
+            HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
+                    String.valueOf(currentSensor.getType().getIdentifier()),
+                    chart, layoutProgress, layoutChart, getApplicationContext());
+            try {
+                List<Map<String, Float>> results = hro.execute().get();
+                ArrayList<Entry> yValues = new ArrayList<Entry>();
+                ArrayList<String> xValues = new ArrayList<String>();
+                // The data has to be ordered in reverse order, from past to present and it's received
+                // the other way around
+                int i = results.size() - 1;
+                for (Map<String, Float> stringFloatMap : results) {
+                    for (String key : stringFloatMap.keySet()) {
+                        xValues.add((String) results.get(i).keySet().toArray()[0]);
+                        yValues.add(new Entry(stringFloatMap.get(key), i));
+                        if (i == results.size() - 1) {
+                            // update the latest value on the view
+                            textSensorValue.setText(GreenhouseUtils.suppressZeros(
+                                    stringFloatMap.get(key)));
+                            textSensorUpdatedAt.setText(key);
+                        }
+                        i--;
                     }
-                    i--;
                 }
+                LineDataSet set = new LineDataSet(yValues, currentSensor.getName());
+                set.setColor(Color.rgb(60, 220, 78));
+                set.setCircleColor(Color.rgb(60, 220, 78));
+                set.setLineWidth(1f);
+                set.setCircleSize(5f);
+                ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+                dataSets.add(set);
+                LineData data = new LineData(xValues, dataSets);
+                chart.setData(data);
+                chart.animateX(1000);
+                layoutProgress.setVisibility(View.GONE);
+                layoutChart.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
             }
-            LineDataSet set = new LineDataSet(yValues, currentSensor.getName());
-            set.setColor(Color.rgb(60, 220, 78));
-            set.setCircleColor(Color.rgb(60, 220, 78));
-            set.setLineWidth(1f);
-            set.setCircleSize(5f);
-            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-            dataSets.add(set);
-
-            LineData data = new LineData(xValues, dataSets);
-            chart.setData(data);
-            chart.animateX(1000);
-
-            layoutProgress.setVisibility(View.GONE);
-            layoutChart.setVisibility(View.VISIBLE);
-
-        } catch (Exception e) {
-            Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
         }
     }
 
     private void getPowerSavingModeStatus() {
-        GetPowerSavingStatusTask task = new GetPowerSavingStatusTask(getBaseContext());
-        String mode = null;
-        try {
-            mode = task.execute(currentSensor.getPinId(), String.valueOf(
-                    currentSensor.getType().getIdentifier())).get();
-        } catch (Exception e) {
-            Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve Pow-save mode" +
-                    " status");
-        }
-        if (mode != null) {
-            if (mode.toLowerCase().equals("true"))
-                modeOn = 1;
-            else if (mode.toLowerCase().equals("false"))
-                modeOn = 0;
-        } else {
-            modeOn = -1;
-            Toast.makeText(getBaseContext(), getResources()
-                    .getString(R.string.error_retrieving_power_save_mode),
-                    Toast.LENGTH_SHORT).show();
+        if (communicator.testConnection()) {
+            GetPowerSavingStatusTask task = new GetPowerSavingStatusTask(getBaseContext());
+            String mode = null;
+            try {
+                mode = task.execute(currentSensor.getPinId(), String.valueOf(
+                        currentSensor.getType().getIdentifier())).get();
+            } catch (Exception e) {
+                Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve Pow-save mode" +
+                        " status");
+            }
+            if (mode != null) {
+                if (mode.toLowerCase().equals("true"))
+                    modeOn = 1;
+                else if (mode.toLowerCase().equals("false"))
+                    modeOn = 0;
+            } else {
+                modeOn = -1;
+                Toast.makeText(getBaseContext(), getResources()
+                                .getString(R.string.error_retrieving_power_save_mode),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
         updatePowerSavingStatus();
-
     }
 
     private void updatePowerSavingStatus() {
