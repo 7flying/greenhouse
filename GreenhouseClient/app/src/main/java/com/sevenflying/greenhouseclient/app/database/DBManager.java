@@ -96,6 +96,16 @@ public class DBManager extends SQLiteOpenHelper {
                         + MoniItemSensorEntry.MS_MONI_REF + ")"
                 + ") "
         );
+        sqLiteDatabase.execSQL(
+		         "CREATE TABLE " + SensorHistory.TABLE_NAME + " ( "
+                + SensorHistory._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                + SensorHistory.SH_PIN_ID + " INTEGER NOT NULL REFERENCES "
+                        + SensorEntry.TABLE_NAME + " (" + SensorEntry._ID + ") ON DELETE CASCADE, "
+                + SensorHistory.SH_DATE + " TEXT NOT NULL,"
+                + SensorHistory.SH_TIME + " TEXT NOT NULL,"
+                + SensorHistory.SH_VALUE + " REAL NOT NULL"
+                + ")"
+         );
     }
 
     @Override
@@ -108,7 +118,7 @@ public class DBManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(statement + AlertEntry.TABLE_NAME);
         sqLiteDatabase.execSQL(statement + ActuatorEntry.TABLE_NAME);
         sqLiteDatabase.execSQL(statement + SensorEntry.TABLE_NAME);
-
+        sqLiteDatabase.execSQL(statement + SensorHistory.TABLE_NAME);
     }
 
     @Override
@@ -132,6 +142,14 @@ public class DBManager extends SQLiteOpenHelper {
     public static abstract class SensorIndex {
 
         public static  final String INDEX_NAME = "indxSensor";
+    }
+
+    public static abstract class SensorHistory implements BaseColumns {
+        public static final String TABLE_NAME = "SensorHistory";
+        public static final String SH_VALUE = "value";
+        public static final String SH_PIN_ID = "pinid";
+        public static final String SH_TIME = "time";
+        public static final String SH_DATE = "date";
     }
 
     /** Class representing an Alert on the DB **/
