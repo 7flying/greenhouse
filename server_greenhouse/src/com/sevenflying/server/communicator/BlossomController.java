@@ -2,6 +2,7 @@ package com.sevenflying.server.communicator;
 
 import java.util.HashMap;
 
+import com.sevenflying.server.Env;
 import com.sevenflying.server.communicator.Communicator;
 import com.sevenflying.server.communicator.PortEvent;
 import com.sevenflying.server.domain.Actuator;
@@ -12,7 +13,8 @@ public class BlossomController implements PortEvent {
 	private static BlossomController controller = null;
 	private Communicator communicator;
 	private String portName;
-	private static final char TERMINATION_CHAR = 'X';
+	private static final char TERMINATION_CHAR = 'X', READ_PREFIX = 'R',
+			WRITE_PREFIX = 'W', ANALOG = 'A', DIGITAL = 'D';
 	// Map containing the sensors. Key: Type + pinId
 	private HashMap<String, Sensor> sensorMap;
 	// Map containing the actuators
@@ -20,9 +22,9 @@ public class BlossomController implements PortEvent {
 
 	private BlossomController(String portName) {
 		this.portName = portName;
-		communicator = new Communicator(this);
-		sensorMap = new HashMap<String, Sensor>();
-		actuatorMap = new HashMap<String, Actuator>();
+		this.communicator = new Communicator(this);
+		this.sensorMap = new HashMap<String, Sensor>();
+		this.actuatorMap = new HashMap<String, Actuator>();
 	}
 
 	public static BlossomController getInstance(String portName) {
@@ -79,38 +81,68 @@ public class BlossomController implements PortEvent {
 	}
 
 	/** Requests the update of the given sensor
-	 * @param sensorKey 
+	 * @param sensorKey - (sensor.getType().getIdentifier() + sensor.getPinId())
 	 */
 	public void requestUpdate(String sensorKey) {
 		if (sensorMap.containsKey(sensorKey)) {
 			// Before asking we wait the required time
 			if (sensorMap.get(sensorKey).isRefreshEnsured()) {
-				System.out.println(" - Waiting...");
+				if (Env.DEBUG)
+					System.out.println(" - Waiting...");
 				try {
 					Thread.sleep(sensorMap.get(sensorKey).getRefreshRate());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			// Type+id+X
-			communicator.sendData(sensorKey + TERMINATION_CHAR);
+			// R{Type}{id}X
+			communicator.sendData(READ_PREFIX + sensorKey + TERMINATION_CHAR);
 		}
 	}
 
 	public void dataReceived(String data) {
-		// It returns:
-		// type-id-X-data: if everything went fine,
-		// type-id-X: error
-		if(data.length() > 5) {
-			System.out.println("$ Echo: " + data);
-			// first 4 chars -> Type + id
-			if(sensorMap.containsKey(data.substring(0, 4))) {
-				// pos 4 char -> X
-				sensorMap.get(data.substring(0, 4)).update(
-						Double.parseDouble(data.substring(5)));
+		// It returns an echo of the command (with the termination char)
+		// and: the read value (if update requested), ERROR: if something went
+		// wrong; just the echo if it was an actuator.
+		// So: {R|W}{Type-1char}{PinPin-2chars}X{|ERROR|{floatReading}}
+		if (Env.DEBUG)
+			System.out.println(" $ Echo: " + data);
+		if (data != null && data.length() > 4) {
+			if (data.charAt(4) != 'X' || data.substring(5) == null) {
+				if(Env.DEBUG)
+					System.err.println(" $ Error parsing command.");
+			} else {
+				switch(data.charAt(0)) {
+				case 'R':
+					if (sensorMap.containsKey(data.substring(1, 4))) {
+						try {
+							double lastValue = Double.parseDouble(data
+													  .substring(5));
+							sensorMap.get(data.substring(1, 4))
+								.update(lastValue);
+						} catch (NumberFormatException e) {
+							if (Env.DEBUG)
+								System.err.println(" $ Error parsing value: "
+										+ data);
+						}
+					}
+					break;
+				case 'W':
+					if (actuatorMap.containsKey(data.substring(1, 4))) {
+						if (data.substring(5).equals("ERROR")) {
+							//TODO throw error launching actuator, propagate to
+							// client
+						}
+					}
+					break;
+				default:
+					System.err.println("$ Error at: " + data);
+				}
 			}
+			
 		} else {
-			System.out.println("$ Error at " + data);
+			if (Env.DEBUG)
+				System.err.println("$ Error at " + data);
 		}
 	}
 
@@ -123,7 +155,9 @@ public class BlossomController implements PortEvent {
 	}
 	
 	public void launch(String pinid) {
-		// TODO launch actuator
+		if (actuatorMap.containsKey(pinid)) {
+			communicator.sendData(WRITE_PREFIX + pinid + TERMINATION_CHAR);
+		}
 	}
 
 

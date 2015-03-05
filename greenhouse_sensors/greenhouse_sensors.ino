@@ -21,7 +21,8 @@ void process(void) {
   switch(buffer[0]) {
   case 'R':
     // Read from sensor 
-    // [1] - Type
+    // [1] - Type: A|D
+    //     TODO: don't like it, change!  
     // [2, 3] - Pin
     switch(buffer[1]) {
     case 'T':
@@ -31,6 +32,10 @@ void process(void) {
     case 'H':
       // Requests humidity
       reading = dht.readHumidity();
+      break;
+    case 'D':
+      // Read a general digital sensor
+      reading = digitalRead((buffer[2] - 48) * 10 + (buffer[3] - 48));
       break;
     case 'L':
       // Fall through, 'light sensor' is a photoresistor
