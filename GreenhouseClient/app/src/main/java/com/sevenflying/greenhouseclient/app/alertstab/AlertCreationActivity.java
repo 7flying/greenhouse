@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Alert;

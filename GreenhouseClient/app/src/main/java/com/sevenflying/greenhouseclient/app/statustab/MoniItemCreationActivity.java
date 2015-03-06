@@ -19,17 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

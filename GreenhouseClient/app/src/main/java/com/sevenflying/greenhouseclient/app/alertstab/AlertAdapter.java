@@ -4,16 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.sevenflying.greenhouseclient.app.R;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Alert;
 import com.sevenflying.greenhouseclient.domain.BootReceiver;
 import com.sevenflying.greenhouseclient.net.Constants;

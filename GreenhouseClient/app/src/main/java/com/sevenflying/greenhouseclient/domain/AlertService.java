@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.sevenflying.greenhouseclient.app.MainActivity;
 import com.sevenflying.greenhouseclient.app.R;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
 

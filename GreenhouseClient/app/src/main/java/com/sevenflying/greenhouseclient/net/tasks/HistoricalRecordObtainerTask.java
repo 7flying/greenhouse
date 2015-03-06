@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -13,6 +14,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.sevenflying.greenhouseclient.net.Commands;
 import com.sevenflying.greenhouseclient.net.Communicator;
+import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -85,8 +87,6 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
                         tempIndex++;
                     }
                     if (tempIndex == 2) {
-                        // Remove date from timedate
-                        temp[0] = temp[0].substring(0, temp[0].indexOf('-') - 1);
                         Map<String, Float> map = new HashMap<String, Float>();
                         map.put(temp[0], Float.valueOf(temp[1]));
                         ret.add(map);

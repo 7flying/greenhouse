@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.Updateable;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Codes;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.Actuator;

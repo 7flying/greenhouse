@@ -1,4 +1,4 @@
-package com.sevenflying.greenhouseclient.app.database;
+package com.sevenflying.greenhouseclient.database;
 
 import android.content.ContentValues;
 import android.content.Context;

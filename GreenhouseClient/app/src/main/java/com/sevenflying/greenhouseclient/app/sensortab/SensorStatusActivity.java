@@ -185,14 +185,18 @@ public class SensorStatusActivity extends ActionBarActivity {
                 int i = results.size() - 1;
                 for (Map<String, Float> stringFloatMap : results) {
                     for (String key : stringFloatMap.keySet()) {
-                        xValues.add((String) results.get(i).keySet().toArray()[0]);
-                        yValues.add(new Entry(stringFloatMap.get(key), i));
                         if (i == results.size() - 1) {
                             // update the latest value on the view
                             textSensorValue.setText(GreenhouseUtils.suppressZeros(
                                     stringFloatMap.get(key)));
                             textSensorUpdatedAt.setText(key);
                         }
+                        // Remove date from timedate, just left hour
+                        xValues.add(((String) results.get(i).keySet().toArray()[0])
+                                .substring(0, ((String)results.get(i).keySet().toArray()[0])
+                                        .indexOf('-') -1));
+                        yValues.add(new Entry(stringFloatMap.get(key), i));
+
                         i--;
                     }
                 }

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.sevenflying.greenhouseclient.app.actuatorstab.ActuatorAdapter;
-import com.sevenflying.greenhouseclient.app.database.DBManager;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.AlertType;
 import com.sevenflying.greenhouseclient.domain.Sensor;
