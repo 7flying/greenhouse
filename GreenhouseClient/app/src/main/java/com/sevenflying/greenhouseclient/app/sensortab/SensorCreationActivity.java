@@ -140,7 +140,7 @@ public class SensorCreationActivity extends ActionBarActivity {
                         // Handle edit sensor
                         try {
                             result = comm.editSensor(
-                                    etName.getText().toString(),
+                                    etName.getText().toString().trim(),
                                     analogDig,
                                     etPin.getText().toString(),
                                     type,

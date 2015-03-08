@@ -182,7 +182,7 @@ public class ActuatorCreationActivity extends ActionBarActivity {
                 if (comm.testConnection()) {
                     String response = null;
                     String pin = (radioAnalog.isChecked() ? "A" : "D") + etPin.getText().toString();
-                    String name = etName.getText().toString();
+                    String name = etName.getText().toString().trim();
                     Actuator temp = new Actuator(name, pin);
                     if (formattedSensorMap.keySet().size() > 0 && radioYes.isChecked()) {
                         Log.d(Constants.DEBUGTAG, "$ Actuator Edit/Modify with control fields");

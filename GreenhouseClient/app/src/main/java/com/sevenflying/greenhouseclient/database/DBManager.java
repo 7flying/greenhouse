@@ -246,6 +246,16 @@ public class DBManager extends SQLiteOpenHelper {
                         String.valueOf(s.getType().getIdentifier())))});
     }
 
+    /** Given a set of values updates the db.
+     * @param values
+     */
+    public void cacheData(List<Map<Sensor, String>> values) {
+
+    }
+
+    /** Given a sensor edits its main data
+     * @param s - sensor to edit
+     */
     public void editSensor(Sensor s) {
         String id = Integer.toString(getSensorID(s.getPinId(),
                     String.valueOf(s.getType().getIdentifier())));
@@ -253,10 +263,7 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(SensorEntry.S_NAME, s.getName());
         values.put(SensorEntry.S_REFRESH, s.getRefreshRate());
-        int rowsAffected = db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?", new String[]{id});
-        // Sensor updated = getSensorBy(id);
-        // Log.d(Constants.DEBUGTAG, " $ editSensor - before: " + s.toString());
-        // Log.d(Constants.DEBUGTAG, " $ editSensor - after: " + updated.toString());
+        db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?", new String[]{id});
     }
 
     /** Returns all the sensors at the manager.
@@ -753,4 +760,8 @@ public class DBManager extends SQLiteOpenHelper {
         cursor.close();
         return ret;
     }
+
+    // --- Sesors's cached values --
+
+
 }
