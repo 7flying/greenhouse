@@ -99,7 +99,7 @@ public class DBManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(
 		         "CREATE TABLE " + SensorHistory.TABLE_NAME + " ( "
                 + SensorHistory._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
-                + SensorHistory.SH_PIN_ID + " INTEGER NOT NULL REFERENCES "
+                + SensorHistory.SH_SENSOR + " INTEGER NOT NULL REFERENCES "
                         + SensorEntry.TABLE_NAME + " (" + SensorEntry._ID + ") ON DELETE CASCADE, "
                 + SensorHistory.SH_DATE + " TEXT NOT NULL,"
                 + SensorHistory.SH_TIME + " TEXT NOT NULL,"
@@ -147,7 +147,7 @@ public class DBManager extends SQLiteOpenHelper {
     public static abstract class SensorHistory implements BaseColumns {
         public static final String TABLE_NAME = "SensorHistory";
         public static final String SH_VALUE = "value";
-        public static final String SH_PIN_ID = "pinid";
+        public static final String SH_SENSOR = "pinid";
         public static final String SH_TIME = "time";
         public static final String SH_DATE = "date";
     }
@@ -244,13 +244,6 @@ public class DBManager extends SQLiteOpenHelper {
         db.update(SensorEntry.TABLE_NAME, values, SensorEntry._ID + " = ?",
                 new String[]{Integer.toString(getSensorID(s.getPinId(),
                         String.valueOf(s.getType().getIdentifier())))});
-    }
-
-    /** Given a set of values updates the db.
-     * @param values
-     */
-    public void cacheData(List<Map<Sensor, String>> values) {
-
     }
 
     /** Given a sensor edits its main data
@@ -762,6 +755,31 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     // --- Sesors's cached values --
+
+    /** Given a set of values updates the db.
+     * @param values
+     */
+    public void cacheData(Map<String, Float> values, Sensor sensor) {
+        SQLiteDatabase db = getWritableDatabase();
+        for (String key : values.keySet()) {
+            int sensorId = getSensorID(sensor.getPinId(),
+                    String.valueOf(sensor.getType().getIdentifier()));
+            ContentValues toWrite = new ContentValues();
+            toWrite.put(SensorHistory.SH_VALUE, values.get(key));
+            toWrite.put(SensorHistory.SH_SENSOR, sensorId);
+            toWrite.put(SensorHistory.SH_TIME, key.substring(0, key.indexOf('-')));
+            toWrite.put(SensorHistory.SH_DATE, key.substring(key.indexOf('-') + 1));
+            db.insert(SensorHistory.TABLE_NAME, null, toWrite);
+        }
+    }
+
+    public Map<String, Float> getLastValues(Sensor sensor) {
+        return null;
+    }
+
+    public void cleanOlder(String time, String date) {
+        
+    }
 
 
 }
