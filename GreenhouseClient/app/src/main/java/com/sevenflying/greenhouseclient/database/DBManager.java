@@ -756,19 +756,33 @@ public class DBManager extends SQLiteOpenHelper {
 
     // --- Sesors's cached values --
 
-    /** Given a set of values updates the db.
-     * @param values
+    /** Given a set of sensor's values updates the db.
+     * @param values - values to save
+     * @param sensor - sensor's reference
      */
-    public void cacheData(Map<String, Float> values, Sensor sensor) {
+    public void cacheData(List<Map<String, Float>> values, Sensor sensor) {
+        cacheData(values, sensor.getPinId(), String.valueOf(sensor.getType().getIdentifier()));
+    }
+
+    /** Given a set of sensor's values updates the db.
+     * @param values - values to save
+     * @param pinId - sensor's pinid
+     * @param sensorType - sensor's type
+     */
+    public void cacheData(List<Map<String, Float>> values, String pinId, String sensorType) {
         SQLiteDatabase db = getWritableDatabase();
-        for (String key : values.keySet()) {
-            int sensorId = getSensorID(sensor.getPinId(),
-                    String.valueOf(sensor.getType().getIdentifier()));
+        int sensorId = getSensorID(pinId, sensorType);
+        Log.d(Constants.DEBUGTAG, " $ catching sensor: pinId " + pinId + " type: " + sensorType);
+        for (Map<String, Float> map : values) {
+            String key = (String) map.keySet().toArray()[0];
+            Log.d(Constants.DEBUGTAG, " $ catching value: " + map.get(key));
+            Log.d(Constants.DEBUGTAG, " $ catching time: " + key.substring(0, key.indexOf('-')));
+            Log.d(Constants.DEBUGTAG, " $ catching date: " + key.substring(key.indexOf('-') + 1));
             ContentValues toWrite = new ContentValues();
-            toWrite.put(SensorHistory.SH_VALUE, values.get(key));
+            toWrite.put(SensorHistory.SH_VALUE, map.get(key));
             toWrite.put(SensorHistory.SH_SENSOR, sensorId);
-            toWrite.put(SensorHistory.SH_TIME, key.substring(0, key.indexOf('-')));
-            toWrite.put(SensorHistory.SH_DATE, key.substring(key.indexOf('-') + 1));
+            toWrite.put(SensorHistory.SH_TIME, key.substring(0, key.indexOf('-')).trim());
+            toWrite.put(SensorHistory.SH_DATE, key.substring(key.indexOf('-') + 1).trim());
             db.insert(SensorHistory.TABLE_NAME, null, toWrite);
         }
     }
@@ -778,7 +792,7 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void cleanOlder(String time, String date) {
-        
+
     }
 
 

@@ -12,6 +12,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.net.Commands;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -41,6 +42,7 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
     private Communicator comm;
     private String serverIP;
     private int serverPort;
+    private DBManager manager;
 
     public HistoricalRecordObtainerTask(String pinId, String senType, LineChart chart,
     LinearLayout layoutProgress, LinearLayout layoutChart, Context context)
@@ -51,6 +53,7 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
         this.layoutProgress = layoutProgress;
         this.layoutChart = layoutChart;
         this.comm = Communicator.getInstance(context);
+        this.manager = new DBManager(context);
     }
 
     @Override
@@ -110,6 +113,6 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
 
     @Override
     protected void onPostExecute(List<Map<String, Float>> stringFloatMapList) {
-
+        manager.cacheData(stringFloatMapList, pinId, senType);
     }
 }
