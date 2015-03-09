@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.sevenflying.greenhouseclient.app.MainActivity;
 import com.sevenflying.greenhouseclient.app.actuatorstab.ActuatorActivity;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Actuator;
@@ -787,11 +788,36 @@ public class DBManager extends SQLiteOpenHelper {
         }
     }
 
-    public Map<String, Float> getLastValues(Sensor sensor) {
-        return null;
+    /** Given a sensor retrieves it's last cached values
+     * @param sensor
+     * @return
+     */
+    public List<Map<String, String>> getLastCachedValues(Sensor sensor) {
+        int sensorId = getSensorID(sensor.getPinId(),
+                String.valueOf(sensor.getType().getIdentifier()));
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + SensorHistory._ID + ", " + SensorHistory.SH_VALUE +
+                ", " + SensorHistory.SH_TIME + ", " + SensorHistory.SH_DATE + ", "
+                + SensorHistory.SH_SENSOR + " FROM "  + SensorHistory.TABLE_NAME + " WHERE "
+                + SensorHistory.SH_SENSOR  + " = ? ORDER BY " + SensorHistory._ID, new String[]{
+                Integer.toString(sensorId)});
+        List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
+        if (cursor.moveToFirst()) {
+            do {
+                Map<String, String> value = new HashMap<String, String>();
+                value.put(SensorHistory.SH_DATE, cursor
+                        .getString(cursor.getColumnIndex(SensorHistory.SH_DATE)));
+                value.put(SensorHistory.SH_TIME, cursor
+                        .getString(cursor.getColumnIndex(SensorHistory.SH_TIME)));
+                value.put(SensorHistory.SH_VALUE, Double.toString(cursor
+                        .getDouble(cursor.getColumnIndex(SensorHistory.SH_DATE))));
+                ret.add(value);
+            } while(cursor.moveToNext());
+        }
+        return ret;
     }
 
-    public void cleanOlder(String time, String date) {
+    public void cleanOldest() {
 
     }
 

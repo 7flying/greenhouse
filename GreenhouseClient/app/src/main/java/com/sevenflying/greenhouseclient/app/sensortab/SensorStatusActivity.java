@@ -215,6 +215,9 @@ public class SensorStatusActivity extends ActionBarActivity {
             } catch (Exception e) {
                 Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
             }
+        } else {
+            // Update the graph using the cached data
+
         }
     }
 
