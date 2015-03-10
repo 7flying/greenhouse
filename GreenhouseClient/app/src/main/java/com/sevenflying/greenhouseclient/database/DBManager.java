@@ -812,8 +812,12 @@ public class DBManager extends SQLiteOpenHelper {
                 value.put(SensorHistory.SH_VALUE, Double.toString(cursor
                         .getDouble(cursor.getColumnIndex(SensorHistory.SH_DATE))));
                 ret.add(value);
+                Log.d(Constants.DEBUGTAG, " $ returning value: " + value.get(SensorHistory.SH_VALUE));
+                Log.d(Constants.DEBUGTAG, " $ returning time: " + value.get(SensorHistory.SH_TIME));
+                Log.d(Constants.DEBUGTAG, " $ returning date: " + value.get(SensorHistory.SH_DATE));
             } while(cursor.moveToNext());
         }
+        cursor.close();
         return ret;
     }
 

@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
+import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -141,10 +142,9 @@ public class SensorStatusActivity extends ActionBarActivity {
             textSensorPin.setText(currentSensor.getPinId());
         }
 
-        if (communicator.testConnection()) {
-            getHistoricalData();
-            getPowerSavingModeStatus();
-        }
+        getHistoricalData();
+        getPowerSavingModeStatus();
+
     }
 
 
@@ -170,16 +170,16 @@ public class SensorStatusActivity extends ActionBarActivity {
     }
 
     private void getHistoricalData() {
+        ArrayList<Entry> yValues = new ArrayList<Entry>();
+        ArrayList<String> xValues = new ArrayList<String>();
+        layoutChart.setVisibility(View.GONE);
+        layoutProgress.setVisibility(View.VISIBLE);
         if (communicator.testConnection()) {
-            layoutChart.setVisibility(View.GONE);
-            layoutProgress.setVisibility(View.VISIBLE);
             HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
                     String.valueOf(currentSensor.getType().getIdentifier()),
                     chart, layoutProgress, layoutChart, getApplicationContext());
             try {
                 List<Map<String, Float>> results = hro.execute().get();
-                ArrayList<Entry> yValues = new ArrayList<Entry>();
-                ArrayList<String> xValues = new ArrayList<String>();
                 // The data has to be ordered in reverse order, from past to present and it's received
                 // the other way around
                 int i = results.size() - 1;
@@ -196,28 +196,45 @@ public class SensorStatusActivity extends ActionBarActivity {
                                 .substring(0, ((String)results.get(i).keySet().toArray()[0])
                                         .indexOf('-') -1));
                         yValues.add(new Entry(stringFloatMap.get(key), i));
-
                         i--;
                     }
                 }
-                LineDataSet set = new LineDataSet(yValues, currentSensor.getName());
-                set.setColor(Color.rgb(60, 220, 78));
-                set.setCircleColor(Color.rgb(60, 220, 78));
-                set.setLineWidth(1f);
-                set.setCircleSize(5f);
-                ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                dataSets.add(set);
-                LineData data = new LineData(xValues, dataSets);
-                chart.setData(data);
-                chart.animateX(1000);
-                layoutProgress.setVisibility(View.GONE);
-                layoutChart.setVisibility(View.VISIBLE);
             } catch (Exception e) {
                 Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
             }
         } else {
             // Update the graph using the cached data
-
+            DBManager manager = new DBManager(getApplicationContext());
+            List<Map<String, String>> values = manager.getLastCachedValues(currentSensor);
+            boolean first = true;
+            int i = values.size() - 1;
+            for (Map<String, String> tuple : values) {
+                Log.e(Constants.DEBUGTAG, " $ cached tuple: " + tuple.toString());
+                if (first) {
+                    first = false;
+                    textSensorValue.setText(tuple.get(DBManager.SensorHistory.SH_VALUE));
+                    textSensorUpdatedAt.setText(tuple.get(DBManager.SensorHistory.SH_TIME) + " - "
+                            + tuple.get(DBManager.SensorHistory.SH_DATE));
+                }
+                xValues.add(tuple.get(DBManager.SensorHistory.SH_TIME));
+                yValues.add(new Entry(Float.parseFloat(tuple.get(DBManager
+                        .SensorHistory.SH_VALUE)), i));
+                i--;
+            }
+        }
+        if (yValues.size() > 0 && xValues.size() > 0) {
+            LineDataSet set = new LineDataSet(yValues, currentSensor.getName());
+            set.setColor(Color.rgb(60, 220, 78));
+            set.setCircleColor(Color.rgb(60, 220, 78));
+            set.setLineWidth(1f);
+            set.setCircleSize(5f);
+            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+            dataSets.add(set);
+            LineData data = new LineData(xValues, dataSets);
+            chart.setData(data);
+            chart.animateX(1000);
+            layoutProgress.setVisibility(View.GONE);
+            layoutChart.setVisibility(View.VISIBLE);
         }
     }
 
