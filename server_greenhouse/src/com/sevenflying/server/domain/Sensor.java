@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import com.sevenflying.server.database.DBManager;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 
+/** Represents a sensor.
+ * @author 7flying
+ */
 public class Sensor extends BlossomSensor {
 
 	// Rate at which data is gathered from this sensor (ms)

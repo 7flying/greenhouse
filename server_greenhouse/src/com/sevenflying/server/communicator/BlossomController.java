@@ -8,6 +8,9 @@ import com.sevenflying.server.communicator.PortEvent;
 import com.sevenflying.server.domain.Actuator;
 import com.sevenflying.server.domain.Sensor;
 
+/** Handles the communication requests.
+ * @author 7flying
+ */
 public class BlossomController implements PortEvent {
 
 	private static BlossomController controller = null;

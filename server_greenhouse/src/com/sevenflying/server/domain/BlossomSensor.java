@@ -1,5 +1,8 @@
 package com.sevenflying.server.domain;
 
+/** Base class for sensors and actuators
+ * @author 7flying
+ */
 public abstract class BlossomSensor {
 
 	// Name of the sensor

@@ -29,7 +29,9 @@ import com.sevenflying.server.domain.exceptions.NoSuchActuatorException;
 import com.sevenflying.server.domain.exceptions.NoSuchSensorException;
 import com.sevenflying.utils.Utils;
 
-/** Manages the communications. */
+/** Manages the communications.
+ * @author 7flying
+ */
 public class NetServer {
 
 	private static String pathToDB = Env.DB_PATH;

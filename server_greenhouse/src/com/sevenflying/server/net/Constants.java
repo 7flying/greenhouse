@@ -21,7 +21,7 @@ public class Constants {
 	public static final String UPDATE_ACTUATOR	= "UPDATE-ACTUATOR";
 	public static final String POWSAV 			= "POWSAV";
 	public static final String POWSAV_STATUS	= "POWSAV-STATUS";
-	
+
 	public static final String TEST_CONNECTION 	= "TEST-CONNECTION";
 
 	/* ***************
@@ -29,13 +29,17 @@ public class Constants {
 	 * ***************/
 	public static final String OK = "OK\n";
 	public static final String ACK = "ACK";
-	
+
 	/* *************
 	 * Error codes *
 	 * *************/
-	 public static final String INTERNAL_SERVER_ERROR 	   = "500";
-	 public static final String DUPLICATED_SENSOR 		   = "501";
-	 public static final String DUPLICATED_ACTUATOR		   = "502";
-	 public static final String INCORRECT_NUMBER_OF_PARAMS = "400";
-	
+	public static final String INTERNAL_SERVER_ERROR 	   = "500";
+	public static final String DUPLICATED_SENSOR 		   = "501";
+	public static final String DUPLICATED_ACTUATOR		   = "502";
+	public static final String INCORRECT_NUMBER_OF_PARAMS = "400";
+
+	/* *******
+	 *  Path *
+	 * *******/
+	public static final String GREENDB_HOME = "GREENDB_HOME";
 }

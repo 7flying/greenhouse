@@ -6,7 +6,8 @@ import java.util.Set;
 import com.sevenflying.server.communicator.BlossomController;
 
 /** Server that continuously gathers data from the sensors and
- * logs it into the db */
+ * logs it into the db
+ * @author 7flying */
 public class GreenServer extends Thread {
 
 	private BlossomController controller;

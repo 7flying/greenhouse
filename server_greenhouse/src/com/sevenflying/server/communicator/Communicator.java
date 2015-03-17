@@ -19,6 +19,7 @@ import java.util.TooManyListenersException;
 
 /**
  * Manages the communication between the greenhouse and the server.
+ * @author 7flying
  */
 public class Communicator implements SerialPortEventListener {
 

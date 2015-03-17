@@ -1,6 +1,7 @@
 package com.sevenflying.server.domain;
 
 /** Defines the types of sensors, their measuring units and identifiers.
+ * @author 7flying
  */
 public enum SensorType {
 

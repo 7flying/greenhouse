@@ -25,13 +25,16 @@ import com.sevenflying.server.domain.exceptions.GreenhouseDatabaseException;
 import com.sevenflying.server.domain.exceptions.NoDataException;
 import com.sevenflying.server.domain.exceptions.NoSuchActuatorException;
 import com.sevenflying.server.domain.exceptions.NoSuchSensorException;
+import com.sevenflying.server.net.Constants;
 
 /** DB manager.
- * @author flying
+ * @author 7flying
  */
 public class DBManager {
 
-	public static String DBPath = Env.DB_PATH;
+	public static String DBPath =
+				System.getenv(Constants.GREENDB_HOME) == null
+				? Env.DB_PATH : System.getenv(Constants.GREENDB_HOME);
 	private static DBManager manager = null;
 	private Connection conn = null;
 	private static String TIME_FORMAT = "HH:mm:ss";
