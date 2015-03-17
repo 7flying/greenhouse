@@ -58,7 +58,9 @@
             android:layout_width="wrap_content"
             android:layout_height="40sp"
             android:layout_marginLeft="5dp"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:background="@color/material_deep_teal_200"
+            android:textColor="@color/bright_foreground_inverse_material_dark"/>
         <!--android:focusable="false" : Great magic!! -->
     </LinearLayout>
 </merge>
