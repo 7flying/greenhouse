@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.sevenflying.greenhouseclient.app.MainActivity;
-import com.sevenflying.greenhouseclient.app.actuatorstab.ActuatorActivity;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.domain.Alert;
@@ -770,60 +768,92 @@ public class DBManager extends SQLiteOpenHelper {
      * @param pinId - sensor's pinid
      * @param sensorType - sensor's type
      */
-    public void cacheData(List<Map<String, Float>> values, String pinId, String sensorType) {
+    public synchronized void cacheData(List<Map<String, Float>> values, String pinId,
+    String sensorType)
+    {
         SQLiteDatabase db = getWritableDatabase();
         int sensorId = getSensorID(pinId, sensorType);
         Log.d(Constants.DEBUGTAG, " $ catching sensor: pinId " + pinId + " type: " + sensorType);
         for (Map<String, Float> map : values) {
             String key = (String) map.keySet().toArray()[0];
-            Log.d(Constants.DEBUGTAG, " $ catching value: " + map.get(key));
-            Log.d(Constants.DEBUGTAG, " $ catching time: " + key.substring(0, key.indexOf('-')));
-            Log.d(Constants.DEBUGTAG, " $ catching date: " + key.substring(key.indexOf('-') + 1));
+            Log.d(Constants.DEBUGTAG, " $ catching value: " + map.get(key) + ", time: "
+                    + key.substring(0, key.indexOf('-')) + ", date: "
+                    + key.substring(key.indexOf('-') + 1));
             ContentValues toWrite = new ContentValues();
             toWrite.put(SensorHistory.SH_VALUE, map.get(key));
             toWrite.put(SensorHistory.SH_SENSOR, sensorId);
             toWrite.put(SensorHistory.SH_TIME, key.substring(0, key.indexOf('-')).trim());
             toWrite.put(SensorHistory.SH_DATE, key.substring(key.indexOf('-') + 1).trim());
-            db.insert(SensorHistory.TABLE_NAME, null, toWrite);
+            if (db.insert(SensorHistory.TABLE_NAME, null, toWrite) == -1)
+                Log.e(Constants.DEBUGTAG, " $ error caching: " + map.toString());
         }
     }
 
     /** Given a sensor retrieves it's last cached values
-     * @param sensor
+     * @param sensor -
      * @return
      */
     public List<Map<String, String>> getLastCachedValues(Sensor sensor) {
         int sensorId = getSensorID(sensor.getPinId(),
                 String.valueOf(sensor.getType().getIdentifier()));
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + SensorHistory._ID + ", " + SensorHistory.SH_VALUE +
-                ", " + SensorHistory.SH_TIME + ", " + SensorHistory.SH_DATE + ", "
-                + SensorHistory.SH_SENSOR + " FROM "  + SensorHistory.TABLE_NAME + " WHERE "
-                + SensorHistory.SH_SENSOR  + " = ? ORDER BY " + SensorHistory._ID, new String[]{
-                Integer.toString(sensorId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM "  + SensorHistory.TABLE_NAME + " WHERE "
+                + SensorHistory.SH_SENSOR  + " = ?", new String[]{ Integer.toString(sensorId)});
         List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
+        int i = 0;
         if (cursor.moveToFirst()) {
             do {
+                i++;
                 Map<String, String> value = new HashMap<String, String>();
                 value.put(SensorHistory.SH_DATE, cursor
                         .getString(cursor.getColumnIndex(SensorHistory.SH_DATE)));
                 value.put(SensorHistory.SH_TIME, cursor
                         .getString(cursor.getColumnIndex(SensorHistory.SH_TIME)));
                 value.put(SensorHistory.SH_VALUE, Double.toString(cursor
-                        .getDouble(cursor.getColumnIndex(SensorHistory.SH_DATE))));
+                        .getDouble(cursor.getColumnIndex(SensorHistory.SH_VALUE))));
                 ret.add(value);
-                Log.d(Constants.DEBUGTAG, " $ returning value: " + value.get(SensorHistory.SH_VALUE));
-                Log.d(Constants.DEBUGTAG, " $ returning time: " + value.get(SensorHistory.SH_TIME));
-                Log.d(Constants.DEBUGTAG, " $ returning date: " + value.get(SensorHistory.SH_DATE));
+                Log.d(Constants.DEBUGTAG, " $ returning value: " + value.get(SensorHistory.SH_VALUE)
+                            + ", time: " + value.get(SensorHistory.SH_TIME) + ", date: "
+                            + value.get(SensorHistory.SH_DATE));
             } while(cursor.moveToNext());
         }
         cursor.close();
+        Log.d(Constants.DEBUGTAG, " $ processed cache values: " + i);
         return ret;
     }
 
-    public void cleanOldest() {
+    /** Clears the db's cache of historic data of the given sensor
+     * @param sensor -
+     */
+    public void cleanCacheData(Sensor sensor) {
+        cleanCacheData(sensor.getPinId(), String.valueOf(sensor.getType().getIdentifier()));
 
     }
+    /** Clears the db's cache of historic data of the given sensor
+     * @param sensorPin - sensor's pinid
+     * @param sensorTypeIdentifier - sensor's type identifier
+     */
+    public void cleanCacheData(String sensorPin, String sensorTypeIdentifier) {
 
+        SQLiteDatabase db = getWritableDatabase();
+        int sensorId = getSensorID(sensorPin, sensorTypeIdentifier);
+        int deleted = db.delete(SensorHistory.TABLE_NAME, SensorHistory.SH_SENSOR + " = ?",
+                new String [] { Integer.toString(sensorId)});
+        Log.d(Constants.DEBUGTAG, " $ clean cache values: " + deleted);
+    }
 
+    /** Checks whether the given sensor has associated cache values.
+     * @param sensor - sensor to check
+     */
+    public boolean doesSensorHaveCache(Sensor sensor) {
+        boolean ret = false;
+        int sensorId = getSensorID(sensor.getPinId(),
+                String.valueOf(sensor.getType().getIdentifier()));
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "  + SensorHistory.TABLE_NAME + " WHERE "
+                + SensorHistory.SH_SENSOR  + " = ?", new String[]{ Integer.toString(sensorId)});
+        ret = cursor.getCount() > 0;
+        cursor.close();
+        return ret;
+    }
 }

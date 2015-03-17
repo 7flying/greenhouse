@@ -113,6 +113,7 @@ public class HistoricalRecordObtainerTask extends AsyncTask<Void, Void, List<Map
 
     @Override
     protected void onPostExecute(List<Map<String, Float>> stringFloatMapList) {
+        manager.cleanCacheData(pinId, senType);
         manager.cacheData(stringFloatMapList, pinId, senType);
     }
 }

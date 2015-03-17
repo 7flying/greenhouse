@@ -40,7 +40,7 @@ public class Communicator {
     public static boolean connectionOk = false;
     public static long lastConnectionCheck = 0l;
     private static Communicator instance = null;
-
+    private static final int MIN_WAIT_REFRESH = 30000;
 
     private Communicator(Context context) {
         this.context = context;
@@ -76,7 +76,7 @@ public class Communicator {
      * @return true if the connection is fine, false otherwise
      */
     public boolean testConnection() {
-        if (System.currentTimeMillis() - lastConnectionCheck > 60000) {
+        if (System.currentTimeMillis() - lastConnectionCheck > MIN_WAIT_REFRESH) {
             TestConnectionTask task = new TestConnectionTask(context);
             boolean ret = true;
             try {

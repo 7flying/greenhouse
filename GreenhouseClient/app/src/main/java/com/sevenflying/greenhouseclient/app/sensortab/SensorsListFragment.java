@@ -121,6 +121,7 @@ public class SensorsListFragment extends Fragment implements Updateable {
                     return true;
                 }
             });
+            checkVisibility();
             // populate list by updaters
             updateSensors();
             return view;

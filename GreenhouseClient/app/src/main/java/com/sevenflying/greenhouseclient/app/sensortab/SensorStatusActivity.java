@@ -48,12 +48,14 @@ public class SensorStatusActivity extends ActionBarActivity {
     private Button buttonChangePowerMode;
     private int modeOn = -1;
     private Communicator communicator;
+    private static DBManager manager = null;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-
+        if (manager == null)
+            manager = new DBManager(getApplicationContext());
         setContentView(R.layout.activity_sensor_status);
         communicator = Communicator.getInstance(getBaseContext());
         // Views
@@ -141,12 +143,10 @@ public class SensorStatusActivity extends ActionBarActivity {
                     .getRefreshRate() / 1000d));
             textSensorPin.setText(currentSensor.getPinId());
         }
-
-        getHistoricalData();
+        // Read the cached values
+        getHistoricalData(true);
         getPowerSavingModeStatus();
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,7 +159,7 @@ public class SensorStatusActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getHistoricalData();
+                getHistoricalData(false); // disable cache
                 getPowerSavingModeStatus();
                 break;
             case R.id.action_cancel:
@@ -169,12 +169,14 @@ public class SensorStatusActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getHistoricalData() {
+    private void getHistoricalData(boolean cache) {
         ArrayList<Entry> yValues = new ArrayList<Entry>();
         ArrayList<String> xValues = new ArrayList<String>();
         layoutChart.setVisibility(View.GONE);
         layoutProgress.setVisibility(View.VISIBLE);
-        if (communicator.testConnection()) {
+        boolean connection = communicator.testConnection(),
+                hasCache = manager.doesSensorHaveCache(currentSensor);
+        if ((!hasCache || !cache) && connection) {
             HistoricalRecordObtainerTask hro = new HistoricalRecordObtainerTask(currentSensor.getPinId(),
                     String.valueOf(currentSensor.getType().getIdentifier()),
                     chart, layoutProgress, layoutChart, getApplicationContext());
@@ -203,23 +205,24 @@ public class SensorStatusActivity extends ActionBarActivity {
                 Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
             }
         } else {
-            // Update the graph using the cached data
-            DBManager manager = new DBManager(getApplicationContext());
-            List<Map<String, String>> values = manager.getLastCachedValues(currentSensor);
-            boolean first = true;
-            int i = values.size() - 1;
-            for (Map<String, String> tuple : values) {
-                Log.e(Constants.DEBUGTAG, " $ cached tuple: " + tuple.toString());
-                if (first) {
-                    first = false;
-                    textSensorValue.setText(tuple.get(DBManager.SensorHistory.SH_VALUE));
-                    textSensorUpdatedAt.setText(tuple.get(DBManager.SensorHistory.SH_TIME) + " - "
-                            + tuple.get(DBManager.SensorHistory.SH_DATE));
+            if (hasCache) {
+                // Update the graph using the cached data
+                List<Map<String, String>> values = manager.getLastCachedValues(currentSensor);
+                boolean first = true;
+                int i = values.size() - 1;
+                for (Map<String, String> tuple : values) {
+                    Log.e(Constants.DEBUGTAG, " $ cached tuple: " + tuple.toString());
+                    if (first) {
+                        first = false;
+                        textSensorValue.setText(tuple.get(DBManager.SensorHistory.SH_VALUE));
+                        textSensorUpdatedAt.setText(tuple.get(DBManager.SensorHistory.SH_TIME) + " - "
+                                + tuple.get(DBManager.SensorHistory.SH_DATE));
+                    }
+                    xValues.add(tuple.get(DBManager.SensorHistory.SH_TIME));
+                    yValues.add(new Entry(Float.parseFloat(tuple.get(DBManager
+                            .SensorHistory.SH_VALUE)), i));
+                    i--;
                 }
-                xValues.add(tuple.get(DBManager.SensorHistory.SH_TIME));
-                yValues.add(new Entry(Float.parseFloat(tuple.get(DBManager
-                        .SensorHistory.SH_VALUE)), i));
-                i--;
             }
         }
         if (yValues.size() > 0 && xValues.size() > 0) {
@@ -233,9 +236,10 @@ public class SensorStatusActivity extends ActionBarActivity {
             LineData data = new LineData(xValues, dataSets);
             chart.setData(data);
             chart.animateX(1000);
-            layoutProgress.setVisibility(View.GONE);
-            layoutChart.setVisibility(View.VISIBLE);
+
         }
+        layoutProgress.setVisibility(View.GONE);
+        layoutChart.setVisibility(View.VISIBLE);
     }
 
     private void getPowerSavingModeStatus() {
