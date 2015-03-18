@@ -17,7 +17,7 @@ public class BlossomController implements PortEvent {
 	private Communicator communicator;
 	private String portName;
 	private static final char TERMINATION_CHAR = 'X', READ_PREFIX = 'R',
-			WRITE_PREFIX = 'W', ANALOG = 'A', DIGITAL = 'D';
+			WRITE_PREFIX = 'W';
 	// Map containing the sensors. Key: Type + pinId
 	private HashMap<String, Sensor> sensorMap;
 	// Map containing the actuators
@@ -134,7 +134,7 @@ public class BlossomController implements PortEvent {
 					if (actuatorMap.containsKey(data.substring(1, 4))) {
 						if (data.substring(5).equals("ERROR")) {
 							//TODO throw error launching actuator, propagate to
-							// client
+							// client ?¿
 						}
 					}
 					break;

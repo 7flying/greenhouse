@@ -44,6 +44,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
     private Button buttonCreate;
     private SensorCheckAdapter adapter;
     private MonitoringItem current;
+    private Uri contentUri;
     private static final int REQUEST_IMAGE_CAPTURE = 1, PICK_IMAGE = 2;
 
     @Override
@@ -71,7 +72,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 current.clearSensors();
                 for (int i = 0; i < adapter.getCount(); i++) {
                     if (adapter.isChecked(adapter.getItem(i))) {
-                       current.addSensor(adapter.getItem(i));
+                        current.addSensor(adapter.getItem(i));
                     }
                 }
                 Intent returnIntent = new Intent();
@@ -102,7 +103,8 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
         });
         imagePreview = (ImageView) findViewById(R.id.image_preview);
-        imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+        //imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+
         Button buttonTakePhoto = (Button) findViewById(R.id.button_take_photo);
         buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,10 +133,12 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             Log.d(Constants.DEBUGTAG, " $ MonItemCreation extraItem: " + current.toString());
             etName.setText(current.getName());
             etName.setEnabled(false);
-            if(current.getPhotoPath() != null)
+            /*
+            if (current.getPhotoPath() != null)
                 imagePreview.setImageBitmap(BitmapFactory.decodeFile(current.getPhotoPath()));
             else
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+            */
         } else {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
@@ -152,10 +156,12 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
             if (photo != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-                addPhotoToGallery("file:" + photo.getAbsolutePath());
+              //  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+
                 photoPath = photo.getPath();
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                addPhotoToGallery("file:" + photo.getAbsolutePath());
+
                 Log.d(Constants.DEBUGTAG, " $ MonItemCreation photopath-dispatch: " + photoPath);
                 Log.d(Constants.DEBUGTAG, " $ MonItemCreation absolutepath-dispatch: "
                         + photo.getAbsolutePath());
@@ -163,17 +169,27 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         }
     }
 
-
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(Constants.DEBUGTAG, " $ HOOOORAY !!!!");
         // The user has taken a photo
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
+                Log.e(Constants.DEBUGTAG, " $ HOORAY 2");
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 if (imageBitmap == null)
-                    Log.e(Constants.DEBUGTAG, " $ MonItemCreation result bitmap is null");
-                else
-                    imagePreview.setImageBitmap(imageBitmap);
+                    Log.e(Constants.DEBUGTAG, " $ MonItemCreation result bitmap extras is null");
+                else {
+                    //imagePreview.setImageBitmap(imageBitmap);
+                    Bitmap temp = BitmapFactory.decodeFile(photoPath);
+                    if (temp == null) {
+                        Log.e(Constants.DEBUGTAG, " $ MonItemCreation result bitmap is null");
+                    }
+                    imagePreview.setImageBitmap(temp);
+                    Log.e(Constants.DEBUGTAG, " $ HOORAY 3");
+                }
             }
         } else {
             // Image comes from gallery
@@ -188,7 +204,9 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                     String imageFilePath = cursor.getString(0);
                     cursor.close();
                     photoPath = imageFilePath;
+                    imagePreview.invalidate();
                     imagePreview.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
+
                 }
             }
         }
@@ -216,7 +234,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
      */
     private void addPhotoToGallery(String photoPath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(new File(photoPath));
+        contentUri = Uri.fromFile(new File(photoPath));
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
