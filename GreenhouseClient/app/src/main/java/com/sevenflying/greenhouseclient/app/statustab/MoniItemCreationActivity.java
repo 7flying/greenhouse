@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -133,12 +135,10 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             Log.d(Constants.DEBUGTAG, " $ MonItemCreation extraItem: " + current.toString());
             etName.setText(current.getName());
             etName.setEnabled(false);
-            /*
             if (current.getPhotoPath() != null)
                 imagePreview.setImageBitmap(BitmapFactory.decodeFile(current.getPhotoPath()));
             else
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
-            */
         } else {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
@@ -178,8 +178,15 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 imagePreview.post(new Runnable() {
                     @Override
                     public void run() {
+                        Matrix m = new Matrix();
+                        m.postRotate(90);
+
+                        ////
                         Bitmap btm = BitmapFactory.decodeFile(photoPath);
-                        imagePreview.setImageBitmap(btm);
+                        if (btm != null) {
+                            Bitmap newb = Bitmap.createBitmap(btm, 0, 0, btm.getWidth(), btm.getHeight(), m, true);
+                            imagePreview.setImageBitmap(newb);
+                        }
                     }
                 });
             }
