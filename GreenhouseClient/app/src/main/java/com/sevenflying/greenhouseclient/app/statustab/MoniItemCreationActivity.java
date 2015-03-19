@@ -156,7 +156,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
             if (photo != null) {
-              //  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
 
                 photoPath = photo.getPath();
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -172,24 +172,16 @@ public class MoniItemCreationActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e(Constants.DEBUGTAG, " $ HOOOORAY !!!!");
         // The user has taken a photo
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                Log.e(Constants.DEBUGTAG, " $ HOORAY 2");
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                if (imageBitmap == null)
-                    Log.e(Constants.DEBUGTAG, " $ MonItemCreation result bitmap extras is null");
-                else {
-                    //imagePreview.setImageBitmap(imageBitmap);
-                    Bitmap temp = BitmapFactory.decodeFile(photoPath);
-                    if (temp == null) {
-                        Log.e(Constants.DEBUGTAG, " $ MonItemCreation result bitmap is null");
+                imagePreview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap btm = BitmapFactory.decodeFile(photoPath);
+                        imagePreview.setImageBitmap(btm);
                     }
-                    imagePreview.setImageBitmap(temp);
-                    Log.e(Constants.DEBUGTAG, " $ HOORAY 3");
-                }
+                });
             }
         } else {
             // Image comes from gallery
