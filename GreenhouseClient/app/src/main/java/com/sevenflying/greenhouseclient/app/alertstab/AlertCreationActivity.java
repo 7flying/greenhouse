@@ -159,6 +159,7 @@ public class AlertCreationActivity extends ActionBarActivity {
             sensorListSpinner.setEnabled(false);
             alertTypeSpinner.setSelection(a.getAlertType().getIndex());
             alertTypeSpinner.setEnabled(false);
+            editTextValue.setText(Double.toString(a.getCompareValue()));
         } else {
             if(getSupportActionBar() != null)
                 getSupportActionBar().setDisplayShowTitleEnabled(true);
