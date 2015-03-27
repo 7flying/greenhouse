@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 
 /** SensorView
@@ -22,8 +23,11 @@ public class SensorView extends RelativeLayout {
     private TextView sensorValue;
     private TextView sensorUnit;
     private ImageView sensorDefaultImage;
+    private static ImageLoader loader = null;
 
     public static SensorView inflate(ViewGroup parent) {
+        if (loader == null)
+            loader = new ImageLoader(parent.getContext());
         return (SensorView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.sensor_view, parent, false);
     }
@@ -51,7 +55,7 @@ public class SensorView extends RelativeLayout {
         sensorPin.setText(" - " + sensor.getPinId());
         sensorValue.setText(GreenhouseUtils.suppressZeros(sensor.getValue()));
         sensorUnit.setText(sensor.getType().getUnit());
-        sensorDefaultImage.setImageResource(sensor.getDrawableId());
+        loader.loadBitmapResource(sensor.getDrawableId(), sensorDefaultImage);
     }
 
     public TextView getSensorName() {

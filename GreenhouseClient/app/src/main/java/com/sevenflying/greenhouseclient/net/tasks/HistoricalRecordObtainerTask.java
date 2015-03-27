@@ -1,21 +1,15 @@
 package com.sevenflying.greenhouseclient.net.tasks;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.net.Commands;
 import com.sevenflying.greenhouseclient.net.Communicator;
-import com.sevenflying.greenhouseclient.net.Constants;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.app.utils.GreenhouseUtils;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Communicator;
@@ -49,6 +50,7 @@ public class SensorStatusActivity extends ActionBarActivity {
     private int modeOn = -1;
     private Communicator communicator;
     private static DBManager manager = null;
+    private static ImageLoader loader = null;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -56,6 +58,8 @@ public class SensorStatusActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         if (manager == null)
             manager = new DBManager(getApplicationContext());
+        if (loader == null)
+            loader = new ImageLoader(getApplicationContext());
         setContentView(R.layout.activity_sensor_status);
         communicator = Communicator.getInstance(getBaseContext());
         // Views
@@ -133,7 +137,7 @@ public class SensorStatusActivity extends ActionBarActivity {
         if (getIntent().hasExtra(Extras.EXTRA_SENSOR)) {
             GreenhouseUtils utils = new GreenhouseUtils(this);
             currentSensor = (Sensor) getIntent().getSerializableExtra(Extras.EXTRA_SENSOR);
-            imageView.setImageResource(currentSensor.getDrawableId());
+            loader.loadBitmapResource(currentSensor.getDrawableId(), imageView);
             textSensorValue.setText(GreenhouseUtils.suppressZeros(currentSensor.getValue()));
             textSensorUnit.setText(currentSensor.getType().getUnit());
             textSensorUpdatedAt.setText(currentSensor.getUpdatedAt());
@@ -202,7 +206,7 @@ public class SensorStatusActivity extends ActionBarActivity {
                     }
                 }
             } catch (Exception e) {
-                Log.e(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
+                Log.d(Constants.DEBUGTAG, " $ SensorStatusActivity: couldn't retrieve historical data ");
             }
         } else {
             if (hasCache) {
@@ -211,7 +215,7 @@ public class SensorStatusActivity extends ActionBarActivity {
                 boolean first = true;
                 int i = values.size() - 1;
                 for (Map<String, String> tuple : values) {
-                    Log.e(Constants.DEBUGTAG, " $ cached tuple: " + tuple.toString());
+                    Log.v(Constants.DEBUGTAG, " $ cached tuple: " + tuple.toString());
                     if (first) {
                         first = false;
                         textSensorValue.setText(tuple.get(DBManager.SensorHistory.SH_VALUE));

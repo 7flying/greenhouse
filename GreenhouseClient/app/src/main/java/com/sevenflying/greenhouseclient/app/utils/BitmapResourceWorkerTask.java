@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -19,16 +20,20 @@ public class BitmapResourceWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     private WeakReference<ImageView> imageViewToLoad;
     private Context context;
     private int data = 0;
+    private ImageLoader loader;
 
-    public BitmapResourceWorkerTask(ImageView imageViewToLoad, Context context) {
+    public BitmapResourceWorkerTask(ImageView imageViewToLoad, Context context, ImageLoader loader) {
         this.imageViewToLoad = new WeakReference<ImageView>(imageViewToLoad);
         this.context = context;
+        this.loader = loader;
     }
 
     @Override
     protected Bitmap doInBackground(Integer... params) {
         data = params[0];
-        return decodeSampledBitmapFromResource(context.getResources(), data, 100, 100);
+        Bitmap map = decodeSampledBitmapFromResource(context.getResources(), data, 100, 100);
+        loader.addBitmapToMemoryCache(String.valueOf(data), map);
+        return map;
     }
 
     @Override

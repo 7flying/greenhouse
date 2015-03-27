@@ -17,10 +17,12 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
 
     private WeakReference<ImageView> imageViewToLoad;
     private String path = null;
+    private ImageLoader loader;
 
-    public BitmapFileWorkerTask(ImageView imageViewToLoad, String path) {
+    public BitmapFileWorkerTask(ImageView imageViewToLoad, String path, ImageLoader loader) {
         this.imageViewToLoad = new WeakReference<ImageView>(imageViewToLoad);
         this.path = path;
+        this.loader = loader;
     }
 
     public String getPath() {
@@ -29,7 +31,9 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... params) {
-        return decodeSampledBitmapFromFile(path, 100, 100);
+        final Bitmap bm = decodeSampledBitmapFromFile(path, 80, 80);
+        loader.addBitmapToMemoryCache(path, bm);
+        return bm;
     }
 
     @Override

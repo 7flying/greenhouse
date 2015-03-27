@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 
 /** ActuatorView class.
@@ -20,8 +21,11 @@ public class ActuatorView extends RelativeLayout {
     private TextView name;
     private ImageView icon;
     private Button launchButton;
+    private static ImageLoader loader = null;
 
     public static ActuatorView inflate(ViewGroup parent) {
+        if (loader == null)
+            loader = new ImageLoader(parent.getContext());
         return  (ActuatorView) LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.actuator_view, parent, false);
     }
@@ -44,7 +48,7 @@ public class ActuatorView extends RelativeLayout {
 
     public void setActuator(Actuator actuator) {
         name.setText(actuator.getName());
-        icon.setImageResource(actuator.getIcon());
+        loader.loadBitmapResource(actuator.getIcon(), icon);
     }
 
     public Button getLaunchButton() {

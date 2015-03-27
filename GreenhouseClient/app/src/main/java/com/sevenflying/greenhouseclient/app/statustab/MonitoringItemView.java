@@ -50,10 +50,9 @@ public class MonitoringItemView extends RelativeLayout {
         name.setText(item.getName());
         // Set image icon or photo
         if(item.getPhotoPath() == null)
-            icon.setImageResource(item.getIcon());
-        else {
+            imageLoader.loadBitmapResource(item.getIcon(), icon);
+        else
             imageLoader.loadBitmapFile(item.getPhotoPath(), icon, item.getIcon());
-        }
 
         if(item.isWarningEnabled())
             warning.setImageResource(item.getWarningIcon());
