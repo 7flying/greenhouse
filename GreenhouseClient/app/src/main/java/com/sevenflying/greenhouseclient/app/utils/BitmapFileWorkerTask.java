@@ -23,6 +23,10 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
         this.path = path;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     @Override
     protected Bitmap doInBackground(Void... params) {
         return decodeSampledBitmapFromFile(path, 100, 100);
@@ -30,6 +34,8 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+        if (isCancelled())
+            bitmap = null;
         if (imageViewToLoad != null && bitmap != null) {
             ImageView image = imageViewToLoad.get();
             if (image != null)

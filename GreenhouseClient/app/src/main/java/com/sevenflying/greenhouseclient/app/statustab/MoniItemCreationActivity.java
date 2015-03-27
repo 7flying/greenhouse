@@ -135,9 +135,22 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             Log.d(Constants.DEBUGTAG, " $ MonItemCreation extraItem: " + current.toString());
             etName.setText(current.getName());
             etName.setEnabled(false);
-            if (current.getPhotoPath() != null)
-                imagePreview.setImageBitmap(BitmapFactory.decodeFile(current.getPhotoPath()));
-            else
+            if (current.getPhotoPath() != null) {
+                // imagePreview.setImageBitmap(BitmapFactory.decodeFile(current.getPhotoPath()));
+                imagePreview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Matrix m = new Matrix();
+                        m.postRotate(90);
+                        Bitmap btm = BitmapFactory.decodeFile(current.getPhotoPath());
+                        if (btm != null) {
+                            Bitmap newb = Bitmap.createBitmap(btm, 0, 0, btm.getWidth(),
+                                    btm.getHeight(), m, true);
+                            imagePreview.setImageBitmap(newb);
+                        }
+                    }
+                });
+            } else
                 imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
         } else {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -180,8 +193,6 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                     public void run() {
                         Matrix m = new Matrix();
                         m.postRotate(90);
-
-                        ////
                         Bitmap btm = BitmapFactory.decodeFile(photoPath);
                         if (btm != null) {
                             Bitmap newb = Bitmap.createBitmap(btm, 0, 0, btm.getWidth(), btm.getHeight(), m, true);

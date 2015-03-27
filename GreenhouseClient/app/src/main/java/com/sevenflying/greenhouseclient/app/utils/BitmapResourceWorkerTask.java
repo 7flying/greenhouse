@@ -33,7 +33,9 @@ public class BitmapResourceWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-       if (imageViewToLoad != null && bitmap != null) {
+        if (isCancelled())
+            bitmap = null;
+        if (imageViewToLoad != null && bitmap != null) {
            ImageView image = imageViewToLoad.get();
            if (image != null)
                image.setImageBitmap(bitmap);

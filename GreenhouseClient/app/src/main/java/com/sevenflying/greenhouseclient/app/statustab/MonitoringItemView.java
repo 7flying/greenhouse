@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 
 
@@ -20,8 +21,11 @@ public class MonitoringItemView extends RelativeLayout {
 
     private TextView name;
     private ImageView icon, warning;
+    private static ImageLoader imageLoader;
 
     public static MonitoringItemView inflate(ViewGroup parent) {
+        if (imageLoader == null)
+            imageLoader = new ImageLoader(parent.getContext());
         return  (MonitoringItemView) LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.monitoring_item_view, parent, false);
     }
@@ -47,8 +51,10 @@ public class MonitoringItemView extends RelativeLayout {
         // Set image icon or photo
         if(item.getPhotoPath() == null)
             icon.setImageResource(item.getIcon());
-        else
-            icon.setImageBitmap(BitmapFactory.decodeFile(item.getPhotoPath()));
+        else {
+            imageLoader.loadBitmapFile(item.getPhotoPath(), icon, item.getIcon());
+        }
+
         if(item.isWarningEnabled())
             warning.setImageResource(item.getWarningIcon());
         else

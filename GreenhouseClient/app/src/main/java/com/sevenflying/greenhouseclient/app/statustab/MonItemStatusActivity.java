@@ -2,6 +2,8 @@ package com.sevenflying.greenhouseclient.app.statustab;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -17,7 +19,11 @@ import android.widget.TextView;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorAdapter;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
+import com.sevenflying.greenhouseclient.app.utils.AsyncResourceDrawable;
+import com.sevenflying.greenhouseclient.app.utils.BitmapFileWorkerTask;
+import com.sevenflying.greenhouseclient.app.utils.BitmapResourceWorkerTask;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
 import com.sevenflying.greenhouseclient.domain.Sensor;
 import com.sevenflying.greenhouseclient.net.Constants;
@@ -35,14 +41,17 @@ public class MonItemStatusActivity extends ActionBarActivity {
     private ImageView imageMonitoring, imageWarning;
     private TextView moniName;
     private SensorAdapter adapter;
+    private static ImageLoader imageLoader = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         setContentView(R.layout.activity_mon_item_status);
+        if (imageLoader == null)
+            imageLoader = new ImageLoader(getApplicationContext());
+
         imageMonitoring = (ImageView) findViewById(R.id.image_monitoring);
         imageWarning = (ImageView) findViewById(R.id.image_warning);
         moniName = (TextView) findViewById(R.id.tv_moni_name);
@@ -50,16 +59,16 @@ public class MonItemStatusActivity extends ActionBarActivity {
         sensorList = new ArrayList<Sensor>();
         adapter = new SensorAdapter(this, R.layout.sensor_list_row, sensorList);
         moniAttachedSensors.setAdapter(adapter);
-        if(getIntent().hasExtra(Extras.EXTRA_MONI)) {
+        if (getIntent().hasExtra(Extras.EXTRA_MONI)) {
             extraInput = (MonitoringItem) getIntent().getSerializableExtra(Extras.EXTRA_MONI);
             Log.d(Constants.DEBUGTAG, " $ MonItemStatus extraItem onCreate: "
                     + extraInput.toString());
-            if(extraInput.getPhotoPath() != null)
-                imageMonitoring.setImageBitmap(BitmapFactory.decodeFile(extraInput.getPhotoPath()));
-            else
-                imageMonitoring.setImageDrawable(getResources()
-                        .getDrawable(R.drawable.ic_leaf_green));
-
+            if (extraInput.getPhotoPath() != null) {
+                imageLoader.loadBitmapFile(extraInput.getPhotoPath(), imageMonitoring,
+                        R.drawable.ic_leaf_green);
+            } else {
+                    imageLoader.loadBitmapResource(R.drawable.ic_leaf_green, imageMonitoring);
+            }
             moniName.setText(extraInput.getName());
             sensorList.addAll(extraInput.getAttachedSensors());
             adapter.notifyDataSetInvalidated();

@@ -12,11 +12,11 @@ import java.lang.ref.WeakReference;
  *  - https://developer.android.com/training/displaying-bitmaps/index.html
  * Created by flying on 27/03/15.
  */
-public class AsyncResourceDrawable extends BitmapDrawable{
+public class AsyncFileDrawable extends BitmapDrawable{
 
     private WeakReference<BitmapFileWorkerTask> bitmapWorkerTaskWeakReference;
 
-    public AsyncResourceDrawable(Resources res, Bitmap bitmap, BitmapFileWorkerTask bitmapWorker) {
+    public AsyncFileDrawable(Resources res, Bitmap bitmap, BitmapFileWorkerTask bitmapWorker) {
         super(res, bitmap);
         bitmapWorkerTaskWeakReference = new WeakReference<BitmapFileWorkerTask>(bitmapWorker);
     }
