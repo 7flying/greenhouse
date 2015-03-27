@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.sevenflying.greenhouseclient.app.R;
 import com.sevenflying.greenhouseclient.app.sensortab.SensorStatusActivity;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.domain.Actuator;
 import com.sevenflying.greenhouseclient.net.Communicator;
 
@@ -23,11 +24,16 @@ import com.sevenflying.greenhouseclient.net.Communicator;
  */
 public class ActuatorStatusActivity extends ActionBarActivity {
 
+    private static ImageLoader loader = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        if (loader == null)
+            loader = new ImageLoader(getApplicationContext());
 
         setContentView(R.layout.activity_actuator_status);
         TextView tvActuatorName = (TextView) findViewById(R.id.text_actuator_name);
@@ -43,7 +49,6 @@ public class ActuatorStatusActivity extends ActionBarActivity {
         RelativeLayout sensorLayout = (RelativeLayout) findViewById(R.id
                 .layout_optional_control_sensor_data);
 
-
         if (getIntent().hasExtra(Extras.EXTRA_ACTUATOR)) {
             layoutOptionalControlSensor.setVisibility(View.VISIBLE);
             final Actuator temp = (Actuator) getIntent().getSerializableExtra(Extras.EXTRA_ACTUATOR);
@@ -51,8 +56,7 @@ public class ActuatorStatusActivity extends ActionBarActivity {
             tvPin.setText(temp.getPinId());
             if (temp.hasControlSensor()) {
                 layoutOptionalControlSensor.setVisibility(View.VISIBLE);
-                controlSensorIm.setImageDrawable(getResources().getDrawable(temp.getControlSensor()
-                        .getDrawableId()));
+                loader.loadBitmapResource(temp.getControlSensor().getDrawableId(), controlSensorIm);
                 controlSensorName.setText(temp.getControlSensor().getName());
                 controlSensorPin.setText(temp.getControlSensor().getPinId());
                 controlType.setText(temp.getCompareType().getSymbol());

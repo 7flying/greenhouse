@@ -31,8 +31,8 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... params) {
-        final Bitmap bm = decodeSampledBitmapFromFile(path, 80, 80);
-        loader.addBitmapToMemoryCache(path, bm);
+        final Bitmap bm = decodeSampledBitmapFromFile(path, 40, 40);
+        //loader.addBitmapToMemoryCache(path, bm);
         return bm;
     }
 
@@ -48,8 +48,8 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
     }
 
     public static Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, int reqHeight) {
-        Matrix m = new Matrix();
-        m.postRotate(90);
+        //Matrix m = new Matrix();
+       // m.postRotate(90);
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -60,7 +60,9 @@ public class BitmapFileWorkerTask extends AsyncTask<Void, Void, Bitmap> {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(path);
+        Bitmap temp =  BitmapFactory.decodeFile(path);
+        //return Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true);
+        return  temp;
     }
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,

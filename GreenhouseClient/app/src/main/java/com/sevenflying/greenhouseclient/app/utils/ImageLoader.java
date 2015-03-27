@@ -60,6 +60,7 @@ public class ImageLoader {
      * @param whileResource - quick resource to load while the task is still executing
      */
     public void loadBitmapFile(String path, ImageView imageView, int whileResource) {
+        /*
         // Check whether the image is already cached
         final Bitmap bitmap = getBitmapFromMemoryCache(path);
         if (bitmap != null) {
@@ -68,10 +69,9 @@ public class ImageLoader {
         }
         else {
             Log.i(Constants.DEBUGTAG, " $ (bit-file) The hasn't: " + path);
+            */
             // Check tasks
             if (cancelPotentialWorkFile(path, imageView)) {
-
-                Log.i(Constants.DEBUGTAG, " $ (bit-file) Requiring bitmap via async: " + path);
                 // When the task finishes we will have the image in the cache
                 BitmapFileWorkerTask task = new BitmapFileWorkerTask(imageView, path, this);
                 AsyncResourceDrawable asyncResourceDrawable = new AsyncResourceDrawable(
@@ -80,7 +80,7 @@ public class ImageLoader {
                 imageView.setImageDrawable(asyncResourceDrawable);
                 task.execute();
             }
-        }
+        //}
     }
 
     /** If it is already a task for the given file, cancel it.
@@ -142,5 +142,10 @@ public class ImageLoader {
         else
             Log.i(Constants.DEBUGTAG, " $ Cache return: " + key + " HIT");
         return bitmap;
+    }
+
+    public void deleteBitmap(String key) {
+        if (memoryCache.get(key) != null)
+            memoryCache.remove(key);
     }
 }

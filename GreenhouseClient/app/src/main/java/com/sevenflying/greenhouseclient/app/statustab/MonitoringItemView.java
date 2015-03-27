@@ -48,15 +48,11 @@ public class MonitoringItemView extends RelativeLayout {
 
     public void setMonitoringItem(MonitoringItem item) {
         name.setText(item.getName());
-        // Set image icon or photo
-        if(item.getPhotoPath() == null)
-            imageLoader.loadBitmapResource(item.getIcon(), icon);
-        else
-            imageLoader.loadBitmapFile(item.getPhotoPath(), icon, item.getIcon());
 
         if(item.isWarningEnabled())
-            warning.setImageResource(item.getWarningIcon());
-        else
-            warning.setImageDrawable(null);
+            imageLoader.loadBitmapResource(item.getWarningIcon(), warning);
+        else {
+            imageLoader.deleteBitmap(String.valueOf(item.getWarningIcon()));
+        }
     }
 }

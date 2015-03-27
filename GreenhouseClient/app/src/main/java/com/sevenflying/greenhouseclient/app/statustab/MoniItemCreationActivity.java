@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.sevenflying.greenhouseclient.app.R;
+import com.sevenflying.greenhouseclient.app.utils.ImageLoader;
 import com.sevenflying.greenhouseclient.database.DBManager;
 import com.sevenflying.greenhouseclient.app.utils.Extras;
 import com.sevenflying.greenhouseclient.domain.MonitoringItem;
@@ -46,15 +47,16 @@ public class MoniItemCreationActivity extends ActionBarActivity {
     private Button buttonCreate;
     private SensorCheckAdapter adapter;
     private MonitoringItem current;
-    private Uri contentUri;
     private static final int REQUEST_IMAGE_CAPTURE = 1, PICK_IMAGE = 2;
+    private static ImageLoader loader = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().show();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
+        if (loader == null)
+            loader = new ImageLoader(getApplicationContext());
         setContentView(R.layout.activity_mon_item_creation);
         buttonCreate = (Button) findViewById(R.id.button_create);
         buttonCreate.setEnabled(false);
@@ -105,7 +107,6 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
         });
         imagePreview = (ImageView) findViewById(R.id.image_preview);
-        //imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
 
         Button buttonTakePhoto = (Button) findViewById(R.id.button_take_photo);
         buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +121,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
         buttonDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+                loader.loadBitmapResource(R.drawable.ic_leaf_green, imagePreview);
                 photoPath = null;
             }
         });
@@ -136,7 +137,6 @@ public class MoniItemCreationActivity extends ActionBarActivity {
             etName.setText(current.getName());
             etName.setEnabled(false);
             if (current.getPhotoPath() != null) {
-                // imagePreview.setImageBitmap(BitmapFactory.decodeFile(current.getPhotoPath()));
                 imagePreview.post(new Runnable() {
                     @Override
                     public void run() {
@@ -151,7 +151,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                     }
                 });
             } else
-                imagePreview.setImageDrawable(getResources().getDrawable(R.drawable.ic_leaf_green));
+                loader.loadBitmapResource(R.drawable.ic_leaf_green, imagePreview);
         } else {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
@@ -192,7 +192,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
                     @Override
                     public void run() {
                         Matrix m = new Matrix();
-                        m.postRotate(90);
+                        m.postRotate(0);
                         Bitmap btm = BitmapFactory.decodeFile(photoPath);
                         if (btm != null) {
                             Bitmap newb = Bitmap.createBitmap(btm, 0, 0, btm.getWidth(), btm.getHeight(), m, true);
@@ -244,7 +244,7 @@ public class MoniItemCreationActivity extends ActionBarActivity {
      */
     private void addPhotoToGallery(String photoPath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        contentUri = Uri.fromFile(new File(photoPath));
+        Uri contentUri = Uri.fromFile(new File(photoPath));
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
