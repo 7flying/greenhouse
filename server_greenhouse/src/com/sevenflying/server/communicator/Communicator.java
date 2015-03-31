@@ -16,6 +16,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.TooManyListenersException;
 
+import com.sevenflying.server.Env;
+
 
 /**
  * Manages the communication between the greenhouse and the server.
@@ -40,7 +42,7 @@ public class Communicator implements SerialPortEventListener {
 	// Timeout for connecting to a port
 	private static final int PORT_CONNECT_TIMEOUT = 2000;
 
-	private boolean debugMode = false;
+	private boolean debugMode = Env.DEBUG_SERIAL;
 	
 	public Communicator(PortEvent portEvent) {
 		this.portEvent = portEvent;
