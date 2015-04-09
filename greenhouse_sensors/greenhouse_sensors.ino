@@ -22,7 +22,6 @@ void process(void) {
   case 'R':
     // Read from sensor 
     // [1] - Type: A|D
-    //     TODO: don't like it, change!  
     // [2, 3] - Pin
     switch(buffer[1]) {
     case 'T':
