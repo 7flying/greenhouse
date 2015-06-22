@@ -45,6 +45,7 @@ void process(void) {
     default:
       err = 1;
     }
+    break;
   case 'W':
     // Launch actuator
     // [1] - Type
@@ -60,19 +61,19 @@ void process(void) {
     case 'A':
       // Launch an analog actuator
       if (value < 256) { // TODO: Check negative ?? -> reverse??
-	for (uint8_t i = 0; i < 1000; i+=100) {
-	  analogWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
-	  delay(10);
-	}
+        for (uint8_t i = 0; i < 1000; i+=100) {
+          analogWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
+          delay(10);
+        }
       } else
-	err = 1;
+        err = 1;
       break;
     case 'D':
       // Launch a digital actuator. Possible values 1 or 0
       if (value != 1 || value != 0)
-	err = 1;
+        err = 1;
       else
-	digitalWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
+        digitalWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
       break;
     default:
       err = 1;
@@ -83,7 +84,7 @@ void process(void) {
     Serial.print(buffer[i]);
   // Mark
   Serial.print('X');
-  if (err | (buffer[0] == 'R' && isnan(reading)))
+  if (err || (buffer[0] == 'R' && isnan(reading)))
     Serial.print("ERROR");
   else
      Serial.print(reading);
@@ -98,14 +99,14 @@ void loop(void) {
       process();
     } else {
       if (buffInd < 7) {
-	buffer[buffInd] = command;
-	buffInd++;
+        buffer[buffInd] = command;
+        buffInd++;
       } else {
-	// generate error
-	buffInd = 0;
-	for (uint8_t i = 0; i<7; i++)
-	  Serial.print(buffer[i]);
-	Serial.println("XERROR");
+        // generate error
+        buffInd = 0;
+        for (uint8_t i = 0; i<7; i++)
+          Serial.print(buffer[i]);
+        Serial.println("XERROR");
       }
     }
   }
