@@ -12,6 +12,8 @@ uint8_t buffInd = 0;
 void setup(void) {
   dht.begin();
   Serial.begin(RATE);
+  for (uint8_t i = 2; i < 14; i++)
+    pinMode(i, OUTPUT);
 }
 
 void process(void) {
@@ -53,24 +55,21 @@ void process(void) {
     // [4 - 6] - Value (max 255)
     uint8_t value = 0;
     uint8_t indx = 4;
-    while (buffer[indx] != 'X') {
+    while (indx != 7) {
       value = value * 10 + (buffer[indx] - 48);
       indx++;
     }
     switch(buffer[1]) {
     case 'A':
       // Launch an analog actuator
-      if (value < 256) { // TODO: Check negative ?? -> reverse??
-        for (uint8_t i = 0; i < 1000; i+=100) {
-          analogWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
-          delay(10);
-        }
+      if (value < 256 && value >= 0) {
+        analogWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
       } else
         err = 1;
       break;
     case 'D':
       // Launch a digital actuator. Possible values 1 or 0
-      if (value != 1 || value != 0)
+      if (value != 1 && value != 0)
         err = 1;
       else
         digitalWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
