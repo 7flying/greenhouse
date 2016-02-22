@@ -1,0 +1,10 @@
+# Compiled python modules.
+*.pyc
+
+# Emacs' stuff
+*~
+\#*\#
+.\#*
+
+# Environment
+env/
