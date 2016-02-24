@@ -16,6 +16,8 @@ class InstrumentType(Base):
     __tablename__ = 'instrument_type'
     id = Column(Integer, primary_key=True)
     name = Column(String(30), nullable=False)
+    identifier = Column(String(1), unique=True)
+    unit = Column(String(15))
     type = Column(String(30))
 
     __mapper_args__ = {
