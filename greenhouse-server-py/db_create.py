@@ -6,6 +6,7 @@ Db creation script.
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app import models, modelsconst
+import config
 
 def create():
     """Creates the engine"""
@@ -16,7 +17,7 @@ def create():
 
     # Add constants
     for sensor_t in modelsconst.SENSOR_TYPES:
-        tmp = SensorType(sensor_t)
+        tmp = models.SensorType(name=sensor_t)
         session.add(tmp)
         session.commit()
 
