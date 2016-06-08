@@ -1,6 +1,7 @@
 #include "DHT.h"
 #define DHT_PIN 7
 #define RATE 115200
+#define DEBUG 0
 
 // DHT sensor
 DHT dht(DHT_PIN, DHT22);
@@ -54,13 +55,20 @@ void process(void) {
     // [2 - 3] - Pin
     // [4 - 6] - Value (max 255)
     uint8_t value = 0;
-    uint8_t indx = 4;
-    while (indx != 7) {
-      value = value * 10 + (buffer[indx] - 48);
-      indx++;
-    }
+    uint8_t multi = 1;
+    uint8_t indx = buffInd;
     switch(buffer[1]) {
     case 'A':
+       // from buffInd (last) to 4
+      while (indx > 3) {
+        value += ((buffer[indx] - 48) * multi);
+        indx--;
+        multi *= 10;
+      }
+      if (DEBUG) {
+        Serial.print("A.Value: ");
+        Serial.println(value);
+      }
       // Launch an analog actuator
       if (value < 256 && value >= 0) {
         analogWrite((buffer[2] - 48) * 10 + (buffer[3] - 48), value);
@@ -69,6 +77,7 @@ void process(void) {
       break;
     case 'D':
       // Launch a digital actuator. Possible values 1 or 0
+      value = (buffer[4] - 48);
       if (value != 1 && value != 0)
         err = 1;
       else
@@ -91,9 +100,17 @@ void process(void) {
 void loop(void) {
   if (Serial.available()) {
     char command = Serial.read();
+    if (DEBUG) {
+      Serial.print("Index: ");
+      Serial.println(buffInd);
+      Serial.print("Input: ");
+      Serial.println(command);
+      Serial.println("");
+    }
     if (command == '\n') {
-      buffInd = 0;
+      buffInd -= 1;
       process();
+      buffInd = 0;
     } else {
       if (buffInd < 7) {
         buffer[buffInd] = command;
