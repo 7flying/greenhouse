@@ -81,8 +81,6 @@ void process(void) {
   // Echo the command  
   for (uint8_t i = 0; i<7; i++)
     Serial.print(buffer[i]);
-  // Mark
-  Serial.print('X');
   if (err || (buffer[0] == 'R' && isnan(reading)))
     Serial.print("ERROR");
   else
@@ -93,7 +91,7 @@ void process(void) {
 void loop(void) {
   if (Serial.available()) {
     char command = Serial.read();
-    if (command == 'X') {
+    if (command == '\n') {
       buffInd = 0;
       process();
     } else {
